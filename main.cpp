@@ -9,10 +9,16 @@
 #include "front_controls.h"
 #include <time.h>
 #include <sys/time.h>
+#include <getopt.h>
 
-volatile sig_atomic_t time_to_quit = false;
+volatile sig_atomic_t 	time_to_quit = false;
+// Set Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
+e_lvl			LEVEL_DEBUG = WARN;
 
-int main() {
+
+int main(int argc, char *argv[])
+{
+	int opt;
 	char const	*front_controls_port = "/dev/ttyUSB0",
 	//char const	*front_controls_port = "/tmp/ttyV0",
 	     		*i2c_device = "/dev/i2c-1",
@@ -38,6 +44,76 @@ int main() {
 
 	// register signal SIGINT and signal handler  
 	signal(SIGINT, signalHandler);  
+
+	// Process options
+	// put ':' in the starting of the
+	// string so that program can
+	// distinguish between '?' and ':'
+	while(true)
+	{
+		static struct option long_options[] =
+		{
+			/* These options don't set a flag. */
+			{"verbose",	required_argument,	0, 'v'},
+			{"quiet",	no_argument,		0, 'q'},
+			{"help",	no_argument,		0, 'h'},
+			{0,0,0,0}
+		};
+		/* getopt_long stores the option index here. */
+		int option_index = 0;
+		opt = getopt_long (argc, argv, ":qv:",
+				long_options, &option_index);
+		/* Detect the end of the options. */
+		if (opt == -1)
+			break;
+		
+		switch(opt)
+		{
+		case 'v':
+			printf("Option Debug: %s\n", optarg);
+			if (strcmp("DEBUG",optarg)==0) {
+				LEVEL_DEBUG = DEBUG;
+				break;
+			}
+			else if (strcmp("INFO",optarg)==0) {
+				LEVEL_DEBUG = INFO;
+				break;
+			}
+			else if (strcmp("WARN",optarg)==0) {
+				LEVEL_DEBUG = WARN;
+				break;
+			}
+			else if (strcmp("ERROR",optarg)==0) {
+				LEVEL_DEBUG = ERROR;
+				break;
+			}
+			else if (strcmp("NONE",optarg)==0) {
+				LEVEL_DEBUG = NONE;
+				break;
+			} 
+			break;
+		case 'q':
+			LEVEL_DEBUG = NONE;
+			break;
+		case '?':
+		case 'h':
+			printf("USAGE: data_logger [OPTIONS]\n");
+			printf("Log engine data.\n\n");
+			printf("Options:\n");
+			printf("  -v,  --verbose=LEVEL\t\tSet verbose level.\n");
+			printf("\t\t\t\tLEVEL is one of: NONE,ERROR,WARN,INFO,DEBUG\n");
+			printf("  -q\t\t\t\tSame as --verbose = NONE\n");
+			printf("  -h, --help\t\t\tPrint this help message.\n");
+			return 0;
+		}
+	}
+
+	// optind is for the extra arguments
+	// which are not parsed
+	for(; optind < argc; optind++){
+		printf("extra arguments: %s\n", argv[optind]);
+	}
+
 
 	// Open Front controls
 	fd_front_controls = open (front_controls_port, O_RDWR | O_NOCTTY | O_SYNC);
@@ -112,7 +188,7 @@ int main() {
 			buffer_ptr += sizeof(tmp);
 			memcpy((void*)&enData.batteryVoltage,(void*)buffer_ptr,sizeof(enData.batteryVoltage));
 			buffer_ptr = buffer;
-			error_message (DEBUG,"RPM: %d Speed: %f Oil temp: %f BatV: %f",enData.rpm,enData.speed,enData.temp_oil, enData.batteryVoltage);
+			error_message (INFO,"RPM: %d Speed: %f Oil temp: %f BatV: %f",enData.rpm,enData.speed,enData.temp_oil, enData.batteryVoltage);
 		}
 		select_result = select(fd_front_controls + 1, &readset, NULL, NULL, &timeout);
 		if (select_result < 0) {
@@ -166,8 +242,8 @@ int main() {
 		gettimeofday(&currtime, NULL);
 		my_time = currtime.tv_sec;
 		strftime(time_buf, 100, "%D %T", localtime(&my_time));
-		// RPM, sysvoltage, batVoltage, running, Time
-		fprintf(fd_log,"%d,%f,%f,%d,%s.%ld\n",enData.rpm,fcData.systemVoltage,enData.batteryVoltage,engineRunning,time_buf,currtime.tv_usec);
+		// RPM, Speed, sysvoltage, batVoltage, running, Time
+		fprintf(fd_log,"%d,%f,%f,%f,%d,%s.%ld\n",enData.rpm,enData.speed,fcData.systemVoltage,enData.batteryVoltage,engineRunning,time_buf,currtime.tv_usec);
 
 		usleep(50000);
 	}

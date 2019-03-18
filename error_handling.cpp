@@ -1,8 +1,6 @@
 #include "error_handling.h"
 
 void error_message(e_lvl err_lvl, char const *fmt, ...) {
-	// Set Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
-	e_lvl LEVEL_DEBUG = DEBUG;
 
 
 	// Handle error messages
@@ -43,5 +41,5 @@ void signalHandler( int signum ) {
 	// cleanup and close up stuff here  
 	// terminate program  
 
-	exit(signum); 
+	//exit(signum); 
 }
