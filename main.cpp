@@ -15,6 +15,19 @@ volatile sig_atomic_t 	time_to_quit = false;
 // Set Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
 e_lvl			LEVEL_DEBUG = WARN;
 
+int fc_open(const char *filepath) {
+	int fd;
+	fd = open (filepath, O_RDWR | O_NOCTTY | O_SYNC);
+	if (fd < 0) {
+		error_message (WARN,"error %d opening %s: %s", errno, filepath, strerror (errno));
+		return -1;
+	}
+
+	// Set interface parameters for front controls
+	set_interface_attribs (fd, B115200, 0);  // set speed to 115,200 bps, 8n1 (no parity)
+	set_blocking (fd, 0);                // set no blocking
+	return fd;
+}
 
 int main(int argc, char *argv[])
 {
@@ -116,16 +129,7 @@ int main(int argc, char *argv[])
 
 
 	// Open Front controls
-	fd_front_controls = open (front_controls_port, O_RDWR | O_NOCTTY | O_SYNC);
-	if (fd_front_controls < 0) {
-		error_message (WARN,"error %d opening %s: %s", errno, front_controls_port, strerror (errno));
-		//return -1;
-	}
-
-	// Set interface parameters for front controls
-	set_interface_attribs (fd_front_controls, B115200, 0);  // set speed to 115,200 bps, 8n1 (no parity)
-	set_blocking (fd_front_controls, 0);                // set no blocking
-
+	fd_front_controls = fc_open(front_controls_port);
 	// Initialize I2C Interface
 	//I2Cdev::initialize();
 	//----- OPEN THE I2C BUS -----
@@ -152,7 +156,12 @@ int main(int argc, char *argv[])
 	while (!time_to_quit) {
 		// Do some stuff
 		FD_ZERO(&readset);
-		FD_SET(fd_front_controls,&readset);
+		if (fd_front_controls > 0) {
+			FD_SET(fd_front_controls,&readset);
+		}
+		else {
+			fd_front_controls = fc_open(front_controls_port);
+		}
 		timeout.tv_sec = 0;
 		timeout.tv_usec = 0;
 

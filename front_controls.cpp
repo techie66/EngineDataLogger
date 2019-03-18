@@ -1,6 +1,6 @@
 #include "front_controls.h"
 
-int readFC(int fd_front_controls, fc_data& fcData) {
+int readFC(int& fd_front_controls, fc_data& fcData) {
 	int	n = 0,
 		i = 0,
 		i_serial_in = 0;
@@ -45,6 +45,11 @@ int readFC(int fd_front_controls, fc_data& fcData) {
 			strcpy(CmdD, exCmd_bin(fcData.inputCmdD));
 			error_message (INFO,"inputCmdD: %s inputCmdC: %s Voltage: %f",CmdD,CmdC,fcData.systemVoltage);
 		}
+	}
+	else if (n == 0) {
+		error_message(WARN,"FC zero data length. closing");
+		close(fd_front_controls);
+		fd_front_controls = -1;
 	}
 	return 0;
 }
