@@ -251,8 +251,9 @@ int main(int argc, char *argv[])
 		gettimeofday(&currtime, NULL);
 		my_time = currtime.tv_sec;
 		strftime(time_buf, 100, "%D %T", localtime(&my_time));
-		// RPM, Speed, sysvoltage, batVoltage, running, Time
-		fprintf(fd_log,"%d,%f,%f,%f,%d,%s.%ld\n",enData.rpm,enData.speed,fcData.systemVoltage,enData.batteryVoltage,engineRunning,time_buf,currtime.tv_usec);
+		// RPM, Speed, sysvoltage, batVoltage, oil temp, running, Time
+		fprintf(fd_log,"%d,%.2f,%.2f,%.2f,%.2f,%d,%s.%ld\n",enData.rpm,enData.speed,fcData.systemVoltage,enData.batteryVoltage,enData.temp_oil,engineRunning,time_buf,currtime.tv_usec);
+		fflush(fd_log);
 
 		usleep(50000);
 	}
