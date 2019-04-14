@@ -2,14 +2,15 @@
 #include <fcntl.h>			//Needed for I2C port
 #include <sys/ioctl.h>			//Needed for I2C port
 #include <linux/i2c-dev.h>		//Needed for I2C port
+#include <time.h>
+#include <sys/time.h>
+#include <getopt.h>
 #include "I2Cdev.h"
 #include "serial.h"
 #include "definitions.h"
 #include "error_handling.h"
 #include "front_controls.h"
-#include <time.h>
-#include <sys/time.h>
-#include <getopt.h>
+#include "bluetooth.h"
 
 volatile sig_atomic_t 	time_to_quit = false;
 // Set Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
@@ -43,7 +44,8 @@ int main(int argc, char *argv[])
 			result = 0;
 	int 		fd_front_controls,
 			fd_i2c,
-			length;
+			length,
+			max_fd = 0;
 	FILE		*fd_log;
 	fd_set		readset,
 			writeset;
@@ -53,6 +55,7 @@ int main(int argc, char *argv[])
 			*buffer_ptr = buffer;
 	char	      	time_buf[100];
 	time_t		my_time;
+	EDL_Bluetooth	dashboard;
 
 
 	// register signal SIGINT and signal handler  
@@ -130,6 +133,7 @@ int main(int argc, char *argv[])
 
 	// Open Front controls
 	fd_front_controls = fc_open(front_controls_port);
+	
 	// Initialize I2C Interface
 	//I2Cdev::initialize();
 	//----- OPEN THE I2C BUS -----
@@ -140,29 +144,35 @@ int main(int argc, char *argv[])
 		//return -1;
 	}
 	
-		
-
-	// Listen for bluetooth client and connect any clients
-	// TODO
-	
 	// Open log file
 	if ((fd_log = fopen(log_file,"a")) < 0) {
-		error_message (ERROR,"Failed to open the i2c bus. err:%d - %s",errno,strerror(errno));
+		error_message (ERROR,"Failed to open the log file err:%d - %s",errno,strerror(errno));
 		//return -1;
 	}
 	fprintf(fd_log,"\n");
 
 	// Main Loop
 	while (!time_to_quit) {
-		// Do some stuff
+		// Setup read sets
 		FD_ZERO(&readset);
+		FD_ZERO(&writeset);
+		FD_SET(dashboard.getListener(),&readset);
+		max_fd = (max_fd>dashboard.getListener())?max_fd:dashboard.getListener();
 		if (fd_front_controls > 0) {
 			FD_SET(fd_front_controls,&readset);
+			max_fd = (max_fd>fd_front_controls)?max_fd:fd_front_controls;
 		}
 		else {
 			fd_front_controls = fc_open(front_controls_port);
 		}
-		timeout.tv_sec = 0;
+		error_message(DEBUG,"client_fd= %d",dashboard.getClient());
+		if (dashboard.getClient() > 0) {
+			error_message(DEBUG,"Adding dashboard client to select");
+			FD_SET(dashboard.getClient(),&readset);
+			FD_SET(dashboard.getClient(),&writeset);
+			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
+		}
+		timeout.tv_sec = 5;
 		timeout.tv_usec = 0;
 
 		// Read all inputs
@@ -181,7 +191,7 @@ int main(int argc, char *argv[])
 		if (read(fd_i2c, buffer, length) != length)		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)KE
 		{
 			//ERROR HANDLING: i2c transaction failed
-			error_message (WARN,"Failed to read from the i2c bus.\n");
+			error_message (WARN,"Failed to read from the i2c bus.");
 		}
 		else
 		{
@@ -199,18 +209,33 @@ int main(int argc, char *argv[])
 			buffer_ptr = buffer;
 			error_message (INFO,"RPM: %d Speed: %f Oil temp: %f BatV: %f",enData.rpm,enData.speed,enData.temp_oil, enData.batteryVoltage);
 		}
-		select_result = select(fd_front_controls + 1, &readset, NULL, NULL, &timeout);
+		select_result = select(max_fd+1, &readset, &writeset, NULL, &timeout);
 		if (select_result < 0) {
 			error_message (WARN, "error %d Port: %s: %s", errno, front_controls_port, strerror (errno));
 		}
 		else if (select_result == 0){
 			// Timeout
+			error_message(DEBUG,"Select Timeout.");
 		}
 		else if (select_result > 0) {
+			error_message(DEBUG,"Select something");
+
 			// Front Controls readable
 			if (FD_ISSET(fd_front_controls,&readset)) {
-				// Front controls has data to be read
+				error_message (DEBUG,"Select read front controls");
 				readFC(fd_front_controls,fcData);
+			}
+			if (FD_ISSET(dashboard.getListener(),&readset)) {
+				error_message(DEBUG,"Select new dashboard client");
+				dashboard.Accept();
+			}
+			if (FD_ISSET(dashboard.getClient(),&readset)) {
+				error_message(DEBUG,"Select read dashboard");
+				dashboard.Read();
+			}
+			if (FD_ISSET(dashboard.getClient(),&writeset)) {
+				error_message(DEBUG,"Select write dashboard");
+				dashboard.Send();
 			}
 		}
 
