@@ -1,18 +1,24 @@
+/*
+ * EDL Main program
+ * READ THE README!!!!!!
+ */
+
 #include <unistd.h>			//Needed for I2C port
 #include <fcntl.h>			//Needed for I2C port
 #include <sys/ioctl.h>			//Needed for I2C port
 #include <linux/i2c-dev.h>		//Needed for I2C port
+#include <time.h>
+#include <sys/time.h>
+#include <getopt.h>
 #include "I2Cdev.h"
 #include "serial.h"
 #include "definitions.h"
 #include "error_handling.h"
 #include "front_controls.h"
-#include <time.h>
-#include <sys/time.h>
-#include <getopt.h>
+#include "bluetooth.h"
 
 volatile sig_atomic_t 	time_to_quit = false;
-// Set Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
+// Set default Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
 e_lvl			LEVEL_DEBUG = WARN;
 
 int fc_open(const char *filepath) {
@@ -31,7 +37,8 @@ int fc_open(const char *filepath) {
 
 int main(int argc, char *argv[])
 {
-	int opt;
+	// TODO: move variable declarations to more sensible spots
+	// keep constants up here
 	char const	*front_controls_port = "/dev/ttyUSB0",
 	//char const	*front_controls_port = "/tmp/ttyV0",
 	     		*i2c_device = "/dev/i2c-1",
@@ -39,11 +46,11 @@ int main(int argc, char *argv[])
 	fc_data		fcData;
 	engine_data	enData;
 	bool		engineRunning = false;
-	int		select_result = 0,
-			result = 0;
+	int		select_result = 0;
 	int 		fd_front_controls,
 			fd_i2c,
-			length;
+			length,
+			max_fd = 0;
 	FILE		*fd_log;
 	fd_set		readset,
 			writeset;
@@ -53,6 +60,7 @@ int main(int argc, char *argv[])
 			*buffer_ptr = buffer;
 	char	      	time_buf[100];
 	time_t		my_time;
+	EDL_Bluetooth	dashboard;
 
 
 	// register signal SIGINT and signal handler  
@@ -60,7 +68,7 @@ int main(int argc, char *argv[])
 
 	// Process options
 	// put ':' in the starting of the
-	// string so that program can
+	// opt string so that program can
 	// distinguish between '?' and ':'
 	while(true)
 	{
@@ -74,12 +82,11 @@ int main(int argc, char *argv[])
 		};
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
-		opt = getopt_long (argc, argv, ":qv:",
+		int opt = getopt_long (argc, argv, ":qv:h",
 				long_options, &option_index);
 		/* Detect the end of the options. */
 		if (opt == -1)
 			break;
-		
 		switch(opt)
 		{
 		case 'v':
@@ -130,6 +137,7 @@ int main(int argc, char *argv[])
 
 	// Open Front controls
 	fd_front_controls = fc_open(front_controls_port);
+	
 	// Initialize I2C Interface
 	//I2Cdev::initialize();
 	//----- OPEN THE I2C BUS -----
@@ -140,27 +148,31 @@ int main(int argc, char *argv[])
 		//return -1;
 	}
 	
-		
-
-	// Listen for bluetooth client and connect any clients
-	// TODO
-	
 	// Open log file
 	if ((fd_log = fopen(log_file,"a")) < 0) {
-		error_message (ERROR,"Failed to open the i2c bus. err:%d - %s",errno,strerror(errno));
+		error_message (ERROR,"Failed to open the log file err:%d - %s",errno,strerror(errno));
 		//return -1;
 	}
 	fprintf(fd_log,"\n");
 
 	// Main Loop
 	while (!time_to_quit) {
-		// Do some stuff
+		// Setup read sets
 		FD_ZERO(&readset);
+		FD_SET(dashboard.getListener(),&readset);
+		max_fd = (max_fd>dashboard.getListener())?max_fd:dashboard.getListener();
 		if (fd_front_controls > 0) {
+			error_message(DEBUG,"Adding front controls to select");
 			FD_SET(fd_front_controls,&readset);
+			max_fd = (max_fd>fd_front_controls)?max_fd:fd_front_controls;
 		}
 		else {
 			fd_front_controls = fc_open(front_controls_port);
+		}
+		if (dashboard.getClient() > 0) {
+			error_message(DEBUG,"Adding dashboard client to select");
+			FD_SET(dashboard.getClient(),&readset);
+			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
 		}
 		timeout.tv_sec = 0;
 		timeout.tv_usec = 0;
@@ -168,6 +180,7 @@ int main(int argc, char *argv[])
 		// Read all inputs
 		
 		//----- READ ENGINE DATA I2C -----
+		// TODO: Make class for engine_data just like the other components
 		// Set I2C addr
 		if (ioctl(fd_i2c, I2C_SLAVE, engine_data_addr) < 0)
 		{
@@ -181,7 +194,7 @@ int main(int argc, char *argv[])
 		if (read(fd_i2c, buffer, length) != length)		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)KE
 		{
 			//ERROR HANDLING: i2c transaction failed
-			error_message (WARN,"Failed to read from the i2c bus.\n");
+			error_message (WARN,"Failed to read from the i2c bus.");
 		}
 		else
 		{
@@ -199,18 +212,30 @@ int main(int argc, char *argv[])
 			buffer_ptr = buffer;
 			error_message (INFO,"RPM: %d Speed: %f Oil temp: %f BatV: %f",enData.rpm,enData.speed,enData.temp_oil, enData.batteryVoltage);
 		}
-		select_result = select(fd_front_controls + 1, &readset, NULL, NULL, &timeout);
+
+		// Do Select()
+		select_result = select(max_fd+1, &readset, &writeset, NULL, &timeout);
 		if (select_result < 0) {
 			error_message (WARN, "error %d Port: %s: %s", errno, front_controls_port, strerror (errno));
 		}
 		else if (select_result == 0){
 			// Timeout
+			// #Dontcare
 		}
 		else if (select_result > 0) {
-			// Front Controls readable
+			error_message(DEBUG,"Select something");
+
 			if (FD_ISSET(fd_front_controls,&readset)) {
-				// Front controls has data to be read
+				error_message (DEBUG,"Select read front controls");
 				readFC(fd_front_controls,fcData);
+			}
+			if (FD_ISSET(dashboard.getListener(),&readset)) {
+				error_message(DEBUG,"Select new dashboard client");
+				dashboard.Accept();
+			}
+			if (FD_ISSET(dashboard.getClient(),&readset)) {
+				error_message(DEBUG,"Select read dashboard");
+				dashboard.Read();
 			}
 		}
 
@@ -225,25 +250,53 @@ int main(int argc, char *argv[])
 			fcData.serialCmdA &= ~ENGINE_RUNNING;
 			error_message (DEBUG,"Not Running. %s",exCmd_bin(fcData.serialCmdA));
 		}
+
+		// Create Flatbuffer
+		// Sent to dashboard and 
+		// TODO: data logfile
+		EDL::AppBuffer::BikeT bikeobj;
+		flatbuffers::FlatBufferBuilder fbb;
+
+		// TODO: get rid of fcData and enData, use BikeT for everything
+		// define bikeobj with main scope
+		bikeobj.rpm = enData.rpm;
+		bikeobj.speed = enData.speed;
+		bikeobj.oil_temp = enData.temp_oil;
+		bikeobj.batteryvoltage = enData.batteryVoltage;
+		// Serialize into new flatbuffer.
+		fbb.Finish(EDL::AppBuffer::Bike::Pack(fbb, &bikeobj));
+
 		// Send commands
 		FD_ZERO(&writeset);
-		FD_SET(fd_front_controls,&writeset);
+		max_fd = (max_fd>dashboard.getListener())?max_fd:dashboard.getListener();
+		if (fd_front_controls > 0) {
+			FD_SET(fd_front_controls,&writeset);
+			max_fd = (max_fd>fd_front_controls)?max_fd:fd_front_controls;
+		}
+		if (dashboard.getClient() > 0) {
+			FD_SET(dashboard.getClient(),&writeset);
+			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
+		}
 		timeout.tv_sec = 0;
 		timeout.tv_usec = 0;
-		
-		select_result = select(fd_front_controls + 1, NULL, &writeset, NULL, &timeout);
+
+		// Do Select()
+		select_result = select(max_fd + 1, NULL, &writeset, NULL, &timeout);
 		if (select_result < 0) {
 			error_message (WARN, "error %d : %s", errno, strerror (errno));
 		}
 		else if (select_result == 0){
 			// Timeout
+			// #Dontcare
 		}
 		else if (select_result > 0) {
-			// Send Commands
-			// Front Controls
 			if (FD_ISSET(fd_front_controls,&writeset)) {
 				// Front controls accepts commands
 				writeFC(fd_front_controls,fcData);
+			}
+			if (FD_ISSET(dashboard.getClient(),&writeset)) {
+				error_message(DEBUG,"Select write dashboard");
+				dashboard.Send(fbb);
 			}
 		}
 		
