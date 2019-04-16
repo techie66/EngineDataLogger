@@ -1,3 +1,7 @@
+// TODO
+// Convert to class
+// fold fc_open into here
+
 #include "front_controls.h"
 
 int readFC(int& fd_front_controls, fc_data& fcData) {

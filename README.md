@@ -8,5 +8,8 @@ This was originally prototyped in Python and later converted to C++ for stabilit
 Included:
 I2C dev Lib - https://github.com/jrowberg/i2cdevlib
 	bcm2835 library - http://www.airspayce.com/mikem/bcm2835/index.html
+FlatBuffers - <URL>
+	Google API for data serialization.
+	Build header with  "flatc -c --gen-object-api cb1100f-app.fbs"
 
 

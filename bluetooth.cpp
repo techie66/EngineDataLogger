@@ -22,6 +22,7 @@ void EDL_Bluetooth::Init(int bt_port) {
 	// put socket into listening mode
 	listen(s, 1);
 	fcntl(s, F_SETFL, O_NONBLOCK);
+	client = -1;
 }
 int EDL_Bluetooth::Accept(){
 	// accept one connection
@@ -34,16 +35,10 @@ int EDL_Bluetooth::Accept(){
 	return client;
 }
 
-void EDL_Bluetooth::Send() {
-	// Send data
-	// TODO Actually send real data
-	sprintf(output,"%d",rpm);
-	rpm = bswap_32(rpm);
-	write(client,&rpm,sizeof(rpm));
-	rpm = bswap_32(rpm);
-	//write(client,output,sizeof(output));
-	rpm += 100;
-	rpm %= 12000;
+void EDL_Bluetooth::Send(const flatbuffers::FlatBufferBuilder& fbb) {
+	uint8_t *buf = fbb.GetBufferPointer();
+	int size = fbb.GetSize();	
+	write(client,buf,size);
 }
 int EDL_Bluetooth::Close() {
 	// close connection
