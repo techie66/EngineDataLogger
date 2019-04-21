@@ -18,7 +18,7 @@ struct BikeT : public flatbuffers::NativeTable {
   float speed;
   float systemvoltage;
   float batteryvoltage;
-  double oil_temp;
+  float oil_temp;
   bool blink_left;
   bool blink_right;
   BikeT()
@@ -26,7 +26,7 @@ struct BikeT : public flatbuffers::NativeTable {
         speed(0.0f),
         systemvoltage(0.0f),
         batteryvoltage(0.0f),
-        oil_temp(0.0),
+        oil_temp(0.0f),
         blink_left(false),
         blink_right(false) {
   }
@@ -55,8 +55,8 @@ struct Bike FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   float batteryvoltage() const {
     return GetField<float>(VT_BATTERYVOLTAGE, 0.0f);
   }
-  double oil_temp() const {
-    return GetField<double>(VT_OIL_TEMP, 0.0);
+  float oil_temp() const {
+    return GetField<float>(VT_OIL_TEMP, 0.0f);
   }
   bool blink_left() const {
     return GetField<uint8_t>(VT_BLINK_LEFT, 0) != 0;
@@ -70,7 +70,7 @@ struct Bike FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<float>(verifier, VT_SPEED) &&
            VerifyField<float>(verifier, VT_SYSTEMVOLTAGE) &&
            VerifyField<float>(verifier, VT_BATTERYVOLTAGE) &&
-           VerifyField<double>(verifier, VT_OIL_TEMP) &&
+           VerifyField<float>(verifier, VT_OIL_TEMP) &&
            VerifyField<uint8_t>(verifier, VT_BLINK_LEFT) &&
            VerifyField<uint8_t>(verifier, VT_BLINK_RIGHT) &&
            verifier.EndTable();
@@ -95,8 +95,8 @@ struct BikeBuilder {
   void add_batteryvoltage(float batteryvoltage) {
     fbb_.AddElement<float>(Bike::VT_BATTERYVOLTAGE, batteryvoltage, 0.0f);
   }
-  void add_oil_temp(double oil_temp) {
-    fbb_.AddElement<double>(Bike::VT_OIL_TEMP, oil_temp, 0.0);
+  void add_oil_temp(float oil_temp) {
+    fbb_.AddElement<float>(Bike::VT_OIL_TEMP, oil_temp, 0.0f);
   }
   void add_blink_left(bool blink_left) {
     fbb_.AddElement<uint8_t>(Bike::VT_BLINK_LEFT, static_cast<uint8_t>(blink_left), 0);
@@ -122,7 +122,7 @@ inline flatbuffers::Offset<Bike> CreateBike(
     float speed = 0.0f,
     float systemvoltage = 0.0f,
     float batteryvoltage = 0.0f,
-    double oil_temp = 0.0,
+    float oil_temp = 0.0f,
     bool blink_left = false,
     bool blink_right = false) {
   BikeBuilder builder_(_fbb);

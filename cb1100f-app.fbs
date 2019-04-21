@@ -6,7 +6,7 @@ table Bike {
     speed:float;
     systemvoltage:float;
     batteryvoltage:float;    
-    oil_temp:double;
+    oil_temp:float;
     blink_left:bool;
     blink_right:bool;
 }
