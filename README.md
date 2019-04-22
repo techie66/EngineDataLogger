@@ -12,4 +12,5 @@ FlatBuffers - <URL>
 	Google API for data serialization.
 	Build header with  "flatc -c --gen-object-api cb1100f-app.fbs"
 
-
+# License
+EngineDataLogger is licensed under the GNU GPLv2. Dependencies are licensed under their respective licenses. See LICENSE for full text of GPLv2.
