@@ -4,13 +4,17 @@ It is written to run on a raspberry pi zero W and communicate with arduinos and 
 
 This was originally prototyped in Python and later converted to C++ for stability and speed.
 
-# Dependancies
-Included:
-I2C dev Lib - https://github.com/jrowberg/i2cdevlib
-	bcm2835 library - http://www.airspayce.com/mikem/bcm2835/index.html
-FlatBuffers - <URL>
+# Dependencies
+## Included:<br>
+I2C dev Lib - https://github.com/jrowberg/i2cdevlib <br>
+	bcm2835 library - http://www.airspayce.com/mikem/bcm2835/index.html <br>
+FlatBuffers - https://github.com/google/flatbuffers <br>
 	Google API for data serialization.
 	Build header with  "flatc -c --gen-object-api cb1100f-app.fbs"
 
+## Not Included
+bluetooth.h - BLuetooth Headers
+
 # License
 EngineDataLogger is licensed under the GNU GPLv2. Dependencies are licensed under their respective licenses. See LICENSE for full text of GPLv2.
+
