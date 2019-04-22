@@ -6,14 +6,14 @@ This was originally prototyped in Python and later converted to C++ for stabilit
 
 # Dependencies
 ## Included:<br>
-I2C dev Lib - https://github.com/jrowberg/i2cdevlib <br>
-	bcm2835 library - http://www.airspayce.com/mikem/bcm2835/index.html <br>
-FlatBuffers - https://github.com/google/flatbuffers <br>
-	Google API for data serialization.
-	Build header with  "flatc -c --gen-object-api cb1100f-app.fbs"
+- I2C dev Lib - https://github.com/jrowberg/i2cdevlib  
 
 ## Not Included
-bluetooth.h - BLuetooth Headers
+- bluetooth.h - BLuetooth Headers
+- bcm2835 library - http://www.airspayce.com/mikem/bcm2835/index.html  
+- FlatBuffers - https://github.com/google/flatbuffers  
+	- Google API for data serialization.  
+	- Build header with  "flatc -c --gen-object-api cb1100f-app.fbs"  
 
 # License
 EngineDataLogger is licensed under the GNU GPLv2. Dependencies are licensed under their respective licenses. See LICENSE for full text of GPLv2.
