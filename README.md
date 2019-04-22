@@ -2,7 +2,11 @@
 This program is designed to work with custom hardware to act as data logger and central control ECU for a 1983 Honda CB1100F.
 It is written to run on a raspberry pi zero W and communicate with arduinos and other sensors to control and record various aspects of the motorcycle's operation.
 
-This was originally prototyped in Python and later converted to C++ for stability and speed.
+## Componenents
+- * [EngineDataLogger(EDL)] (https://github.com/techie66/EngineDataLogger)
+- [EDL - Dashboard] (https://github.com/techie66/EngineDataLogger---Dashboard)
+- [EDL - Front Controls] (https://github.com/techie66/EngineDataLogger-FrontControls)
+- [EDL - EngineData] (https://github.com/techie66/EngineDataLogger-EngineData)
 
 # Dependencies
 ## Included:<br>
