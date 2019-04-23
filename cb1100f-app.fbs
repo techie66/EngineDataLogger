@@ -4,6 +4,7 @@ namespace EDL.AppBuffer;
 table Bike {
     rpm:int;
     speed:float;
+    odometer:uint32;
     systemvoltage:float;
     batteryvoltage:float;    
     oil_temp:float;

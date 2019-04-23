@@ -56,8 +56,6 @@ int main(int argc, char *argv[])
 			writeset;
 	struct timeval	timeout,
 			currtime;
-	unsigned char 	buffer[60] = {0},
-			*buffer_ptr = buffer;
 	char	      	time_buf[100];
 	time_t		my_time;
 	EDL_Bluetooth	dashboard;
@@ -190,7 +188,11 @@ int main(int argc, char *argv[])
 		}
 
 		// length is calculated by fixed size of data stream from Sleepy Pi
-		length = sizeof(enData.rpm) + sizeof(enData.speed) + sizeof(enData.temp_oil) + sizeof(enData.batteryVoltage);			//<<< Number of bytes to read
+		length = sizeof(enData.rpm) + sizeof(enData.speed) + sizeof(enData.temp_oil) + sizeof(enData.batteryVoltage)
+			+ sizeof(enData.odometer);			//<<< Number of bytes to read
+		
+		unsigned char 	buffer[60] = {0};
+		unsigned char	*buffer_ptr = buffer;
 		if (read(fd_i2c, buffer, length) != length)		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)KE
 		{
 			//ERROR HANDLING: i2c transaction failed
@@ -209,8 +211,10 @@ int main(int argc, char *argv[])
 			enData.speed = tmp / 100.0;
 			buffer_ptr += sizeof(tmp);
 			memcpy((void*)&enData.batteryVoltage,(void*)buffer_ptr,sizeof(enData.batteryVoltage));
+			buffer_ptr += sizeof(enData.batteryVoltage);
+			memcpy((void*)&enData.odometer,(void*)buffer_ptr,sizeof(enData.odometer));
 			buffer_ptr = buffer;
-			error_message (INFO,"RPM: %d Speed: %f Oil temp: %f BatV: %f",enData.rpm,enData.speed,enData.temp_oil, enData.batteryVoltage);
+			error_message (INFO,"ODO: %d RPM: %d Speed: %f Oil temp: %f BatV: %f",enData.odometer,enData.rpm,enData.speed,enData.temp_oil, enData.batteryVoltage);
 		}
 
 		// Do Select()
@@ -261,6 +265,7 @@ int main(int argc, char *argv[])
 		// define bikeobj with main scope
 		bikeobj.rpm = enData.rpm;
 		bikeobj.speed = enData.speed;
+		bikeobj.odometer = enData.odometer;
 		bikeobj.oil_temp = enData.temp_oil;
 		bikeobj.batteryvoltage = enData.batteryVoltage;
 		// Serialize into new flatbuffer.

@@ -38,6 +38,7 @@ struct			engine_data {
 				float		batteryVoltage = 0.0,
 						temp_oil = 0, // divide by 100 for actual temp
 						speed = 0; // divide by 100 for actual speed
+				uint32_t	odometer = 0;
 			};
 
 #endif
