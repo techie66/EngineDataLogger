@@ -48,6 +48,15 @@ int readFC(int& fd_front_controls, fc_data& fcData) {
 			strcpy(CmdC,exCmd_bin(fcData.inputCmdC));
 			strcpy(CmdD, exCmd_bin(fcData.inputCmdD));
 			error_message (INFO,"inputCmdD: %s inputCmdC: %s Voltage: %f",CmdD,CmdC,fcData.systemVoltage);
+			fcData.brake_on = fcData.inputCmdD & BRAKE_ON;
+			fcData.horn_on = fcData.inputCmdD & HORN_ON;
+			fcData.left_on = fcData.inputCmdD & LEFT_ON;
+			fcData.right_on = fcData.inputCmdD & RIGHT_ON;
+			fcData.high_on = fcData.inputCmdD & HIGH_BEAMS_ON;
+			fcData.kill_on = fcData.inputCmdD & KILL_ON;
+			fcData.clutch_disengaged = fcData.inputCmdC & CLUTCH_DISENGAGED;
+			fcData.kickstand_up = fcData.inputCmdC & KICKSTAND_UP;
+			fcData.in_neutral = fcData.inputCmdC & IN_NEUTRAL;
 		}
 	}
 	else if (n == 0) {

@@ -17,6 +17,7 @@ struct BikeT : public flatbuffers::NativeTable {
   int32_t rpm;
   float speed;
   uint32_t odometer;
+  uint32_t trip;
   float systemvoltage;
   float batteryvoltage;
   float oil_temp;
@@ -26,6 +27,7 @@ struct BikeT : public flatbuffers::NativeTable {
       : rpm(0),
         speed(0.0f),
         odometer(0),
+        trip(0),
         systemvoltage(0.0f),
         batteryvoltage(0.0f),
         oil_temp(0.0f),
@@ -40,11 +42,12 @@ struct Bike FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_RPM = 4,
     VT_SPEED = 6,
     VT_ODOMETER = 8,
-    VT_SYSTEMVOLTAGE = 10,
-    VT_BATTERYVOLTAGE = 12,
-    VT_OIL_TEMP = 14,
-    VT_BLINK_LEFT = 16,
-    VT_BLINK_RIGHT = 18
+    VT_TRIP = 10,
+    VT_SYSTEMVOLTAGE = 12,
+    VT_BATTERYVOLTAGE = 14,
+    VT_OIL_TEMP = 16,
+    VT_BLINK_LEFT = 18,
+    VT_BLINK_RIGHT = 20
   };
   int32_t rpm() const {
     return GetField<int32_t>(VT_RPM, 0);
@@ -54,6 +57,9 @@ struct Bike FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
   uint32_t odometer() const {
     return GetField<uint32_t>(VT_ODOMETER, 0);
+  }
+  uint32_t trip() const {
+    return GetField<uint32_t>(VT_TRIP, 0);
   }
   float systemvoltage() const {
     return GetField<float>(VT_SYSTEMVOLTAGE, 0.0f);
@@ -75,6 +81,7 @@ struct Bike FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<int32_t>(verifier, VT_RPM) &&
            VerifyField<float>(verifier, VT_SPEED) &&
            VerifyField<uint32_t>(verifier, VT_ODOMETER) &&
+           VerifyField<uint32_t>(verifier, VT_TRIP) &&
            VerifyField<float>(verifier, VT_SYSTEMVOLTAGE) &&
            VerifyField<float>(verifier, VT_BATTERYVOLTAGE) &&
            VerifyField<float>(verifier, VT_OIL_TEMP) &&
@@ -98,6 +105,9 @@ struct BikeBuilder {
   }
   void add_odometer(uint32_t odometer) {
     fbb_.AddElement<uint32_t>(Bike::VT_ODOMETER, odometer, 0);
+  }
+  void add_trip(uint32_t trip) {
+    fbb_.AddElement<uint32_t>(Bike::VT_TRIP, trip, 0);
   }
   void add_systemvoltage(float systemvoltage) {
     fbb_.AddElement<float>(Bike::VT_SYSTEMVOLTAGE, systemvoltage, 0.0f);
@@ -131,6 +141,7 @@ inline flatbuffers::Offset<Bike> CreateBike(
     int32_t rpm = 0,
     float speed = 0.0f,
     uint32_t odometer = 0,
+    uint32_t trip = 0,
     float systemvoltage = 0.0f,
     float batteryvoltage = 0.0f,
     float oil_temp = 0.0f,
@@ -140,6 +151,7 @@ inline flatbuffers::Offset<Bike> CreateBike(
   builder_.add_oil_temp(oil_temp);
   builder_.add_batteryvoltage(batteryvoltage);
   builder_.add_systemvoltage(systemvoltage);
+  builder_.add_trip(trip);
   builder_.add_odometer(odometer);
   builder_.add_speed(speed);
   builder_.add_rpm(rpm);
@@ -162,6 +174,7 @@ inline void Bike::UnPackTo(BikeT *_o, const flatbuffers::resolver_function_t *_r
   { auto _e = rpm(); _o->rpm = _e; };
   { auto _e = speed(); _o->speed = _e; };
   { auto _e = odometer(); _o->odometer = _e; };
+  { auto _e = trip(); _o->trip = _e; };
   { auto _e = systemvoltage(); _o->systemvoltage = _e; };
   { auto _e = batteryvoltage(); _o->batteryvoltage = _e; };
   { auto _e = oil_temp(); _o->oil_temp = _e; };
@@ -180,6 +193,7 @@ inline flatbuffers::Offset<Bike> CreateBike(flatbuffers::FlatBufferBuilder &_fbb
   auto _rpm = _o->rpm;
   auto _speed = _o->speed;
   auto _odometer = _o->odometer;
+  auto _trip = _o->trip;
   auto _systemvoltage = _o->systemvoltage;
   auto _batteryvoltage = _o->batteryvoltage;
   auto _oil_temp = _o->oil_temp;
@@ -190,6 +204,7 @@ inline flatbuffers::Offset<Bike> CreateBike(flatbuffers::FlatBufferBuilder &_fbb
       _rpm,
       _speed,
       _odometer,
+      _trip,
       _systemvoltage,
       _batteryvoltage,
       _oil_temp,

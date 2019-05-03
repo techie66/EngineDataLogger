@@ -32,6 +32,15 @@ struct			fc_data {
 					inputCmdD = 0,
 					inputCmdC = 0;
 				float	systemVoltage = 0.0;
+				bool	brake_on = false;
+				bool	horn_on = false;
+				bool	left_on = false;
+				bool	right_on = false;
+				bool	high_on = false;
+				bool	kill_on = false;
+				bool	clutch_disengaged = false;
+				bool	kickstand_up = false;
+				bool	in_neutral = false;
 			};
 struct			engine_data {
 				uint16_t	rpm = 0;
@@ -39,6 +48,7 @@ struct			engine_data {
 						temp_oil = 0, // divide by 100 for actual temp
 						speed = 0; // divide by 100 for actual speed
 				uint32_t	odometer = 0;
+				uint32_t	trip = 0;
 			};
 
 #endif

@@ -213,6 +213,8 @@ int main(int argc, char *argv[])
 			memcpy((void*)&enData.batteryVoltage,(void*)buffer_ptr,sizeof(enData.batteryVoltage));
 			buffer_ptr += sizeof(enData.batteryVoltage);
 			memcpy((void*)&enData.odometer,(void*)buffer_ptr,sizeof(enData.odometer));
+			buffer_ptr += sizeof(enData.odometer);
+			memcpy((void*)&enData.trip,(void*)buffer_ptr,sizeof(enData.trip));
 			buffer_ptr = buffer;
 			error_message (INFO,"ODO: %d RPM: %d Speed: %f Oil temp: %f BatV: %f",enData.odometer,enData.rpm,enData.speed,enData.temp_oil, enData.batteryVoltage);
 		}
@@ -268,6 +270,9 @@ int main(int argc, char *argv[])
 		bikeobj.odometer = enData.odometer;
 		bikeobj.oil_temp = enData.temp_oil;
 		bikeobj.batteryvoltage = enData.batteryVoltage;
+		bikeobj.blink_left = fcData.left_on;
+		bikeobj.blink_right = fcData.right_on;
+		bikeobj.trip = enData.trip;
 		// Serialize into new flatbuffer.
 		fbb.Finish(EDL::AppBuffer::Bike::Pack(fbb, &bikeobj));
 
