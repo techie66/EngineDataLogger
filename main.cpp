@@ -45,6 +45,8 @@ int main(int argc, char *argv[])
 			*log_file = "system_log.csv";
 	fc_data		fcData;
 	engine_data	enData;
+	System_CMD db_from_cmd = NO_CMD;
+	System_CMD en_to_cmd = NO_CMD;
 	bool		engineRunning = false;
 	int		select_result = 0;
 	int 		fd_front_controls,
@@ -241,7 +243,7 @@ int main(int argc, char *argv[])
 			}
 			if (FD_ISSET(dashboard.getClient(),&readset)) {
 				error_message(DEBUG,"Select read dashboard");
-				dashboard.Read();
+				db_from_cmd = dashboard.Read();
 			}
 		}
 
@@ -255,6 +257,12 @@ int main(int argc, char *argv[])
 			engineRunning = false;
 			fcData.serialCmdA &= ~ENGINE_RUNNING;
 			error_message (DEBUG,"Not Running. %s",exCmd_bin(fcData.serialCmdA));
+		}
+
+		if(db_from_cmd == TRPRST) {
+			error_message(WARN,"Resetting Trip");
+			en_to_cmd = db_from_cmd;
+			db_from_cmd = NO_CMD;
 		}
 
 		// Create Flatbuffer
@@ -287,10 +295,14 @@ int main(int argc, char *argv[])
 			FD_SET(dashboard.getClient(),&writeset);
 			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
 		}
+		if (en_to_cmd != NO_CMD) {
+			// write to en
+			write(fd_i2c,(const void*)en_to_cmd,sizeof(en_to_cmd));
+			en_to_cmd = NO_CMD;
+		}
+		// Do Select()
 		timeout.tv_sec = 0;
 		timeout.tv_usec = 0;
-
-		// Do Select()
 		select_result = select(max_fd + 1, NULL, &writeset, NULL, &timeout);
 		if (select_result < 0) {
 			error_message (WARN, "error %d : %s", errno, strerror (errno));

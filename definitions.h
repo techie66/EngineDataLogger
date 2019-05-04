@@ -51,4 +51,9 @@ struct			engine_data {
 				uint32_t	trip = 0;
 			};
 
+enum System_CMD {
+	NO_CMD,
+	TRPRST
+};
+
 #endif

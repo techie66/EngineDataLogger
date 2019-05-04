@@ -10,6 +10,7 @@
 #include <bluetooth/sdp.h>
 #include <bluetooth/sdp_lib.h>
 #include "cb1100f-app_generated.h"
+#include "definitions.h"
 
 class EDL_Bluetooth
 {
@@ -27,7 +28,7 @@ class EDL_Bluetooth
 	int Accept();
 	void Send(const flatbuffers::FlatBufferBuilder& fbb);
 	int Close();
-	void Read();
+	System_CMD Read();
 	int getListener();
 	int getClient();
 };

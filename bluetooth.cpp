@@ -29,7 +29,7 @@ int EDL_Bluetooth::Accept(){
 	client = accept(s, (struct sockaddr *)&rem_addr, &opt);
 
 	ba2str( &rem_addr.rc_bdaddr, buf );
-	fprintf(stderr, "accepted connection from %s\n", buf);
+	error_message(WARN,"Accepted connection from [%s]\n", buf);
 	memset(buf, 0, sizeof(buf));
 	fcntl(client, F_SETFL, O_NONBLOCK);
 	return client;
@@ -48,17 +48,22 @@ int EDL_Bluetooth::Close() {
 	return 0;
 }
 
-void EDL_Bluetooth::Read() {
+System_CMD EDL_Bluetooth::Read() {
 	// read data from the client
 	// TODO do something with it
 	bytes_read = read(client, buf, sizeof(buf));
-	error_message(DEBUG,"Bytes Read= %d",bytes_read);
+	error_message(INFO,"Bluetooth Bytes Read= %d",bytes_read);
 	if( bytes_read > 0 ) {
-		error_message(DEBUG,"received [%s]\n", buf);
+		buf[bytes_read] = 0;
+		error_message(INFO,"received [%s]\n", buf);
+		if(strcmp(buf,"TRPRST") == 0) {
+			return TRPRST;
+		}
 	}
 	else if (bytes_read <= 0 ) {
 		Close();
 	}
+	return NO_CMD;
 }
 
 int EDL_Bluetooth::getClient() {
