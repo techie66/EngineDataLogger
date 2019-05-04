@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 	fc_data		fcData;
 	engine_data	enData;
 	System_CMD db_from_cmd = NO_CMD;
-	System_CMD en_to_cmd = NO_CMD;
+	char		en_to_cmd = 0;
 	bool		engineRunning = false;
 	int		select_result = 0;
 	int 		fd_front_controls,
@@ -261,7 +261,7 @@ int main(int argc, char *argv[])
 
 		if(db_from_cmd == TRPRST) {
 			error_message(WARN,"Resetting Trip");
-			en_to_cmd = db_from_cmd;
+			en_to_cmd = 'T';
 			db_from_cmd = NO_CMD;
 		}
 
@@ -295,10 +295,10 @@ int main(int argc, char *argv[])
 			FD_SET(dashboard.getClient(),&writeset);
 			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
 		}
-		if (en_to_cmd != NO_CMD) {
+		if (en_to_cmd != 0) {
 			// write to en
-			write(fd_i2c,(const void*)en_to_cmd,sizeof(en_to_cmd));
-			en_to_cmd = NO_CMD;
+			write(fd_i2c,(const void*)&en_to_cmd,sizeof(en_to_cmd));
+			en_to_cmd = 0;
 		}
 		// Do Select()
 		timeout.tv_sec = 0;
