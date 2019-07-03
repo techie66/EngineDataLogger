@@ -23,6 +23,7 @@ struct BikeT : public flatbuffers::NativeTable {
   float oil_temp;
   bool blink_left;
   bool blink_right;
+  uint16_t lambda;
   BikeT()
       : rpm(0),
         speed(0.0f),
@@ -32,7 +33,8 @@ struct BikeT : public flatbuffers::NativeTable {
         batteryvoltage(0.0f),
         oil_temp(0.0f),
         blink_left(false),
-        blink_right(false) {
+        blink_right(false),
+        lambda(0) {
   }
 };
 
@@ -47,7 +49,8 @@ struct Bike FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_BATTERYVOLTAGE = 14,
     VT_OIL_TEMP = 16,
     VT_BLINK_LEFT = 18,
-    VT_BLINK_RIGHT = 20
+    VT_BLINK_RIGHT = 20,
+    VT_LAMBDA = 22
   };
   int32_t rpm() const {
     return GetField<int32_t>(VT_RPM, 0);
@@ -76,6 +79,9 @@ struct Bike FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   bool blink_right() const {
     return GetField<uint8_t>(VT_BLINK_RIGHT, 0) != 0;
   }
+  uint16_t lambda() const {
+    return GetField<uint16_t>(VT_LAMBDA, 0);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int32_t>(verifier, VT_RPM) &&
@@ -87,6 +93,7 @@ struct Bike FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<float>(verifier, VT_OIL_TEMP) &&
            VerifyField<uint8_t>(verifier, VT_BLINK_LEFT) &&
            VerifyField<uint8_t>(verifier, VT_BLINK_RIGHT) &&
+           VerifyField<uint16_t>(verifier, VT_LAMBDA) &&
            verifier.EndTable();
   }
   BikeT *UnPack(const flatbuffers::resolver_function_t *_resolver = nullptr) const;
@@ -124,6 +131,9 @@ struct BikeBuilder {
   void add_blink_right(bool blink_right) {
     fbb_.AddElement<uint8_t>(Bike::VT_BLINK_RIGHT, static_cast<uint8_t>(blink_right), 0);
   }
+  void add_lambda(uint16_t lambda) {
+    fbb_.AddElement<uint16_t>(Bike::VT_LAMBDA, lambda, 0);
+  }
   explicit BikeBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -146,7 +156,8 @@ inline flatbuffers::Offset<Bike> CreateBike(
     float batteryvoltage = 0.0f,
     float oil_temp = 0.0f,
     bool blink_left = false,
-    bool blink_right = false) {
+    bool blink_right = false,
+    uint16_t lambda = 0) {
   BikeBuilder builder_(_fbb);
   builder_.add_oil_temp(oil_temp);
   builder_.add_batteryvoltage(batteryvoltage);
@@ -155,6 +166,7 @@ inline flatbuffers::Offset<Bike> CreateBike(
   builder_.add_odometer(odometer);
   builder_.add_speed(speed);
   builder_.add_rpm(rpm);
+  builder_.add_lambda(lambda);
   builder_.add_blink_right(blink_right);
   builder_.add_blink_left(blink_left);
   return builder_.Finish();
@@ -180,6 +192,7 @@ inline void Bike::UnPackTo(BikeT *_o, const flatbuffers::resolver_function_t *_r
   { auto _e = oil_temp(); _o->oil_temp = _e; };
   { auto _e = blink_left(); _o->blink_left = _e; };
   { auto _e = blink_right(); _o->blink_right = _e; };
+  { auto _e = lambda(); _o->lambda = _e; };
 }
 
 inline flatbuffers::Offset<Bike> Bike::Pack(flatbuffers::FlatBufferBuilder &_fbb, const BikeT* _o, const flatbuffers::rehasher_function_t *_rehasher) {
@@ -199,6 +212,7 @@ inline flatbuffers::Offset<Bike> CreateBike(flatbuffers::FlatBufferBuilder &_fbb
   auto _oil_temp = _o->oil_temp;
   auto _blink_left = _o->blink_left;
   auto _blink_right = _o->blink_right;
+  auto _lambda = _o->lambda;
   return EDL::AppBuffer::CreateBike(
       _fbb,
       _rpm,
@@ -209,7 +223,8 @@ inline flatbuffers::Offset<Bike> CreateBike(flatbuffers::FlatBufferBuilder &_fbb
       _batteryvoltage,
       _oil_temp,
       _blink_left,
-      _blink_right);
+      _blink_right,
+      _lambda);
 }
 
 inline const EDL::AppBuffer::Bike *GetBike(const void *buf) {

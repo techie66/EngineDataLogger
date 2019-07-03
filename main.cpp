@@ -10,22 +10,30 @@
 #include <time.h>
 #include <sys/time.h>
 #include <getopt.h>
+#include <isp2.h>
 #include "I2Cdev.h"
 #include "serial.h"
 #include "definitions.h"
 #include "error_handling.h"
 #include "front_controls.h"
 #include "bluetooth.h"
+#include <bcm2835.h>
+
+#define O2_PIN 26
+#define LC2_PORT "/dev/serial0"
+#define LC2_POWER_DELAY 15 // delay in seconds
+
+#define FC_PORT "/dev/ttyUSB0"
 
 volatile sig_atomic_t 	time_to_quit = false;
 // Set default Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
 e_lvl			LEVEL_DEBUG = WARN;
 
-int fc_open(const char *filepath) {
+int fc_open() {
 	int fd;
-	fd = open (filepath, O_RDWR | O_NOCTTY | O_SYNC);
+	fd = open (FC_PORT, O_RDWR | O_NOCTTY | O_SYNC);
 	if (fd < 0) {
-		error_message (WARN,"error %d opening %s: %s", errno, filepath, strerror (errno));
+		error_message (WARN,"error %d opening %s: %s", errno, FC_PORT, strerror (errno));
 		return -1;
 	}
 
@@ -35,31 +43,30 @@ int fc_open(const char *filepath) {
 	return fd;
 }
 
+int lc2_open() {
+	int fd;
+	fd = open (LC2_PORT, O_RDWR | O_NOCTTY | O_SYNC);
+	if (fd < 0) {
+		error_message (WARN,"error %d opening %s: %s", errno, LC2_PORT, strerror (errno));
+		return -1;
+	}
+
+	// Set interface parameters for front controls
+	set_interface_attribs (fd, B19200, 0);  // set speed to 19,200 bps, 8n1 (no parity)
+	set_blocking (fd, 0);                // set no blocking
+	return fd;
+}
+
 int main(int argc, char *argv[])
 {
 	// TODO: move variable declarations to more sensible spots
 	// keep constants up here
-	char const	*front_controls_port = "/dev/ttyUSB0",
-	//char const	*front_controls_port = "/tmp/ttyV0",
-	     		*i2c_device = "/dev/i2c-1",
+	char const	*i2c_device = "/dev/i2c-1",
 			*log_file = "system_log.csv";
-	fc_data		fcData;
-	engine_data	enData;
-	System_CMD db_from_cmd = NO_CMD;
-	char		en_to_cmd = 0;
-	bool		engineRunning = false;
-	int		select_result = 0;
 	int 		fd_front_controls,
-			fd_i2c,
-			length,
-			max_fd = 0;
+			fd_lc2,
+			fd_i2c;
 	FILE		*fd_log;
-	fd_set		readset,
-			writeset;
-	struct timeval	timeout,
-			currtime;
-	char	      	time_buf[100];
-	time_t		my_time;
 	EDL_Bluetooth	dashboard;
 
 
@@ -134,9 +141,17 @@ int main(int argc, char *argv[])
 		printf("extra arguments: %s\n", argv[optind]);
 	}
 
+	// Initialize GPIO output
+	if (!bcm2835_init())
+		return 1;
+	// Set pin mode
+	bcm2835_gpio_fsel(O2_PIN, BCM2835_GPIO_FSEL_OUTP);
 
 	// Open Front controls
-	fd_front_controls = fc_open(front_controls_port);
+	fd_front_controls = fc_open();
+	
+	// Open LC-2
+	fd_lc2 = lc2_open();
 	
 	// Initialize I2C Interface
 	//I2Cdev::initialize();
@@ -156,29 +171,17 @@ int main(int argc, char *argv[])
 	fprintf(fd_log,"\n");
 
 	// Main Loop
+	engine_data	enData;
+	isp2_t		lc2_data = isp2_t();
+	fc_data		fcData;
+	System_CMD	db_from_cmd = NO_CMD;
+	char		en_to_cmd = 0;
+	bool		engineRunning = false;
 	while (!time_to_quit) {
-		// Setup read sets
-		FD_ZERO(&readset);
-		FD_SET(dashboard.getListener(),&readset);
-		max_fd = (max_fd>dashboard.getListener())?max_fd:dashboard.getListener();
-		if (fd_front_controls > 0) {
-			error_message(DEBUG,"Adding front controls to select");
-			FD_SET(fd_front_controls,&readset);
-			max_fd = (max_fd>fd_front_controls)?max_fd:fd_front_controls;
-		}
-		else {
-			fd_front_controls = fc_open(front_controls_port);
-		}
-		if (dashboard.getClient() > 0) {
-			error_message(DEBUG,"Adding dashboard client to select");
-			FD_SET(dashboard.getClient(),&readset);
-			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
-		}
-		timeout.tv_sec = 0;
-		timeout.tv_usec = 0;
-
+		int	length;
 		// Read all inputs
-		
+	
+
 		//----- READ ENGINE DATA I2C -----
 		// TODO: Make class for engine_data just like the other components
 		// Set I2C addr
@@ -221,10 +224,44 @@ int main(int argc, char *argv[])
 			error_message (INFO,"ODO: %d RPM: %d Speed: %f Oil temp: %f BatV: %f",enData.odometer,enData.rpm,enData.speed,enData.temp_oil, enData.batteryVoltage);
 		}
 
+		// Setup read sets
+		int	select_result = 0,
+			max_fd = 0;
+		fd_set	readset,
+			writeset;
+		FD_ZERO(&readset);
+		FD_SET(dashboard.getListener(),&readset);
+		max_fd = (max_fd>dashboard.getListener())?max_fd:dashboard.getListener();
+		if (fd_front_controls > 0) {
+			error_message(DEBUG,"Adding front controls to select");
+			FD_SET(fd_front_controls,&readset);
+			max_fd = (max_fd>fd_front_controls)?max_fd:fd_front_controls;
+		}
+		else {
+			fd_front_controls = fc_open();
+		}
+		if (fd_lc2 > 0) {
+			error_message(DEBUG,"Adding LC-2 to select");
+			FD_SET(fd_lc2,&readset);
+			max_fd = (max_fd>fd_lc2)?max_fd:fd_lc2;
+		}
+		else {
+			fd_lc2 = fc_open();
+		}
+		if (dashboard.getClient() > 0) {
+			error_message(DEBUG,"Adding dashboard client to select");
+			FD_SET(dashboard.getClient(),&readset);
+			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
+		}
+
+		struct timeval	timeout;
+		timeout.tv_sec = 0;
+		timeout.tv_usec = 0;
+		
 		// Do Select()
 		select_result = select(max_fd+1, &readset, &writeset, NULL, &timeout);
 		if (select_result < 0) {
-			error_message (WARN, "error %d Port: %s: %s", errno, front_controls_port, strerror (errno));
+			error_message (WARN, "error %d Port: %s: %s", errno, FC_PORT, strerror (errno));
 		}
 		else if (select_result == 0){
 			// Timeout
@@ -245,17 +282,35 @@ int main(int argc, char *argv[])
 				error_message(DEBUG,"Select read dashboard");
 				db_from_cmd = dashboard.Read();
 			}
+			if (FD_ISSET(fd_lc2,&readset)) {
+				error_message (DEBUG,"Select read LC-2");
+				ISP2::isp2_read(fd_lc2,lc2_data);
+				error_message(ERROR,"Status: %d Lambda: %d\n",lc2_data.status,lc2_data.lambda);
+			}
 		}
 
 		// calculate stuff / make decisions
+		static time_t start_running_time;
+		struct timeval	currtime;
+		time_t my_time;
 		if (enData.rpm > RUNNING_RPM) {
 			engineRunning = true;
 			fcData.serialCmdA |= ENGINE_RUNNING;
+			gettimeofday(&currtime, NULL);
+			my_time = currtime.tv_sec;
+			if (start_running_time == 0 ) {
+				start_running_time = currtime.tv_sec;
+			}
+			if (my_time - start_running_time > LC2_POWER_DELAY) {
+				bcm2835_gpio_write(O2_PIN, HIGH);
+			}
 			error_message (DEBUG,"Running. %s",exCmd_bin(fcData.serialCmdA));
 		}
 		else {
 			engineRunning = false;
 			fcData.serialCmdA &= ~ENGINE_RUNNING;
+			start_running_time = 0;
+			bcm2835_gpio_write(O2_PIN, LOW);
 			error_message (DEBUG,"Not Running. %s",exCmd_bin(fcData.serialCmdA));
 		}
 
@@ -271,8 +326,6 @@ int main(int argc, char *argv[])
 		EDL::AppBuffer::BikeT bikeobj;
 		flatbuffers::FlatBufferBuilder fbb;
 
-		// TODO: get rid of fcData and enData, use BikeT for everything
-		// define bikeobj with main scope
 		bikeobj.rpm = enData.rpm;
 		bikeobj.speed = enData.speed;
 		bikeobj.odometer = enData.odometer;
@@ -281,6 +334,9 @@ int main(int argc, char *argv[])
 		bikeobj.blink_left = fcData.left_on;
 		bikeobj.blink_right = fcData.right_on;
 		bikeobj.trip = enData.trip;
+		if (lc2_data.status == ISP2_NORMAL) {
+			bikeobj.lambda = lc2_data.lambda;
+		}
 		// Serialize into new flatbuffer.
 		fbb.Finish(EDL::AppBuffer::Bike::Pack(fbb, &bikeobj));
 
@@ -325,6 +381,7 @@ int main(int argc, char *argv[])
 		// Log data
 		gettimeofday(&currtime, NULL);
 		my_time = currtime.tv_sec;
+		char time_buf[100];
 		strftime(time_buf, 100, "%D %T", localtime(&my_time));
 		// RPM, Speed, sysvoltage, batVoltage, oil temp, running, Time
 		fprintf(fd_log,"%d,%.2f,%.2f,%.2f,%.2f,%d,%s.%ld\n",enData.rpm,enData.speed,fcData.systemVoltage,enData.batteryVoltage,enData.temp_oil,engineRunning,time_buf,currtime.tv_usec);
@@ -333,6 +390,8 @@ int main(int argc, char *argv[])
 		usleep(50000);
 	}
 
+	bcm2835_gpio_write(O2_PIN, LOW);
+	bcm2835_close();
 	// Return 0 for clean exit
 	return 0;
 }

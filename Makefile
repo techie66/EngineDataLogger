@@ -18,7 +18,7 @@ LINK = g++
 # Turn on optimization and warnings (add -g for debugging with gdb):
 # CPPFLAGS =            # no preprocessor flags
 CC_FLAGS = -O0 -Wall -g
-LIBS = -lbcm2835 -lbluetooth
+LIBS = -lbcm2835 -lbluetooth -lisp2
 #LIBS = -lbcm2835 -lerrno -lfcntl -lstring -ltermios -lunistd
 
 # File names
