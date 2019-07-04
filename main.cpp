@@ -177,6 +177,7 @@ int main(int argc, char *argv[])
 	System_CMD	db_from_cmd = NO_CMD;
 	char		en_to_cmd = 0;
 	bool		engineRunning = false;
+	bool		o2_manual = false;
 	while (!time_to_quit) {
 		int	length;
 		// Read all inputs
@@ -310,13 +311,29 @@ int main(int argc, char *argv[])
 			engineRunning = false;
 			fcData.serialCmdA &= ~ENGINE_RUNNING;
 			start_running_time = 0;
-			bcm2835_gpio_write(O2_PIN, LOW);
+			if (!o2_manual) {
+				bcm2835_gpio_write(O2_PIN, LOW);
+			}
 			error_message (DEBUG,"Not Running. %s",exCmd_bin(fcData.serialCmdA));
 		}
 
 		if(db_from_cmd == TRPRST) {
 			error_message(WARN,"Resetting Trip");
 			en_to_cmd = 'T';
+			db_from_cmd = NO_CMD;
+		}
+
+		if(db_from_cmd == O2MANON) {
+			error_message(INFO,"Manually turning on O2 sensor");
+			bcm2835_gpio_write(O2_PIN, HIGH);
+			o2_manual = true;
+			db_from_cmd = NO_CMD;
+		}
+
+		if(db_from_cmd == O2MANOFF) {
+			error_message(INFO,"Manually turning off O2 sensor");
+			bcm2835_gpio_write(O2_PIN, LOW);
+			o2_manual = false;
 			db_from_cmd = NO_CMD;
 		}
 
@@ -334,7 +351,7 @@ int main(int argc, char *argv[])
 		bikeobj.blink_left = fcData.left_on;
 		bikeobj.blink_right = fcData.right_on;
 		bikeobj.trip = enData.trip;
-		if (lc2_data.status == ISP2_NORMAL) {
+		if (lc2_data.status == ISP2_NORMAL || o2_manual) {
 			bikeobj.lambda = lc2_data.lambda;
 		}
 		// Serialize into new flatbuffer.

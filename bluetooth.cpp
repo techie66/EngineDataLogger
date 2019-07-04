@@ -59,6 +59,12 @@ System_CMD EDL_Bluetooth::Read() {
 		if(strcmp(buf,"TRPRST") == 0) {
 			return TRPRST;
 		}
+		if(strcmp(buf,"O2MANON") == 0) {
+			return O2MANON;
+		}
+		if(strcmp(buf,"O2MANOFF") == 0) {
+			return O2MANOFF;
+		}
 	}
 	else if (bytes_read <= 0 ) {
 		Close();

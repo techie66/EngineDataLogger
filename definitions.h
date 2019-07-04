@@ -53,7 +53,9 @@ struct			engine_data {
 
 enum System_CMD {
 	NO_CMD,
-	TRPRST
+	TRPRST,
+	O2MANON,
+	O2MANOFF
 };
 
 #endif
