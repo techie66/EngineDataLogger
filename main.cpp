@@ -18,12 +18,13 @@
 #include "front_controls.h"
 #include "bluetooth.h"
 #include <bcm2835.h>
+#include <ignitech.h>
 
 #define O2_PIN 26
 #define LC2_PORT "/dev/serial0"
 #define LC2_POWER_DELAY 15 // delay in seconds
 
-#define FC_PORT "/dev/ttyUSB0"
+#define FC_PORT "/dev/front_controls"
 
 volatile sig_atomic_t 	time_to_quit = false;
 // Set default Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
@@ -63,6 +64,7 @@ int main(int argc, char *argv[])
 	// keep constants up here
 	char const	*i2c_device = "/dev/i2c-1",
 			*log_file = "system_log.csv";
+	char		*ignitech_device = 0;
 	int 		fd_front_controls,
 			fd_lc2,
 			fd_i2c;
@@ -85,11 +87,12 @@ int main(int argc, char *argv[])
 			{"verbose",	required_argument,	0, 'v'},
 			{"quiet",	no_argument,		0, 'q'},
 			{"help",	no_argument,		0, 'h'},
+			{"ignitech",	required_argument,	0, 'i'},
 			{0,0,0,0}
 		};
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
-		int opt = getopt_long (argc, argv, ":qv:h",
+		int opt = getopt_long (argc, argv, ":qi:v:h",
 				long_options, &option_index);
 		/* Detect the end of the options. */
 		if (opt == -1)
@@ -119,6 +122,10 @@ int main(int argc, char *argv[])
 				break;
 			} 
 			break;
+		case 'i':
+			// TODO seems pretty dumb to blindly trust user input
+			ignitech_device = strdup(optarg);
+			break;
 		case 'q':
 			LEVEL_DEBUG = NONE;
 			break;
@@ -128,9 +135,10 @@ int main(int argc, char *argv[])
 			printf("Log engine data.\n\n");
 			printf("Options:\n");
 			printf("  -v,  --verbose=LEVEL\t\tSet verbose level.\n");
-			printf("\t\t\t\tLEVEL is one of: NONE,ERROR,WARN,INFO,DEBUG\n");
+			printf("\t\t\t\tLEVEL is one of: NONE,ERROR,WARN,INFO,DEBUG\n\n");
 			printf("  -q\t\t\t\tSame as --verbose = NONE\n");
 			printf("  -h, --help\t\t\tPrint this help message.\n");
+			printf("  -i, --ignitech\t\tDevice path for Ignitech\n");
 			return 0;
 		}
 	}
@@ -169,6 +177,10 @@ int main(int argc, char *argv[])
 		//return -1;
 	}
 	fprintf(fd_log,"\n");
+
+	// Open Ignitech
+	IGNITECH ignition (ignitech_device);
+	int ignition_read_status = -1;
 
 	// Main Loop
 	engine_data	enData;
@@ -223,6 +235,17 @@ int main(int argc, char *argv[])
 			memcpy((void*)&enData.trip,(void*)buffer_ptr,sizeof(enData.trip));
 			buffer_ptr = buffer;
 			error_message (INFO,"ODO: %d RPM: %d Speed: %f Oil temp: %f BatV: %f",enData.odometer,enData.rpm,enData.speed,enData.temp_oil, enData.batteryVoltage);
+		}
+
+		// Read Ignition
+		ignition_read_status = ignition.read_sync();
+		if (ignition_read_status < 0 ) {
+			error_message (ERROR,"Failed to Read Ignitech err:%d - %s",errno,strerror(errno));
+		}
+		else {
+			enData.rpm = ignition.get_rpm();
+			error_message (INFO,"Read Ignitech, RPM: %d, Battery: %d\n", enData.rpm,ignition.get_battery_mV());
+			// TODO read the other stuff
 		}
 
 		// Setup read sets
