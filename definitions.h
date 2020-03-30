@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-const uint16_t		RUNNING_RPM=500;
+const uint16_t		RUNNING_RPM=900;
 const uint8_t		engine_data_addr = 0x04,
       			FC_CMD_SIZE = 8;
 
@@ -46,6 +46,7 @@ struct			engine_data {
 				uint16_t	rpm = 0;
 				float		batteryVoltage = 0.0,
 						temp_oil = 0, // divide by 100 for actual temp
+						pres_oil = 0, // divide by 100 for actual pressure
 						speed = 0; // divide by 100 for actual speed
 				uint32_t	odometer = 0;
 				uint32_t	trip = 0;

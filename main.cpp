@@ -64,7 +64,8 @@ int main(int argc, char *argv[])
 	// keep constants up here
 	char const	*i2c_device = "/dev/i2c-1",
 			*log_file = "system_log.csv";
-	char		*ignitech_device = 0;
+	char		empty[4] = "";
+	char		*ignitech_device = empty;
 	int 		fd_front_controls,
 			fd_lc2,
 			fd_i2c;
@@ -207,7 +208,7 @@ int main(int argc, char *argv[])
 
 		// length is calculated by fixed size of data stream from Sleepy Pi
 		length = sizeof(enData.rpm) + sizeof(enData.speed) + sizeof(enData.temp_oil) + sizeof(enData.batteryVoltage)
-			+ sizeof(enData.odometer);			//<<< Number of bytes to read
+			+ sizeof(enData.odometer) + 2;		//<<< Number of bytes to read
 		
 		unsigned char 	buffer[60] = {0};
 		unsigned char	*buffer_ptr = buffer;
@@ -233,16 +234,19 @@ int main(int argc, char *argv[])
 			memcpy((void*)&enData.odometer,(void*)buffer_ptr,sizeof(enData.odometer));
 			buffer_ptr += sizeof(enData.odometer);
 			memcpy((void*)&enData.trip,(void*)buffer_ptr,sizeof(enData.trip));
+			buffer_ptr += sizeof(enData.trip);
+			memcpy((void*)&tmp,(void*)buffer_ptr,sizeof(tmp));
+			enData.pres_oil = tmp / 100.0;
 			buffer_ptr = buffer;
-			error_message (INFO,"ODO: %d RPM: %d Speed: %f Oil temp: %f BatV: %f",enData.odometer,enData.rpm,enData.speed,enData.temp_oil, enData.batteryVoltage);
+			error_message (INFO,"ODO: %d RPM: %d Speed: %f Oil temp: %f pres: %f BatV: %f",enData.odometer,enData.rpm,enData.speed,enData.temp_oil, enData.pres_oil, enData.batteryVoltage);
 		}
 
 		// Read Ignition
-		ignition_read_status = ignition.read_sync();
-		if (ignition_read_status < 0 ) {
+		ignition_read_status = ignition.read_async();
+		if (ignition_read_status < IGN_SUC ) {
 			error_message (ERROR,"Failed to Read Ignitech err:%d - %s",errno,strerror(errno));
 		}
-		else {
+		else if (ignition_read_status == IGN_SUC) {
 			enData.rpm = ignition.get_rpm();
 			error_message (INFO,"Read Ignitech, RPM: %d, Battery: %d\n", enData.rpm,ignition.get_battery_mV());
 			// TODO read the other stuff
@@ -423,8 +427,8 @@ int main(int argc, char *argv[])
 		my_time = currtime.tv_sec;
 		char time_buf[100];
 		strftime(time_buf, 100, "%D %T", localtime(&my_time));
-		// RPM, Speed, sysvoltage, batVoltage, oil temp, running, Time
-		fprintf(fd_log,"%d,%.2f,%.2f,%.2f,%.2f,%d,%s.%ld\n",enData.rpm,enData.speed,fcData.systemVoltage,enData.batteryVoltage,enData.temp_oil,engineRunning,time_buf,currtime.tv_usec);
+		// RPM, Speed, sysvoltage, batVoltage, oil temp, oil pressure, running, Time, lambda, IAP(kpa)
+		fprintf(fd_log,"%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%s.%ld,%.2f,%d\n",enData.rpm,enData.speed,fcData.systemVoltage,enData.batteryVoltage,enData.temp_oil,enData.pres_oil,engineRunning,time_buf,currtime.tv_usec,lc2_data.lambda/1000.0, ignition.get_map_kpa());
 		fflush(fd_log);
 
 		usleep(50000);
