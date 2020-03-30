@@ -428,7 +428,7 @@ int main(int argc, char *argv[])
 		char time_buf[100];
 		strftime(time_buf, 100, "%D %T", localtime(&my_time));
 		// RPM, Speed, sysvoltage, batVoltage, oil temp, oil pressure, running, Time, lambda, IAP(kpa)
-		fprintf(fd_log,"%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%s.%ld,%.2f,%d\n",enData.rpm,enData.speed,fcData.systemVoltage,enData.batteryVoltage,enData.temp_oil,enData.pres_oil,engineRunning,time_buf,currtime.tv_usec,lc2_data.lambda/1000.0, ignition.get_map_kpa());
+		fprintf(fd_log,"%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%s.%06ld,%.2f,%d\n",enData.rpm,enData.speed,fcData.systemVoltage,enData.batteryVoltage,enData.temp_oil,enData.pres_oil,engineRunning,time_buf,currtime.tv_usec,lc2_data.lambda/1000.0, ignition.get_map_kpa());
 		fflush(fd_log);
 
 		usleep(50000);
