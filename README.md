@@ -3,10 +3,10 @@ This program is designed to work with custom hardware to act as data logger and 
 It is written to run on a raspberry pi zero W and communicate with arduinos and other sensors to control and record various aspects of the motorcycle's operation.
 
 ## Componenents
-- * [EngineDataLogger(EDL)] (https://github.com/techie66/EngineDataLogger)
-- [EDL - Dashboard] (https://github.com/techie66/EngineDataLogger---Dashboard)
-- [EDL - Front Controls] (https://github.com/techie66/EngineDataLogger-FrontControls)
-- [EDL - EngineData] (https://github.com/techie66/EngineDataLogger-EngineData)
+- ->[EngineDataLogger(EDL)](https://github.com/techie66/EngineDataLogger)
+- [EDL - Dashboard](https://github.com/techie66/EngineDataLogger---Dashboard)
+- [EDL - Front Controls](https://github.com/techie66/EngineDataLogger-FrontControls)
+- [EDL - EngineData](https://github.com/techie66/EngineDataLogger-EngineData)
 
 # Dependencies
 ## Included:<br>
@@ -23,4 +23,3 @@ It is written to run on a raspberry pi zero W and communicate with arduinos and 
 
 # License
 EngineDataLogger is licensed under the GNU GPLv2. Dependencies are licensed under their respective licenses. See LICENSE for full text of GPLv2.
-
