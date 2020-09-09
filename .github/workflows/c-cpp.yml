@@ -12,6 +12,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Install libIgnitech
+      run: |
+        git clone https://github.com/techie66/libIgnitech.git
+        cd libIgnitech
+        ./autogen.sh
+        ./configure
+        make
+        sudo make install
+        cd ..
     - name: Install libISP2
       run: |
         git clone https://github.com/techie66/libISP2.git
@@ -20,6 +29,7 @@ jobs:
         ./configure
         make
         sudo make install
+        cd ..
     - name: Install Bluetooth headers
       run: sudo apt-get install libbluetooth-dev
     - name: Install Flatbuffers
