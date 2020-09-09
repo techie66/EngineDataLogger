@@ -31,6 +31,10 @@ OBJECTS = $(SOURCES:.cpp=.o)
 #===========================================
 all:data_logger
 
+check:
+
+distcheck:
+
 # Main target
 $(EXEC): $(OBJECTS)
 	$(LINK) $(OBJECTS) $(LIBS) -o $(EXEC)
