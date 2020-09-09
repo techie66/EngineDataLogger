@@ -20,7 +20,7 @@ jobs:
         cd flatbuffers
         cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
         make
-        make install
+        sudo make install
         cd ../EngineDataLogger
     - name: make
       run: make
