@@ -12,6 +12,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install libISP2
+        run: |
+          git clone https://github.com/techie66/libISP2.git
+          cd libISP2
+          ./autogen.sh
+          ./configure
+          make
+          sudo make install
     - name: Install Bluetooth headers
       run: sudo apt-get install libbluetooth-dev
     - name: Install Flatbuffers
