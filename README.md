@@ -22,4 +22,4 @@ It is written to run on a raspberry pi zero W and communicate with arduinos and 
 	- https://github.com/techie66/libISP2
 
 # License
-EngineDataLogger is licensed under the GNU GPLv2. Dependencies are licensed under their respective licenses. See LICENSE for full text of GPLv2.
+EngineDataLogger is licensed under the GNU GPLv3. Dependencies are licensed under their respective licenses. See LICENSE for full text of GPLv3.
