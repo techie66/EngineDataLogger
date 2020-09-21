@@ -1,8 +1,55 @@
 data_logger
-*.o
-.depend
 input.txt
 output.txt
 system_log.csv
 example_serial.txt
-simple_bluetooth
+
+# Vim swap files
+.*.swp
+*~
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+
+# Autotools/libtool/gnumake Stuff
+Makefile
+config.log
+config.status
+stamp-h1
+.deps
+.libs
+config.h
+libtool
+autom4te.cache
+.depend
+.dirstamp
