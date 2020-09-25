@@ -87,7 +87,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = data_logger$(EXEEXT)
+bin_PROGRAMS = enginedatalogger$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -106,11 +106,12 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(myconfdir)" \
 	"$(DESTDIR)$(systemdsystemunitdir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_data_logger_OBJECTS = src/main.$(OBJEXT) src/bluetooth.$(OBJEXT) \
-	src/serial.$(OBJEXT) src/I2Cdev.$(OBJEXT) \
-	src/error_handling.$(OBJEXT) src/front_controls.$(OBJEXT)
-data_logger_OBJECTS = $(am_data_logger_OBJECTS)
-data_logger_LDADD = $(LDADD)
+am_enginedatalogger_OBJECTS = src/main.$(OBJEXT) \
+	src/bluetooth.$(OBJEXT) src/serial.$(OBJEXT) \
+	src/I2Cdev.$(OBJEXT) src/error_handling.$(OBJEXT) \
+	src/front_controls.$(OBJEXT) src/cmdline.$(OBJEXT)
+enginedatalogger_OBJECTS = $(am_enginedatalogger_OBJECTS)
+enginedatalogger_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -127,10 +128,23 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = src/$(DEPDIR)/I2Cdev.Po \
-	src/$(DEPDIR)/bluetooth.Po src/$(DEPDIR)/error_handling.Po \
+	src/$(DEPDIR)/bluetooth.Po src/$(DEPDIR)/cmdline.Po \
+	src/$(DEPDIR)/error_handling.Po \
 	src/$(DEPDIR)/front_controls.Po src/$(DEPDIR)/main.Po \
 	src/$(DEPDIR)/serial.Po
 am__mv = mv -f
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_@AM_V@)
+am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
+am__v_CC_0 = @echo "  CC      " $@;
+am__v_CC_1 = 
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+am__v_CCLD_0 = @echo "  CCLD    " $@;
+am__v_CCLD_1 = 
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 AM_V_CXX = $(am__v_CXX_@AM_V@)
@@ -144,20 +158,8 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-AM_V_CC = $(am__v_CC_@AM_V@)
-am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
-am__v_CC_0 = @echo "  CC      " $@;
-am__v_CC_1 = 
-CCLD = $(CC)
-LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_CCLD = $(am__v_CCLD_@AM_V@)
-am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
-am__v_CCLD_0 = @echo "  CCLD    " $@;
-am__v_CCLD_1 = 
-SOURCES = $(data_logger_SOURCES)
-DIST_SOURCES = $(data_logger_SOURCES)
+SOURCES = $(enginedatalogger_SOURCES)
+DIST_SOURCES = $(enginedatalogger_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -190,7 +192,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__dist_systemdsystemunit_DATA_DIST = data/data_logger.service
+am__dist_systemdsystemunit_DATA_DIST =  \
+	$(etcdir)/enginedatalogger.service
 DATA = $(dist_myconf_DATA) $(dist_systemdsystemunit_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) \
 	$(LISP)config.h.in
@@ -330,36 +333,44 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-data_logger_SOURCES = \
+etcdir = $(srcdir)/etc
+enginedatalogger_SOURCES = \
 		    src/main.cpp \
 		    src/bluetooth.cpp \
 		    src/serial.cpp \
 		    src/I2Cdev.cpp \
 		    src/error_handling.cpp \
 		    src/front_controls.cpp \
+		    src/cmdline.c \
 		    src/I2Cdev.h \
 		    src/bluetooth.h \
 		    src/serial.h \
 		    src/error_handling.h \
 		    src/front_controls.h \
 		    src/cb1100f-app_generated.h \
-		    src/definitions.h
+		    src/definitions.h \
+		    src/cmdline.h
 
 AM_DISTCHECK_CONFIGURE_FLAGS = \
   --with-systemdsystemunitdir=$$dc_install_base/$(systemdsystemunitdir)
 
 @HAVE_SYSTEMD_TRUE@dist_systemdsystemunit_DATA = \
-@HAVE_SYSTEMD_TRUE@			 data/data_logger.service
+@HAVE_SYSTEMD_TRUE@			 $(etcdir)/enginedatalogger.service
 
-myconfdir = $(sysconfdir)/data_logger
+myconfdir = $(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
-		    etc/data_logger.conf
+		    $(etcdir)/enginedatalogger.conf
+
+edit = sed \
+             -e 's|@datadir[@]|$(pkgdatadir)|g' \
+             -e 's|@myconfdir[@]|$(myconfdir)|g' \
+             -e 's|@prefix[@]|$(prefix)|g'
 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .cpp .o .obj
+.SUFFIXES: .c .cpp .o .obj
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -467,10 +478,12 @@ src/error_handling.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/front_controls.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/cmdline.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 
-data_logger$(EXEEXT): $(data_logger_OBJECTS) $(data_logger_DEPENDENCIES) $(EXTRA_data_logger_DEPENDENCIES) 
-	@rm -f data_logger$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(data_logger_OBJECTS) $(data_logger_LDADD) $(LIBS)
+enginedatalogger$(EXEEXT): $(enginedatalogger_OBJECTS) $(enginedatalogger_DEPENDENCIES) $(EXTRA_enginedatalogger_DEPENDENCIES) 
+	@rm -f enginedatalogger$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(enginedatalogger_OBJECTS) $(enginedatalogger_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -481,6 +494,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/I2Cdev.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/bluetooth.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cmdline.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/error_handling.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/front_controls.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@ # am--include-marker
@@ -491,6 +505,22 @@ $(am__depfiles_remade):
 	@echo '# dummy' >$@-t && $(am__mv) $@-t $@
 
 am--depfiles: $(am__depfiles_remade)
+
+.c.o:
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ $<
+
+.c.obj:
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -823,6 +853,7 @@ distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f src/$(DEPDIR)/I2Cdev.Po
 	-rm -f src/$(DEPDIR)/bluetooth.Po
+	-rm -f src/$(DEPDIR)/cmdline.Po
 	-rm -f src/$(DEPDIR)/error_handling.Po
 	-rm -f src/$(DEPDIR)/front_controls.Po
 	-rm -f src/$(DEPDIR)/main.Po
@@ -878,6 +909,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f src/$(DEPDIR)/I2Cdev.Po
 	-rm -f src/$(DEPDIR)/bluetooth.Po
+	-rm -f src/$(DEPDIR)/cmdline.Po
 	-rm -f src/$(DEPDIR)/error_handling.Po
 	-rm -f src/$(DEPDIR)/front_controls.Po
 	-rm -f src/$(DEPDIR)/main.Po
@@ -925,6 +957,15 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_myconfDATA \
 
 @HAVE_SYSTEMD_TRUE@install-data-hook:
 @HAVE_SYSTEMD_TRUE@	sudo systemctl enable data_logger || true
+
+$(etcdir)/enginedatalogger.conf $(etcdir)/enginedatalogger.service: Makefile
+	rm -f $@ $@.tmp
+	$(edit) '$@.in' >$@.tmp
+	chmod a-w $@.tmp
+	mv $@.tmp $@
+
+$(etcdir)/enginedatalogger.conf: $(etcdir)/enginedatalogger.conf.in
+$(etcdir)/enginedatalogger.service: $(etcdir)/enginedatalogger.service.in
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

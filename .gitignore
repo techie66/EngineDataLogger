@@ -1,4 +1,4 @@
-data_logger
+enginedatalogger
 input.txt
 output.txt
 system_log.csv
@@ -15,6 +15,7 @@ example_serial.txt
 *.lo
 *.o
 *.obj
+.Tpo
 
 # Precompiled Headers
 *.gch
@@ -53,3 +54,7 @@ libtool
 autom4te.cache
 .depend
 .dirstamp
+
+# generated config files
+etc/enginedatalogger.conf
+etc/enginedatalogger.service

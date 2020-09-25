@@ -1,0 +1,4 @@
+# Placeholder Config file
+verbose = WARN
+ignitech = /dev/ignitech
+#prefix = @prefix@
