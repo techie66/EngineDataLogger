@@ -30,24 +30,26 @@
 #include <sys/time.h>
 #include <getopt.h>
 #include <isp2.h>
+#include <bcm2835.h>
+#include <ignitech.h>
+
 #include "I2Cdev.h"
 #include "serial.h"
 #include "definitions.h"
 #include "error_handling.h"
 #include "front_controls.h"
 #include "bluetooth.h"
-#include <bcm2835.h>
-#include <ignitech.h>
+#include "cmdline.h"
 
+// TODO option-ify
 #define O2_PIN 26
 #define LC2_PORT "/dev/serial0"
 #define LC2_POWER_DELAY 15 // delay in seconds
-
 #define FC_PORT "/dev/front_controls"
 
 volatile sig_atomic_t 	time_to_quit = false;
 // Set default Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
-e_lvl			LEVEL_DEBUG = WARN;
+e_lvl			LEVEL_DEBUG = ERROR;
 
 int fc_open() {
 	int fd;
@@ -81,93 +83,62 @@ int main(int argc, char *argv[])
 {
 	// TODO: move variable declarations to more sensible spots
 	// keep constants up here
-	char const	*i2c_device = "/dev/i2c-1",
-			*log_file = "system_log.csv";
-	char		empty[4] = "";
-	char		*ignitech_device = empty;
+	// TODO option-ify
+	char const	*i2c_device = "/dev/i2c-1";
 	int 		fd_front_controls,
 			fd_lc2,
 			fd_i2c;
 	FILE		*fd_log;
 	EDL_Bluetooth	dashboard;
 
+	gengetopt_args_info args_info;
+	struct cmdline_parser_params *params;
+
+	/* initialize the parameters structure */
+	params = cmdline_parser_params_create();
+
+	/* let's call our cmdline parser */
+	if (cmdline_parser (argc, argv, &args_info) != 0)
+		exit(1) ;
+
+	if ( args_info.config_file_given ) {
+		// call config file parser
+		params->initialize = 0;
+		if (cmdline_parser_config_file
+		(args_info.config_file_arg, &args_info, params) != 0)
+			exit(1);
+	}
+
+	if ( args_info.v_given )
+		LEVEL_DEBUG = e_lvl(args_info.v_given + 1);
+	if ( args_info.verbose_given )
+		LEVEL_DEBUG = e_lvl(args_info.verbose_arg);
+	if ( args_info.quiet_given )
+		LEVEL_DEBUG = NONE;
+
+	char const *ignitech_device = NULL;
+	IGNITECH* ignition;
+	int ignition_read_status = -1;
+	if ( args_info.ignitech_given ) {
+		ignitech_device = args_info.ignitech_arg;
+		ignition = new IGNITECH(ignitech_device);
+	}
+
+	char const *log_file = NULL;
+	if ( args_info.output_file_given ) {
+		log_file = args_info.output_file_arg;
+		// Open log file
+		if ((fd_log = fopen(log_file,"a")) < 0) {
+			error_message (ERROR,"Failed to open the log file err:%d - %s",errno,strerror(errno));
+			//return -1;
+		}
+		fprintf(fd_log,"\n");
+	}
+
+	// End processing options/config
 
 	// register signal SIGINT and signal handler  
 	signal(SIGINT, signalHandler);  
-
-	// Process options
-	// put ':' in the starting of the
-	// opt string so that program can
-	// distinguish between '?' and ':'
-	while(true)
-	{
-		static struct option long_options[] =
-		{
-			/* These options don't set a flag. */
-			{"verbose",	required_argument,	0, 'v'},
-			{"quiet",	no_argument,		0, 'q'},
-			{"help",	no_argument,		0, 'h'},
-			{"ignitech",	required_argument,	0, 'i'},
-			{0,0,0,0}
-		};
-		/* getopt_long stores the option index here. */
-		int option_index = 0;
-		int opt = getopt_long (argc, argv, ":qi:v:h",
-				long_options, &option_index);
-		/* Detect the end of the options. */
-		if (opt == -1)
-			break;
-		switch(opt)
-		{
-		case 'v':
-			printf("Option Debug: %s\n", optarg);
-			if (strcmp("DEBUG",optarg)==0) {
-				LEVEL_DEBUG = DEBUG;
-				break;
-			}
-			else if (strcmp("INFO",optarg)==0) {
-				LEVEL_DEBUG = INFO;
-				break;
-			}
-			else if (strcmp("WARN",optarg)==0) {
-				LEVEL_DEBUG = WARN;
-				break;
-			}
-			else if (strcmp("ERROR",optarg)==0) {
-				LEVEL_DEBUG = ERROR;
-				break;
-			}
-			else if (strcmp("NONE",optarg)==0) {
-				LEVEL_DEBUG = NONE;
-				break;
-			} 
-			break;
-		case 'i':
-			// TODO seems pretty dumb to blindly trust user input
-			ignitech_device = strdup(optarg);
-			break;
-		case 'q':
-			LEVEL_DEBUG = NONE;
-			break;
-		case '?':
-		case 'h':
-			printf("USAGE: data_logger [OPTIONS]\n");
-			printf("Log engine data.\n\n");
-			printf("Options:\n");
-			printf("  -v,  --verbose=LEVEL\t\tSet verbose level.\n");
-			printf("\t\t\t\tLEVEL is one of: NONE,ERROR,WARN,INFO,DEBUG\n\n");
-			printf("  -q\t\t\t\tSame as --verbose = NONE\n");
-			printf("  -h, --help\t\t\tPrint this help message.\n");
-			printf("  -i, --ignitech\t\tDevice path for Ignitech\n");
-			return 0;
-		}
-	}
-
-	// optind is for the extra arguments
-	// which are not parsed
-	for(; optind < argc; optind++){
-		printf("extra arguments: %s\n", argv[optind]);
-	}
 
 	// Initialize GPIO output
 	if (!bcm2835_init())
@@ -184,23 +155,12 @@ int main(int argc, char *argv[])
 	// Initialize I2C Interface
 	//I2Cdev::initialize();
 	//----- OPEN THE I2C BUS -----
-	if ((fd_i2c = open(i2c_device, O_RDWR)) < 0)
-	{
+	if ((fd_i2c = open(i2c_device, O_RDWR)) < 0) {
 		//ERROR HANDLING: you can check errno to see what went wrong
 		error_message (ERROR,"Failed to open the i2c bus. err:%d - %s",errno,strerror(errno));
 		//return -1;
 	}
 	
-	// Open log file
-	if ((fd_log = fopen(log_file,"a")) < 0) {
-		error_message (ERROR,"Failed to open the log file err:%d - %s",errno,strerror(errno));
-		//return -1;
-	}
-	fprintf(fd_log,"\n");
-
-	// Open Ignitech
-	IGNITECH ignition (ignitech_device);
-	int ignition_read_status = -1;
 
 	// Main Loop
 	engine_data	enData;
@@ -218,8 +178,7 @@ int main(int argc, char *argv[])
 		//----- READ ENGINE DATA I2C -----
 		// TODO: Make class for engine_data just like the other components
 		// Set I2C addr
-		if (ioctl(fd_i2c, I2C_SLAVE, engine_data_addr) < 0)
-		{
+		if (ioctl(fd_i2c, I2C_SLAVE, engine_data_addr) < 0) {
 			//ERROR HANDLING; you can check errno to see what went wrong
 			error_message (ERROR,"Failed to acquire bus access and/or talk to slave. err:%d - %s",errno,strerror(errno));
 			//return -1;
@@ -231,13 +190,11 @@ int main(int argc, char *argv[])
 		
 		unsigned char 	buffer[60] = {0};
 		unsigned char	*buffer_ptr = buffer;
-		if (read(fd_i2c, buffer, length) != length)		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)KE
-		{
+		if (read(fd_i2c, buffer, length) != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)KE
 			//ERROR HANDLING: i2c transaction failed
 			error_message (WARN,"Failed to read from the i2c bus.");
 		}
-		else
-		{
+		else {
 			// Good I2C read, Sort out the various packed variables
 			memcpy((void*)&enData.rpm,(void*)buffer_ptr,sizeof(enData.rpm));
 			buffer_ptr += sizeof(enData.rpm);
@@ -259,16 +216,16 @@ int main(int argc, char *argv[])
 			buffer_ptr = buffer;
 			error_message (INFO,"ODO: %d RPM: %d Speed: %f Oil temp: %f pres: %f BatV: %f",enData.odometer,enData.rpm,enData.speed,enData.temp_oil, enData.pres_oil, enData.batteryVoltage);
 		}
-
-		// Read Ignition
-		ignition_read_status = ignition.read_async();
-		if (ignition_read_status < IGN_SUC ) {
-			error_message (ERROR,"Failed to Read Ignitech err:%d - %s",errno,strerror(errno));
-		}
-		else if (ignition_read_status == IGN_SUC) {
-			enData.rpm = ignition.get_rpm();
-			error_message (INFO,"Read Ignitech, RPM: %d, Battery: %d\n", enData.rpm,ignition.get_battery_mV());
-			// TODO read the other stuff
+		if ( args_info.ignitech_given ) {
+			// Read Ignition
+			ignition_read_status = ignition->read_async();
+			if (ignition_read_status < IGN_SUC ) {
+				error_message (ERROR,"Failed to Read Ignitech err:%d - %s",errno,strerror(errno));
+			}
+			else if (ignition_read_status == IGN_SUC) {
+				error_message (INFO,"Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(),ignition->get_battery_mV());
+				// TODO read the other stuff
+			}
 		}
 
 		// Setup read sets
@@ -336,11 +293,24 @@ int main(int argc, char *argv[])
 			}
 		}
 
+		// Create Flatbuffer
+		// Sent to dashboard and 
+		// TODO: data logfile
+		EDL::AppBuffer::BikeT bikeobj;
+		flatbuffers::FlatBufferBuilder fbb;
+
+		bikeobj.rpm = enData.rpm;
+		if ( args_info.ignitech_given ) {
+			bikeobj.alt_rpm = bikeobj.rpm;
+			bikeobj.rpm = ignition->get_rpm();
+			bikeobj.map_kpa = ignition->get_map_kpa();
+		}
+		
 		// calculate stuff / make decisions
 		static time_t start_running_time;
 		struct timeval	currtime;
 		time_t my_time;
-		if (enData.rpm > RUNNING_RPM) {
+		if (bikeobj.rpm > RUNNING_RPM) {
 			engineRunning = true;
 			fcData.serialCmdA |= ENGINE_RUNNING;
 			gettimeofday(&currtime, NULL);
@@ -353,7 +323,7 @@ int main(int argc, char *argv[])
 			}
 			error_message (DEBUG,"Running. %s",exCmd_bin(fcData.serialCmdA));
 		}
-		else {
+		else { // TODO change to less than ENGINE OFF RPM
 			engineRunning = false;
 			fcData.serialCmdA &= ~ENGINE_RUNNING;
 			start_running_time = 0;
@@ -383,17 +353,12 @@ int main(int argc, char *argv[])
 			db_from_cmd = NO_CMD;
 		}
 
-		// Create Flatbuffer
-		// Sent to dashboard and 
-		// TODO: data logfile
-		EDL::AppBuffer::BikeT bikeobj;
-		flatbuffers::FlatBufferBuilder fbb;
-
-		bikeobj.rpm = enData.rpm;
 		bikeobj.speed = enData.speed;
 		bikeobj.odometer = enData.odometer;
 		bikeobj.oil_temp = enData.temp_oil;
+		bikeobj.oil_pres = enData.pres_oil;
 		bikeobj.batteryvoltage = enData.batteryVoltage;
+		bikeobj.systemvoltage = fcData.systemVoltage;
 		bikeobj.blink_left = fcData.left_on;
 		bikeobj.blink_right = fcData.right_on;
 		bikeobj.trip = enData.trip;
@@ -402,7 +367,6 @@ int main(int argc, char *argv[])
 		}
 		// Serialize into new flatbuffer.
 		fbb.Finish(EDL::AppBuffer::Bike::Pack(fbb, &bikeobj));
-
 		// Send commands
 		FD_ZERO(&writeset);
 		max_fd = (max_fd>dashboard.getListener())?max_fd:dashboard.getListener();
@@ -447,8 +411,24 @@ int main(int argc, char *argv[])
 		char time_buf[100];
 		strftime(time_buf, 100, "%D %T", localtime(&my_time));
 		// RPM, Speed, sysvoltage, batVoltage, oil temp, oil pressure, running, Time, lambda, IAP(kpa)
-		fprintf(fd_log,"%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%s.%06ld,%.2f,%d\n",enData.rpm,enData.speed,fcData.systemVoltage,enData.batteryVoltage,enData.temp_oil,enData.pres_oil,engineRunning,time_buf,currtime.tv_usec,lc2_data.lambda/1000.0, ignition.get_map_kpa());
-		fflush(fd_log);
+
+		if ( args_info.output_file_given ) {
+			// TODO remove flatbuffers dependency for the log
+			fprintf(fd_log,"%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%s.%06ld,%.2f,%d\n",
+				bikeobj.rpm,
+				bikeobj.speed,
+				bikeobj.systemvoltage,
+				bikeobj.batteryvoltage,
+				bikeobj.oil_temp,
+				bikeobj.oil_pres,
+				engineRunning,
+				time_buf,
+				currtime.tv_usec,
+				bikeobj.lambda/1000.0, 
+				bikeobj.map_kpa
+			);
+			fflush(fd_log);
+		}
 
 		usleep(50000);
 	}

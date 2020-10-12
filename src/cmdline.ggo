@@ -1,0 +1,19 @@
+package "EngineDataLogger"
+version "v0.1.0"
+args "--func-name=cmdline_parser --conf-parser"
+
+
+option "config-file"	c "Configuration file." string typestr="filename" optional
+option "output-file"	o "Output file for CSV logging" string typestr="filename" default="/dev/null" optional
+option "v"		v "Verbose output. Specify multiple times for increasing verbosity." optional multiple(1-3)
+option "verbose"	- "Set level of verbosity explicitly. \n(Overrides -v)\n" enum typestr="VERBOSITY" values="NONE","ERROR","WARN","INFO","DEBUG" default="ERROR" optional
+option "quiet"		q "Suppress output. Same as --verbose=NONE (Overrides both -v and --verbose)" optional
+
+section "Device Interfaces"
+
+option "front-controls"	f "Front controls device" string typestr="device" optional
+option "ignitech"	i "Ignitech ignition device" string typestr="device" optional 
+option "lc2"		l "Innovate LC-2 device" string typestr="device" optional
+option "lc2-delay"	- "Delay before powering up LC-2." int typestr="seconds" default="15" dependon="lc2" optional
+option "lc2-pin"	- "GPIO pin that controls power for LC-2" int default="26" dependon="lc2" optional
+option "sleepy"	s	 "I2C device to communicate with Sleepy Pi." string typestr="device" optional

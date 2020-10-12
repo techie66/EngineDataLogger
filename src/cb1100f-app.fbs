@@ -31,6 +31,9 @@ table Bike {
     blink_left:bool;
     blink_right:bool;
     lambda:ushort;
+    map_kpa:int;
+    oil_pres:float;
+    alt_rpm:int;
 }
 
 root_type Bike;

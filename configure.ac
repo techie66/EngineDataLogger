@@ -12,11 +12,22 @@ AM_INIT_AUTOMAKE(1.9 subdir-objects)
 AC_PROG_CXX
 AC_PROG_CC
 
-# Checks for libraries.
-AC_CHECK_LIB([bcm2835], [bcm2835_i2c_write_read_rs],,[
-	      ./install-deps.sh bcm2835
-	      LIBS="$LIBS -lbcm2835"
-	      ])
+# Checks for libraries. Based on enabled features.
+
+AC_ARG_ENABLE([i2c],
+	      [AS_HELP_STRING([--disable-i2c],
+			      [disable support for I2C which is needed for communicating with a SleepyPi as part of the "EngineData" module])],
+			      [],
+			      [enable_i2c=yes])
+AS_IF([test "x$enable_i2c" != xno],
+	[AC_CHECK_LIB([bcm2835], [bcm2835_i2c_write_read_rs],,[
+		      ./install-deps.sh bcm2835
+		      LIBS="$LIBS -lbcm2835"
+		      ])
+	AC_DEFINE([FEAT_I2C],[1],[Support talking to i2c devices])
+	])
+
+
 AC_CHECK_LIB([bluetooth], [ba2str],,[
 	      ./install-deps.sh bluetooth
 	      LIBS="-lbluetooth $LIBS"
