@@ -34,6 +34,7 @@ table Bike {
     map_kpa:int;
     oil_pres:float;
     alt_rpm:int;
+	gear:string;
 }
 
 root_type Bike;

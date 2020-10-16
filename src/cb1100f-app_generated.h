@@ -10,7 +10,6 @@ namespace EDL {
 namespace AppBuffer {
 
 struct Bike;
-struct BikeBuilder;
 struct BikeT;
 
 struct BikeT : public flatbuffers::NativeTable {
@@ -28,6 +27,7 @@ struct BikeT : public flatbuffers::NativeTable {
   int32_t map_kpa;
   float oil_pres;
   int32_t alt_rpm;
+  std::string gear;
   BikeT()
       : rpm(0),
         speed(0.0f),
@@ -47,7 +47,6 @@ struct BikeT : public flatbuffers::NativeTable {
 
 struct Bike FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef BikeT NativeTableType;
-  typedef BikeBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RPM = 4,
     VT_SPEED = 6,
@@ -61,7 +60,8 @@ struct Bike FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_LAMBDA = 22,
     VT_MAP_KPA = 24,
     VT_OIL_PRES = 26,
-    VT_ALT_RPM = 28
+    VT_ALT_RPM = 28,
+    VT_GEAR = 30
   };
   int32_t rpm() const {
     return GetField<int32_t>(VT_RPM, 0);
@@ -102,6 +102,9 @@ struct Bike FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   int32_t alt_rpm() const {
     return GetField<int32_t>(VT_ALT_RPM, 0);
   }
+  const flatbuffers::String *gear() const {
+    return GetPointer<const flatbuffers::String *>(VT_GEAR);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int32_t>(verifier, VT_RPM) &&
@@ -117,6 +120,8 @@ struct Bike FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<int32_t>(verifier, VT_MAP_KPA) &&
            VerifyField<float>(verifier, VT_OIL_PRES) &&
            VerifyField<int32_t>(verifier, VT_ALT_RPM) &&
+           VerifyOffset(verifier, VT_GEAR) &&
+           verifier.VerifyString(gear()) &&
            verifier.EndTable();
   }
   BikeT *UnPack(const flatbuffers::resolver_function_t *_resolver = nullptr) const;
@@ -125,7 +130,6 @@ struct Bike FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
 };
 
 struct BikeBuilder {
-  typedef Bike Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
   void add_rpm(int32_t rpm) {
@@ -167,10 +171,14 @@ struct BikeBuilder {
   void add_alt_rpm(int32_t alt_rpm) {
     fbb_.AddElement<int32_t>(Bike::VT_ALT_RPM, alt_rpm, 0);
   }
+  void add_gear(flatbuffers::Offset<flatbuffers::String> gear) {
+    fbb_.AddOffset(Bike::VT_GEAR, gear);
+  }
   explicit BikeBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
+  BikeBuilder &operator=(const BikeBuilder &);
   flatbuffers::Offset<Bike> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<Bike>(end);
@@ -192,8 +200,10 @@ inline flatbuffers::Offset<Bike> CreateBike(
     uint16_t lambda = 0,
     int32_t map_kpa = 0,
     float oil_pres = 0.0f,
-    int32_t alt_rpm = 0) {
+    int32_t alt_rpm = 0,
+    flatbuffers::Offset<flatbuffers::String> gear = 0) {
   BikeBuilder builder_(_fbb);
+  builder_.add_gear(gear);
   builder_.add_alt_rpm(alt_rpm);
   builder_.add_oil_pres(oil_pres);
   builder_.add_map_kpa(map_kpa);
@@ -210,30 +220,66 @@ inline flatbuffers::Offset<Bike> CreateBike(
   return builder_.Finish();
 }
 
+inline flatbuffers::Offset<Bike> CreateBikeDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t rpm = 0,
+    float speed = 0.0f,
+    uint32_t odometer = 0,
+    uint32_t trip = 0,
+    float systemvoltage = 0.0f,
+    float batteryvoltage = 0.0f,
+    float oil_temp = 0.0f,
+    bool blink_left = false,
+    bool blink_right = false,
+    uint16_t lambda = 0,
+    int32_t map_kpa = 0,
+    float oil_pres = 0.0f,
+    int32_t alt_rpm = 0,
+    const char *gear = nullptr) {
+  auto gear__ = gear ? _fbb.CreateString(gear) : 0;
+  return EDL::AppBuffer::CreateBike(
+      _fbb,
+      rpm,
+      speed,
+      odometer,
+      trip,
+      systemvoltage,
+      batteryvoltage,
+      oil_temp,
+      blink_left,
+      blink_right,
+      lambda,
+      map_kpa,
+      oil_pres,
+      alt_rpm,
+      gear__);
+}
+
 flatbuffers::Offset<Bike> CreateBike(flatbuffers::FlatBufferBuilder &_fbb, const BikeT *_o, const flatbuffers::rehasher_function_t *_rehasher = nullptr);
 
 inline BikeT *Bike::UnPack(const flatbuffers::resolver_function_t *_resolver) const {
-  std::unique_ptr<EDL::AppBuffer::BikeT> _o = std::unique_ptr<EDL::AppBuffer::BikeT>(new BikeT());
-  UnPackTo(_o.get(), _resolver);
-  return _o.release();
+  auto _o = new BikeT();
+  UnPackTo(_o, _resolver);
+  return _o;
 }
 
 inline void Bike::UnPackTo(BikeT *_o, const flatbuffers::resolver_function_t *_resolver) const {
   (void)_o;
   (void)_resolver;
-  { auto _e = rpm(); _o->rpm = _e; }
-  { auto _e = speed(); _o->speed = _e; }
-  { auto _e = odometer(); _o->odometer = _e; }
-  { auto _e = trip(); _o->trip = _e; }
-  { auto _e = systemvoltage(); _o->systemvoltage = _e; }
-  { auto _e = batteryvoltage(); _o->batteryvoltage = _e; }
-  { auto _e = oil_temp(); _o->oil_temp = _e; }
-  { auto _e = blink_left(); _o->blink_left = _e; }
-  { auto _e = blink_right(); _o->blink_right = _e; }
-  { auto _e = lambda(); _o->lambda = _e; }
-  { auto _e = map_kpa(); _o->map_kpa = _e; }
-  { auto _e = oil_pres(); _o->oil_pres = _e; }
-  { auto _e = alt_rpm(); _o->alt_rpm = _e; }
+  { auto _e = rpm(); _o->rpm = _e; };
+  { auto _e = speed(); _o->speed = _e; };
+  { auto _e = odometer(); _o->odometer = _e; };
+  { auto _e = trip(); _o->trip = _e; };
+  { auto _e = systemvoltage(); _o->systemvoltage = _e; };
+  { auto _e = batteryvoltage(); _o->batteryvoltage = _e; };
+  { auto _e = oil_temp(); _o->oil_temp = _e; };
+  { auto _e = blink_left(); _o->blink_left = _e; };
+  { auto _e = blink_right(); _o->blink_right = _e; };
+  { auto _e = lambda(); _o->lambda = _e; };
+  { auto _e = map_kpa(); _o->map_kpa = _e; };
+  { auto _e = oil_pres(); _o->oil_pres = _e; };
+  { auto _e = alt_rpm(); _o->alt_rpm = _e; };
+  { auto _e = gear(); if (_e) _o->gear = _e->str(); };
 }
 
 inline flatbuffers::Offset<Bike> Bike::Pack(flatbuffers::FlatBufferBuilder &_fbb, const BikeT* _o, const flatbuffers::rehasher_function_t *_rehasher) {
@@ -257,6 +303,7 @@ inline flatbuffers::Offset<Bike> CreateBike(flatbuffers::FlatBufferBuilder &_fbb
   auto _map_kpa = _o->map_kpa;
   auto _oil_pres = _o->oil_pres;
   auto _alt_rpm = _o->alt_rpm;
+  auto _gear = _o->gear.empty() ? 0 : _fbb.CreateString(_o->gear);
   return EDL::AppBuffer::CreateBike(
       _fbb,
       _rpm,
@@ -271,7 +318,8 @@ inline flatbuffers::Offset<Bike> CreateBike(flatbuffers::FlatBufferBuilder &_fbb
       _lambda,
       _map_kpa,
       _oil_pres,
-      _alt_rpm);
+      _alt_rpm,
+      _gear);
 }
 
 inline const EDL::AppBuffer::Bike *GetBike(const void *buf) {
@@ -304,16 +352,10 @@ inline void FinishSizePrefixedBikeBuffer(
   fbb.FinishSizePrefixed(root);
 }
 
-inline std::unique_ptr<EDL::AppBuffer::BikeT> UnPackBike(
+inline std::unique_ptr<BikeT> UnPackBike(
     const void *buf,
     const flatbuffers::resolver_function_t *res = nullptr) {
-  return std::unique_ptr<EDL::AppBuffer::BikeT>(GetBike(buf)->UnPack(res));
-}
-
-inline std::unique_ptr<EDL::AppBuffer::BikeT> UnPackSizePrefixedBike(
-    const void *buf,
-    const flatbuffers::resolver_function_t *res = nullptr) {
-  return std::unique_ptr<EDL::AppBuffer::BikeT>(GetSizePrefixedBike(buf)->UnPack(res));
+  return std::unique_ptr<BikeT>(GetBike(buf)->UnPack(res));
 }
 
 }  // namespace AppBuffer

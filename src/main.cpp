@@ -365,6 +365,10 @@ int main(int argc, char *argv[])
 		if (lc2_data.status == ISP2_NORMAL || o2_manual) {
 			bikeobj.lambda = lc2_data.lambda;
 		}
+		bikeobj.gear = "";
+		if (fcData.in_neutral) {
+			bikeobj.gear = "N";
+		}
 		// Serialize into new flatbuffer.
 		fbb.Finish(EDL::AppBuffer::Bike::Pack(fbb, &bikeobj));
 		// Send commands

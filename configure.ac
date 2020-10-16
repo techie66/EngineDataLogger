@@ -14,17 +14,18 @@ AC_PROG_CC
 
 # Checks for libraries. Based on enabled features.
 
-AC_ARG_ENABLE([i2c],
-	      [AS_HELP_STRING([--disable-i2c],
-			      [disable support for I2C which is needed for communicating with a SleepyPi as part of the "EngineData" module])],
+AC_ARG_WITH([bcm2835],
+	      [AS_HELP_STRING([--without-bcm3835],
+			      [compile without bcm2835, which is needed for communicating with a SleepyPi as part of the "EngineData" module and gpio such as O2 sensor power control.])],
 			      [],
-			      [enable_i2c=yes])
-AS_IF([test "x$enable_i2c" != xno],
+			      [enable_bcm2835=yes])
+AS_IF([test "x$enable_bcm2835" != xno],
 	[AC_CHECK_LIB([bcm2835], [bcm2835_i2c_write_read_rs],,[
 		      ./install-deps.sh bcm2835
 		      LIBS="$LIBS -lbcm2835"
 		      ])
 	AC_DEFINE([FEAT_I2C],[1],[Support talking to i2c devices])
+	AC_DEFINE([FEAT_GPIO],[1],[Support direct GPIO])
 	])
 
 
