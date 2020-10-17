@@ -19,7 +19,7 @@ AC_ARG_WITH([bcm2835],
 			      [compile without bcm2835, which is needed for communicating with a SleepyPi as part of the "EngineData" module and gpio such as O2 sensor power control.])],
 			      [],
 			      [enable_bcm2835=yes])
-AS_IF([test "x$enable_bcm2835" != xno],
+AS_IF([test "x$with_bcm2835" != xno],
 	[AC_CHECK_LIB([bcm2835], [bcm2835_i2c_write_read_rs],,[
 		      ./install-deps.sh bcm2835
 		      LIBS="$LIBS -lbcm2835"

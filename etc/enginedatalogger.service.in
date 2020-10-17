@@ -1,3 +1,10 @@
 # Replace with actual file
 [UNIT]
-ExecStart = @prefix@/enginedatalogger -c @myconfdir@/enginedatalogger.conf
+Description=EngineDataLogger
+DefaultDependencies=false
+
+[Service]
+Type=simple
+Restart=always
+ExecStart = @bindir@/enginedatalogger -c @myconfdir@/enginedatalogger.conf
+WorkingDirectory=@runstatedir@/enginedatalogger

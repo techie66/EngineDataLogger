@@ -4462,7 +4462,7 @@ else
 fi
 
 
-if test "x$enable_bcm2835" != xno; then :
+if test "x$with_bcm2835" != xno; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for bcm2835_i2c_write_read_rs in -lbcm2835" >&5
 $as_echo_n "checking for bcm2835_i2c_write_read_rs in -lbcm2835... " >&6; }
 if ${ac_cv_lib_bcm2835_bcm2835_i2c_write_read_rs+:} false; then :
