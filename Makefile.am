@@ -1,6 +1,6 @@
 etcdir=$(srcdir)/etc
 bin_PROGRAMS = enginedatalogger
-bin_SCRIPTS = shutdowncheck.py
+bin_SCRIPTS = bin/shutdowncheck.py
 enginedatalogger_SOURCES= \
 		    src/main.cpp \
 		    src/bluetooth.cpp \
