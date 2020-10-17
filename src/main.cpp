@@ -365,7 +365,7 @@ int main(int argc, char *argv[])
 		if (lc2_data.status == ISP2_NORMAL || o2_manual) {
 			bikeobj.lambda = lc2_data.lambda;
 		}
-		bikeobj.gear = "";
+		bikeobj.gear = "?";
 		if (fcData.in_neutral) {
 			bikeobj.gear = "N";
 		}

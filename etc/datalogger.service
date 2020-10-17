@@ -1,0 +1,14 @@
+[Unit]
+Description=DataLogger
+DefaultDependencies=false
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/local/bin/data_logger -i /dev/ignitech
+WorkingDirectory=/etc/data_logger
+
+#[Install]
+#WantedBy=local-fs.target
+
+

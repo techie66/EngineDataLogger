@@ -1,0 +1,12 @@
+[Unit]
+Description=ShutdownCheck
+DefaultDependencies=false
+
+[Service]
+Type=simple
+ExecStart=/root/shutdowncheck.py
+WorkingDirectory=/root/
+
+[Install]
+WantedBy=local-fs.target
+
