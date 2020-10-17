@@ -26,6 +26,13 @@ $(bin_SCRIPTS):
 	
 $(dist_myconf_DATA):
 	
+edit = sed \
+             -e 's|@datadir[@]|$(pkgdatadir)|g' \
+             -e 's|@myconfdir[@]|$(myconfdir)|g' \
+             -e 's|@bindir[@]|$(bindir)|g' \
+             -e 's|@runstatedir[@]|$(runstatedir)|g' \
+             -e 's|@prefix[@]|$(prefix)|g'
+
 AM_DISTCHECK_CONFIGURE_FLAGS = \
   --with-systemdsystemunitdir=$$dc_install_base/$(systemdsystemunitdir)
 if HAVE_SYSTEMD
@@ -43,13 +50,6 @@ install-data-hook:
 	sudo systemctl enable enginedatalogger.path || true
 	sudo systemctl enable shutdowncheck.service || true
 
-edit = sed \
-             -e 's|@datadir[@]|$(pkgdatadir)|g' \
-             -e 's|@myconfdir[@]|$(myconfdir)|g' \
-             -e 's|@bindir[@]|$(bindir)|g' \
-             -e 's|@runstatedir[@]|$(runstatedir)|g' \
-             -e 's|@prefix[@]|$(prefix)|g'
-
 $(dist_systemdsystemunit_DATA): Makefile
 	rm -f $@ $@.tmp
 	$(edit) '$@.in' >$@.tmp
@@ -60,3 +60,10 @@ MOSTLYCLEANFILES = $(dist_systemdsystemunit_DATA)
 
 endif
 
+$(dist_myconf_DATA): Makefile
+	rm -f $@ $@.tmp
+	$(edit) '$@.in' >$@.tmp
+	chmod og-w $@.tmp
+	mv $@.tmp $@
+
+$(etcdir)/enginedatalogger.conf: $(etcdir)/enginedatalogger.conf.in

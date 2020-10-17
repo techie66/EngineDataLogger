@@ -355,6 +355,13 @@ myconfdir = $(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
 		    $(etcdir)/enginedatalogger.conf
 
+edit = sed \
+             -e 's|@datadir[@]|$(pkgdatadir)|g' \
+             -e 's|@myconfdir[@]|$(myconfdir)|g' \
+             -e 's|@bindir[@]|$(bindir)|g' \
+             -e 's|@runstatedir[@]|$(runstatedir)|g' \
+             -e 's|@prefix[@]|$(prefix)|g'
+
 AM_DISTCHECK_CONFIGURE_FLAGS = \
   --with-systemdsystemunitdir=$$dc_install_base/$(systemdsystemunitdir)
 
@@ -362,13 +369,6 @@ AM_DISTCHECK_CONFIGURE_FLAGS = \
 @HAVE_SYSTEMD_TRUE@			 $(etcdir)/enginedatalogger.service \
 @HAVE_SYSTEMD_TRUE@			 $(etcdir)/enginedatalogger.path \
 @HAVE_SYSTEMD_TRUE@			 $(etcdir)/shutdowncheck.service
-
-@HAVE_SYSTEMD_TRUE@edit = sed \
-@HAVE_SYSTEMD_TRUE@             -e 's|@datadir[@]|$(pkgdatadir)|g' \
-@HAVE_SYSTEMD_TRUE@             -e 's|@myconfdir[@]|$(myconfdir)|g' \
-@HAVE_SYSTEMD_TRUE@             -e 's|@bindir[@]|$(bindir)|g' \
-@HAVE_SYSTEMD_TRUE@             -e 's|@runstatedir[@]|$(runstatedir)|g' \
-@HAVE_SYSTEMD_TRUE@             -e 's|@prefix[@]|$(prefix)|g'
 
 @HAVE_SYSTEMD_TRUE@MOSTLYCLEANFILES = $(dist_systemdsystemunit_DATA)
 all: config.h
@@ -995,6 +995,14 @@ $(dist_myconf_DATA):
 @HAVE_SYSTEMD_TRUE@	$(edit) '$@.in' >$@.tmp
 @HAVE_SYSTEMD_TRUE@	chmod og-w $@.tmp
 @HAVE_SYSTEMD_TRUE@	mv $@.tmp $@
+
+$(dist_myconf_DATA): Makefile
+	rm -f $@ $@.tmp
+	$(edit) '$@.in' >$@.tmp
+	chmod og-w $@.tmp
+	mv $@.tmp $@
+
+$(etcdir)/enginedatalogger.conf: $(etcdir)/enginedatalogger.conf.in
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
