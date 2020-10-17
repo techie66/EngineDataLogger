@@ -33,6 +33,11 @@ dist_systemdsystemunit_DATA = \
 			 $(etcdir)/enginedatalogger.service \
 			 $(etcdir)/enginedatalogger.path \
 			 $(etcdir)/shutdowncheck.service
+
+$(etcdir)/enginedatalogger.service: $(etcdir)/enginedatalogger.service.in
+$(etcdir)/enginedatalogger.path: $(etcdir)/enginedatalogger.path.in
+$(etcdir)/shutdowncheck.service: $(etcdir)/shutdowncheck.service.in
+
 install-data-hook:
 	sudo systemctl enable enginedatalogger.service || true
 	sudo systemctl enable enginedatalogger.path || true
@@ -50,6 +55,8 @@ $(dist_systemdsystemunit_DATA): Makefile
 	$(edit) '$@.in' >$@.tmp
 	chmod og-w $@.tmp
 	mv $@.tmp $@
-endif
 
+MOSTLYCLEANFILES = $(dist_systemdsystemunit_DATA)
+
+endif
 

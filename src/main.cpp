@@ -323,7 +323,7 @@ int main(int argc, char *argv[])
 			}
 			error_message (DEBUG,"Running. %s",exCmd_bin(fcData.serialCmdA));
 		}
-		else { // TODO change to less than ENGINE OFF RPM
+		else if ( bikeobj.rpm <= STOPPED_RPM ) { // TODO change to less than ENGINE OFF RPM
 			engineRunning = false;
 			fcData.serialCmdA &= ~ENGINE_RUNNING;
 			start_running_time = 0;

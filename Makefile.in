@@ -370,6 +370,7 @@ AM_DISTCHECK_CONFIGURE_FLAGS = \
 @HAVE_SYSTEMD_TRUE@             -e 's|@runstatedir[@]|$(runstatedir)|g' \
 @HAVE_SYSTEMD_TRUE@             -e 's|@prefix[@]|$(prefix)|g'
 
+@HAVE_SYSTEMD_TRUE@MOSTLYCLEANFILES = $(dist_systemdsystemunit_DATA)
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -862,6 +863,7 @@ install-strip:
 	    "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'" install; \
 	fi
 mostlyclean-generic:
+	-test -z "$(MOSTLYCLEANFILES)" || rm -f $(MOSTLYCLEANFILES)
 
 clean-generic:
 
@@ -978,6 +980,11 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 $(bin_SCRIPTS):
 
 $(dist_myconf_DATA):
+
+@HAVE_SYSTEMD_TRUE@$(etcdir)/enginedatalogger.service: $(etcdir)/enginedatalogger.service.in
+@HAVE_SYSTEMD_TRUE@$(etcdir)/enginedatalogger.path: $(etcdir)/enginedatalogger.path.in
+@HAVE_SYSTEMD_TRUE@$(etcdir)/shutdowncheck.service: $(etcdir)/shutdowncheck.service.in
+
 @HAVE_SYSTEMD_TRUE@install-data-hook:
 @HAVE_SYSTEMD_TRUE@	sudo systemctl enable enginedatalogger.service || true
 @HAVE_SYSTEMD_TRUE@	sudo systemctl enable enginedatalogger.path || true

@@ -22,7 +22,8 @@
 
 #include <cstdint>
 
-const uint16_t		RUNNING_RPM=900;
+const uint16_t		RUNNING_RPM=900,
+      			STOPPED_RPM=500;
 const uint8_t		engine_data_addr = 0x04,
       			FC_CMD_SIZE = 8;
 
