@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 {
 	// TODO: move variable declarations to more sensible spots
 	// keep constants up here
-	// TODO option-ify
+	// TODO option-ify (part way there)
 	char const	*i2c_device = "/dev/i2c-1";
 	int 		fd_front_controls,
 			fd_lc2,
@@ -418,6 +418,7 @@ int main(int argc, char *argv[])
 
 		if ( args_info.output_file_given ) {
 			// TODO remove flatbuffers dependency for the log
+			// TODO log both rpms, log advance when available
 			fprintf(fd_log,"%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%s.%06ld,%.2f,%d\n",
 				bikeobj.rpm,
 				bikeobj.speed,
@@ -437,6 +438,7 @@ int main(int argc, char *argv[])
 		usleep(50000);
 	}
 
+	// TODO Make build-time and run-time optional
 	bcm2835_gpio_write(O2_PIN, LOW);
 	bcm2835_close();
 	// Return 0 for clean exit
