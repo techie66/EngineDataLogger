@@ -4,19 +4,23 @@ bin_SCRIPTS = bin/shutdowncheck.py
 enginedatalogger_SOURCES= \
 		    src/main.cpp \
 		    src/bluetooth.cpp \
-		    src/serial.cpp \
-		    src/I2Cdev.cpp \
-		    src/error_handling.cpp \
-		    src/front_controls.cpp \
-		    src/cmdline.c \
-		    src/I2Cdev.h \
 		    src/bluetooth.h \
+		    src/serial.cpp \
 		    src/serial.h \
+		    src/error_handling.cpp \
 		    src/error_handling.h \
+		    src/front_controls.cpp \
 		    src/front_controls.h \
+		    src/cmdline.c \
+		    src/cmdline.h \
 		    src/cb1100f-app_generated.h \
-		    src/definitions.h \
-		    src/cmdline.h
+		    src/definitions.h
+
+if I2C
+	enginedatalogger_SOURCES += \
+	src/I2Cdev.cpp \
+	src/I2Cdev.h
+endif
 
 myconfdir=$(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \

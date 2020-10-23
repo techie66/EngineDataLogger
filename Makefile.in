@@ -109,8 +109,8 @@ PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_enginedatalogger_OBJECTS = src/main.$(OBJEXT) \
 	src/bluetooth.$(OBJEXT) src/serial.$(OBJEXT) \
-	src/I2Cdev.$(OBJEXT) src/error_handling.$(OBJEXT) \
-	src/front_controls.$(OBJEXT) src/cmdline.$(OBJEXT)
+	src/error_handling.$(OBJEXT) src/front_controls.$(OBJEXT) \
+	src/cmdline.$(OBJEXT)
 enginedatalogger_OBJECTS = $(am_enginedatalogger_OBJECTS)
 enginedatalogger_LDADD = $(LDADD)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -260,6 +260,7 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 GREP = @GREP@
+HAVE_CXX11 = @HAVE_CXX11@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -337,19 +338,17 @@ bin_SCRIPTS = bin/shutdowncheck.py
 enginedatalogger_SOURCES = \
 		    src/main.cpp \
 		    src/bluetooth.cpp \
-		    src/serial.cpp \
-		    src/I2Cdev.cpp \
-		    src/error_handling.cpp \
-		    src/front_controls.cpp \
-		    src/cmdline.c \
-		    src/I2Cdev.h \
 		    src/bluetooth.h \
+		    src/serial.cpp \
 		    src/serial.h \
+		    src/error_handling.cpp \
 		    src/error_handling.h \
+		    src/front_controls.cpp \
 		    src/front_controls.h \
+		    src/cmdline.c \
+		    src/cmdline.h \
 		    src/cb1100f-app_generated.h \
-		    src/definitions.h \
-		    src/cmdline.h
+		    src/definitions.h
 
 myconfdir = $(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
@@ -477,8 +476,6 @@ src/bluetooth.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/serial.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/I2Cdev.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
 src/error_handling.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/front_controls.$(OBJEXT): src/$(am__dirstamp) \
@@ -532,7 +529,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/I2Cdev.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/bluetooth.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cmdline.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/error_handling.Po@am__quote@
@@ -976,6 +972,10 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 
 .PRECIOUS: Makefile
 
+
+@I2C_TRUE@	enginedatalogger_SOURCES += \
+@I2C_TRUE@	src/I2Cdev.cpp \
+@I2C_TRUE@	src/I2Cdev.h
 
 $(bin_SCRIPTS):
 

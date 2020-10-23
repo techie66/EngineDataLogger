@@ -12,6 +12,7 @@ AM_INIT_AUTOMAKE(1.9 subdir-objects)
 AC_PROG_CXX
 AC_PROG_CC
 
+AX_CXX_COMPILE_STDCXX_11
 # Checks for libraries. Based on enabled features.
 
 AC_ARG_WITH([bcm2835],
@@ -20,12 +21,18 @@ AC_ARG_WITH([bcm2835],
 			      [],
 			      [enable_bcm2835=yes])
 AS_IF([test "x$with_bcm2835" != xno],
-	[AC_CHECK_LIB([bcm2835], [bcm2835_i2c_write_read_rs],,[
-		      ./install-deps.sh bcm2835
-		      LIBS="$LIBS -lbcm2835"
+	[AC_CHECK_LIB([bcm2835], [bcm2835_i2c_write_read_rs],[
+		LIBS="$LIBS -lbcm2835"
+		#AC_DEFINE([FEAT_I2C],[1],[Support talking to i2c devices])
+		AC_DEFINE([FEAT_GPIO],[1],[Support direct GPIO])
+		AC_DEFINE([HAVE_LIBBCM2835],[1],[Library bcm2835 found])
+		],[
+		./install-deps.sh bcm2835
+		LIBS="$LIBS -lbcm2835"
+		#AC_DEFINE([FEAT_I2C],[1],[Support talking to i2c devices])
+		AC_DEFINE([FEAT_GPIO],[1],[Support direct GPIO])
+		AC_DEFINE([HAVE_LIBBCM2835],[1],[Library bcm2835 found])
 		      ])
-	AC_DEFINE([FEAT_I2C],[1],[Support talking to i2c devices])
-	AC_DEFINE([FEAT_GPIO],[1],[Support direct GPIO])
 	])
 
 
@@ -45,6 +52,9 @@ AC_CHECK_LIB([flatbuffers], [main],,[
 	      ./install-deps.sh flatbuffers
 	      LIBS="-lflatbuffers $LIBS"
 	      ])
+
+AM_CONDITIONAL([GPIO], [test "x$FEAT_GPIO" = x1])
+AM_CONDITIONAL([I2C], [test "x$FEAT_I2C" = x1])
 
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h termios.h unistd.h])

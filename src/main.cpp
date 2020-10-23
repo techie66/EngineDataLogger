@@ -22,6 +22,7 @@
  * READ THE README!!!!!!
  */
 
+#include "config.h"
 #include <unistd.h>			//Needed for I2C port
 #include <fcntl.h>			//Needed for I2C port
 #include <sys/ioctl.h>			//Needed for I2C port
@@ -30,10 +31,16 @@
 #include <sys/time.h>
 #include <getopt.h>
 #include <isp2.h>
-#include <bcm2835.h>
-#include <ignitech.h>
 
+#ifdef FEAT_GPIO
+#include <bcm2835.h>
+#endif /* FEAT_GPIO */
+
+#ifdef FEAT_I2C
 #include "I2Cdev.h"
+#endif /* FEAT_I2C */
+
+#include <ignitech.h>
 #include "serial.h"
 #include "definitions.h"
 #include "error_handling.h"
@@ -139,13 +146,15 @@ int main(int argc, char *argv[])
 
 	// register signal SIGINT and signal handler  
 	signal(SIGINT, signalHandler);  
-
+	
+	#ifdef FEAT_GPIO
 	// Initialize GPIO output
 	if (!bcm2835_init())
 		return 1;
 	// Set pin mode
 	bcm2835_gpio_fsel(O2_PIN, BCM2835_GPIO_FSEL_OUTP);
-
+	#endif /* FEAT_GPIO */
+	
 	// Open Front controls
 	fd_front_controls = fc_open();
 	
@@ -318,18 +327,22 @@ int main(int argc, char *argv[])
 			if (start_running_time == 0 ) {
 				start_running_time = currtime.tv_sec;
 			}
+			#ifdef FEAT_GPIO
 			if (my_time - start_running_time > LC2_POWER_DELAY) {
 				bcm2835_gpio_write(O2_PIN, HIGH);
 			}
+			#endif /* FEAT_GPIO */
 			error_message (DEBUG,"Running. %s",exCmd_bin(fcData.serialCmdA));
 		}
 		else if ( bikeobj.rpm <= STOPPED_RPM ) { // TODO change to less than ENGINE OFF RPM
 			engineRunning = false;
 			fcData.serialCmdA &= ~ENGINE_RUNNING;
 			start_running_time = 0;
+			#ifdef FEAT_GPIO
 			if (!o2_manual) {
 				bcm2835_gpio_write(O2_PIN, LOW);
 			}
+			#endif /* FEAT_GPIO */
 			error_message (DEBUG,"Not Running. %s",exCmd_bin(fcData.serialCmdA));
 		}
 
@@ -339,6 +352,7 @@ int main(int argc, char *argv[])
 			db_from_cmd = NO_CMD;
 		}
 
+		#ifdef FEAT_GPIO
 		if(db_from_cmd == O2MANON) {
 			error_message(INFO,"Manually turning on O2 sensor");
 			bcm2835_gpio_write(O2_PIN, HIGH);
@@ -352,6 +366,7 @@ int main(int argc, char *argv[])
 			o2_manual = false;
 			db_from_cmd = NO_CMD;
 		}
+		#endif /* FEAT_GPIO */
 
 		bikeobj.speed = enData.speed;
 		bikeobj.odometer = enData.odometer;
@@ -438,9 +453,11 @@ int main(int argc, char *argv[])
 		usleep(50000);
 	}
 
-	// TODO Make build-time and run-time optional
+	// TODO Make run-time optional
+	#ifdef FEAT_GPIO
 	bcm2835_gpio_write(O2_PIN, LOW);
 	bcm2835_close();
+	#endif /* FEAT_GPIO */
 	// Return 0 for clean exit
 	return 0;
 }
