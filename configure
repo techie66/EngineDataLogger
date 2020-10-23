@@ -734,6 +734,7 @@ ac_user_opts='
 enable_option_checking
 enable_silent_rules
 enable_dependency_tracking
+enable_gpio
 with_bcm2835
 with_systemdsystemunitdir
 '
@@ -1384,14 +1385,13 @@ Optional Features:
                           do not reject slow dependency extractors
   --disable-dependency-tracking
                           speeds up one-time build
+  --disable-gpio          Disable support for GPIO
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --without-bcm3835       compile without bcm2835, which is needed for
-                          communicating with a SleepyPi as part of the
-                          "EngineData" module and gpio such as O2 sensor power
-                          control.
+  --without-bcm3835       compile without bcm2835, which is needed for gpio
+                          such as O2 sensor power control.
   --with-systemdsystemunitdir=DIR
                           Directory for systemd service files
 
@@ -4730,17 +4730,23 @@ $as_echo "#define HAVE_CXX11 1" >>confdefs.h
   fi
 
 # Checks for libraries. Based on enabled features.
+# Check whether --enable-gpio was given.
+if test "${enable_gpio+set}" = set; then :
+  enableval=$enable_gpio;
+else
+  enable_gpio=yes
+fi
 
 
 # Check whether --with-bcm2835 was given.
 if test "${with_bcm2835+set}" = set; then :
   withval=$with_bcm2835;
 else
-  enable_bcm2835=yes
+  with_bcm2835=yes
 fi
 
 
-if test "x$with_bcm2835" != xno; then :
+if test "x$with_bcm2835" != xno -a "x$enable_gpio" != xno; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for bcm2835_i2c_write_read_rs in -lbcm2835" >&5
 $as_echo_n "checking for bcm2835_i2c_write_read_rs in -lbcm2835... " >&6; }
 if ${ac_cv_lib_bcm2835_bcm2835_i2c_write_read_rs+:} false; then :

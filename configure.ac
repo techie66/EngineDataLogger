@@ -14,13 +14,17 @@ AC_PROG_CC
 
 AX_CXX_COMPILE_STDCXX_11
 # Checks for libraries. Based on enabled features.
-
+AC_ARG_ENABLE([gpio],
+	[AS_HELP_STRING([--disable-gpio],
+		[Disable support for GPIO])],
+	[],
+	[enable_gpio=yes])
 AC_ARG_WITH([bcm2835],
-	      [AS_HELP_STRING([--without-bcm3835],
-			      [compile without bcm2835, which is needed for communicating with a SleepyPi as part of the "EngineData" module and gpio such as O2 sensor power control.])],
-			      [],
-			      [enable_bcm2835=yes])
-AS_IF([test "x$with_bcm2835" != xno],
+	[AS_HELP_STRING([--without-bcm3835],
+		[compile without bcm2835, which is needed for gpio such as O2 sensor power control.])],
+		[],
+		[with_bcm2835=yes])
+AS_IF([test "x$with_bcm2835" != xno -a "x$enable_gpio" != xno],
 	[AC_CHECK_LIB([bcm2835], [bcm2835_i2c_write_read_rs],[
 		LIBS="$LIBS -lbcm2835"
 		#AC_DEFINE([FEAT_I2C],[1],[Support talking to i2c devices])
