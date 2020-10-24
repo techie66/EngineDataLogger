@@ -434,21 +434,31 @@ int main(int argc, char *argv[])
 		strftime(time_buf, 100, "%D %T", localtime(&my_time));
 		// RPM, Speed, sysvoltage, batVoltage, oil temp, oil pressure, running, Time, lambda, IAP(kpa)
 
+		bike_data log_data;
+		log_data.rpm = bikeobj.rpm;
+		log_data.alt_rpm = bikeobj.alt_rpm;
+		log_data.speed = bikeobj.speed;
+		log_data.systemvoltage = bikeobj.systemvoltage;
+		log_data.batteryvoltage = bikeobj.batteryvoltage;
+		log_data.oil_temp = bikeobj.oil_temp;
+		log_data.oil_pres = bikeobj.oil_pres;
+		log_data.lambda = bikeobj.lambda;
+		log_data.map_kpa = bikeobj.map_kpa;
 		if ( args_info.output_file_given ) {
 			// TODO remove flatbuffers dependency for the log
 			// TODO log both rpms, log advance when available
 			fprintf(fd_log,"%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%s.%06ld,%.2f,%d\n",
-				bikeobj.rpm,
-				bikeobj.speed,
-				bikeobj.systemvoltage,
-				bikeobj.batteryvoltage,
-				bikeobj.oil_temp,
-				bikeobj.oil_pres,
+				log_data.rpm,
+				log_data.speed,
+				log_data.systemvoltage,
+				log_data.batteryvoltage,
+				log_data.oil_temp,
+				log_data.oil_pres,
 				engineRunning,
 				time_buf,
 				currtime.tv_usec,
-				bikeobj.lambda/1000.0, 
-				bikeobj.map_kpa
+				log_data.lambda/1000.0, 
+				log_data.map_kpa
 			);
 			fflush(fd_log);
 		}
