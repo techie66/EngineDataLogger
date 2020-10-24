@@ -130,6 +130,9 @@ int main(int argc, char *argv[])
 		ignitech_device = args_info.ignitech_arg;
 		ignition = new IGNITECH(ignitech_device);
 	}
+	if ( args_info.ignitech_dump_file_given ) {
+		ignition->enable_raw_dump(args_info.ignitech_dump_file_arg);
+	}
 
 	char const *log_file = NULL;
 	if ( args_info.output_file_given ) {

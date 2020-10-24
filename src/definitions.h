@@ -79,4 +79,20 @@ enum System_CMD {
 	O2MANOFF
 };
 
+struct	bike_data {
+	int32_t rpm;
+	int32_t alt_rpm;
+	float speed;
+	uint32_t odometer;
+	uint32_t trip;
+	float systemvoltage;
+	float batteryvoltage;
+	float oil_temp;
+	float oil_pres;
+	bool blink_left;
+	bool blink_right;
+	uint16_t lambda;
+	int32_t map_kpa;
+	bool engineRunning;
+};
 #endif

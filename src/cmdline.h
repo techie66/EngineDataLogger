@@ -66,6 +66,9 @@ struct gengetopt_args_info
   char * ignitech_arg;	/**< @brief Ignitech ignition device.  */
   char * ignitech_orig;	/**< @brief Ignitech ignition device original value given at command line.  */
   const char *ignitech_help; /**< @brief Ignitech ignition device help description.  */
+  char * ignitech_dump_file_arg;	/**< @brief File to dump raw responses from Ignitech.  */
+  char * ignitech_dump_file_orig;	/**< @brief File to dump raw responses from Ignitech original value given at command line.  */
+  const char *ignitech_dump_file_help; /**< @brief File to dump raw responses from Ignitech help description.  */
   char * lc2_arg;	/**< @brief Innovate LC-2 device.  */
   char * lc2_orig;	/**< @brief Innovate LC-2 device original value given at command line.  */
   const char *lc2_help; /**< @brief Innovate LC-2 device help description.  */
@@ -88,6 +91,7 @@ struct gengetopt_args_info
   unsigned int quiet_given ;	/**< @brief Whether quiet was given.  */
   unsigned int front_controls_given ;	/**< @brief Whether front-controls was given.  */
   unsigned int ignitech_given ;	/**< @brief Whether ignitech was given.  */
+  unsigned int ignitech_dump_file_given ;	/**< @brief Whether ignitech-dump-file was given.  */
   unsigned int lc2_given ;	/**< @brief Whether lc2 was given.  */
   unsigned int lc2_delay_given ;	/**< @brief Whether lc2-delay was given.  */
   unsigned int lc2_pin_given ;	/**< @brief Whether lc2-pin was given.  */

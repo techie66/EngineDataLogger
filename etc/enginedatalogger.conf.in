@@ -1,4 +1,5 @@
 # Placeholder Config file
 verbose = WARN
 ignitech = /dev/ignitech
-#output-file = /var/log/enginedatalogger.log
+output-file = /var/log/enginedatalogger.log
+ignitech-dump-file = @runstatedir@/ignitech.dump.bin
