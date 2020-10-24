@@ -447,8 +447,9 @@ int main(int argc, char *argv[])
 		if ( args_info.output_file_given ) {
 			// TODO remove flatbuffers dependency for the log
 			// TODO log both rpms, log advance when available
-			fprintf(fd_log,"%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%s.%06ld,%.2f,%d\n",
+			fprintf(fd_log,"%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%s.%06ld,%.2f,%d\n",
 				log_data.rpm,
+				log_data.alt_rpm,
 				log_data.speed,
 				log_data.systemvoltage,
 				log_data.batteryvoltage,
