@@ -1,5 +1,22 @@
-# Placeholder Config file
-verbose = WARN
-ignitech = /dev/ignitech
+# EngineDataLogger Config
+# This file is an example of options that can be used.
+
+# Output Log file
+#	location of the output log file
 output-file = /var/log/enginedatalogger.log
-ignitech-dump-file = @runstatedir@/ignitech.dump.bin
+
+# Verbosity
+# Options: NONE,ERROR,WARN,INFO,DEBUG
+# in order of how much is written to stdout
+verbose = WARN
+
+# Ignitech device settings
+# set `ignitech` to the device that is the ignitech controller
+#	usually something like /dev/ttyUSB0 
+#	its handy to set udev rules to ensure this is always the right device
+ignitech = /dev/ignitech
+
+# Ignitech dump file
+#	optional file to pass to libIgnitech as a raw dump of all received bytes
+#	Only really useful for debugging
+#ignitech-dump-file = @runstatedir@/ignitech.dump.bin

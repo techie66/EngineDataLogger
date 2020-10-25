@@ -17,6 +17,9 @@ It is written to run on a raspberry pi zero W and communicate with arduinos and 
 	make
 	sudo make install
 ```
+After installation it will be necessary to setup a config file. An example is distrubuted as `/usr/local/etc/enginedatalogger/enginedatalogger.conf.dist` (on most systems, other systems may be in a different directory, see output from `sudo make install`)
+Copy this file to `/usr/local/etc/enginedatalogger/enginedatalogger.conf` and edit as necessary.
+ 
 ### Dependencies
 #### Included:<br>
 - I2C dev Lib - https://github.com/jrowberg/i2cdevlib  
