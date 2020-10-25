@@ -176,6 +176,7 @@ int main(int argc, char *argv[])
 
 	// Main Loop
 	engine_data	enData;
+	bike_data log_data;
 	isp2_t		lc2_data = isp2_t();
 	fc_data		fcData;
 	System_CMD	db_from_cmd = NO_CMD;
@@ -232,11 +233,23 @@ int main(int argc, char *argv[])
 			// Read Ignition
 			ignition_read_status = ignition->read_async();
 			if (ignition_read_status < IGN_SUC ) {
-				error_message (ERROR,"Failed to Read Ignitech err:%d - %s",errno,strerror(errno));
+				static int num_failures = 0;
+				error_message (INFO,"Failed to Read Ignitech err:%d - %s",errno,strerror(errno));
+				// TODO avoid reading bad data on IGN_ERR
+				num_failures++;
+				if ( num_failures > IGNITECH_MAX_RESETS ) {
+					num_failures = 0;
+					log_data.ig_rpm = 0;
+					log_data.batteryvoltage = 0;
+					log_data.map_kpa = 0;
+				}
 			}
 			else if (ignition_read_status == IGN_SUC) {
-				error_message (INFO,"Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(),ignition->get_battery_mV());
+				error_message (DEBUG,"Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(),ignition->get_battery_mV());
 				// TODO read the other stuff
+				log_data.ig_rpm = ignition->get_rpm();
+				log_data.batteryvoltage = ignition->get_battery_mV();
+				log_data.map_kpa = ignition->get_map_kpa();
 			}
 		}
 
@@ -305,24 +318,18 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		// Create Flatbuffer
-		// Sent to dashboard and 
-		// TODO: data logfile
-		EDL::AppBuffer::BikeT bikeobj;
-		flatbuffers::FlatBufferBuilder fbb;
-
-		bikeobj.rpm = enData.rpm;
-		if ( args_info.ignitech_given ) {
-			bikeobj.alt_rpm = bikeobj.rpm;
-			bikeobj.rpm = ignition->get_rpm();
-			bikeobj.map_kpa = ignition->get_map_kpa();
-		}
-		
 		// calculate stuff / make decisions
 		static time_t start_running_time;
 		struct timeval	currtime;
 		time_t my_time;
-		if (bikeobj.rpm > RUNNING_RPM) {
+
+		int my_rpm = enData.rpm;
+		if ( args_info.ignitech_given ) {
+			if ( ignition->get_status() == IGN_SUC ) {
+				my_rpm = ignition->get_rpm();
+			}
+		}
+		if (my_rpm > RUNNING_RPM) {
 			engineRunning = true;
 			fcData.serialCmdA |= ENGINE_RUNNING;
 			gettimeofday(&currtime, NULL);
@@ -337,7 +344,7 @@ int main(int argc, char *argv[])
 			#endif /* FEAT_GPIO */
 			error_message (DEBUG,"Running. %s",exCmd_bin(fcData.serialCmdA));
 		}
-		else if ( bikeobj.rpm <= STOPPED_RPM ) { // TODO change to less than ENGINE OFF RPM
+		else if ( my_rpm <= STOPPED_RPM ) {
 			engineRunning = false;
 			fcData.serialCmdA &= ~ENGINE_RUNNING;
 			start_running_time = 0;
@@ -371,6 +378,14 @@ int main(int argc, char *argv[])
 		}
 		#endif /* FEAT_GPIO */
 
+		// Create Flatbuffer
+		// Sent to dashboard and 
+		// TODO: data logfile
+		EDL::AppBuffer::BikeT bikeobj;
+		flatbuffers::FlatBufferBuilder fbb;
+
+		bikeobj.alt_rpm = enData.rpm;
+		bikeobj.rpm = my_rpm;
 		bikeobj.speed = enData.speed;
 		bikeobj.odometer = enData.odometer;
 		bikeobj.oil_temp = enData.temp_oil;
@@ -382,6 +397,7 @@ int main(int argc, char *argv[])
 		bikeobj.trip = enData.trip;
 		if (lc2_data.status == ISP2_NORMAL || o2_manual) {
 			bikeobj.lambda = lc2_data.lambda;
+			log_data.lambda = lc2_data.lambda;
 		}
 		bikeobj.gear = "?";
 		if (fcData.in_neutral) {
@@ -434,21 +450,16 @@ int main(int argc, char *argv[])
 		strftime(time_buf, 100, "%D %T", localtime(&my_time));
 		// RPM, Speed, sysvoltage, batVoltage, oil temp, oil pressure, running, Time, lambda, IAP(kpa)
 
-		bike_data log_data;
-		log_data.rpm = bikeobj.rpm;
-		log_data.alt_rpm = bikeobj.alt_rpm;
-		log_data.speed = bikeobj.speed;
-		log_data.systemvoltage = bikeobj.systemvoltage;
-		log_data.batteryvoltage = bikeobj.batteryvoltage;
-		log_data.oil_temp = bikeobj.oil_temp;
-		log_data.oil_pres = bikeobj.oil_pres;
-		log_data.lambda = bikeobj.lambda;
-		log_data.map_kpa = bikeobj.map_kpa;
+		log_data.oil_temp = enData.temp_oil;
+		log_data.oil_pres = enData.pres_oil;
+		log_data.alt_rpm = enData.rpm;
+		log_data.speed = enData.speed;
+		log_data.systemvoltage = enData.batteryVoltage;
 		if ( args_info.output_file_given ) {
 			// TODO remove flatbuffers dependency for the log
 			// TODO log both rpms, log advance when available
 			fprintf(fd_log,"%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%s.%06ld,%.2f,%d\n",
-				log_data.rpm,
+				log_data.ig_rpm,
 				log_data.alt_rpm,
 				log_data.speed,
 				log_data.systemvoltage,

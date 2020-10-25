@@ -80,7 +80,7 @@ enum System_CMD {
 };
 
 struct	bike_data {
-	int32_t rpm;
+	int32_t ig_rpm;
 	int32_t alt_rpm;
 	float speed;
 	uint32_t odometer;

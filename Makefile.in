@@ -352,7 +352,7 @@ enginedatalogger_SOURCES = \
 
 myconfdir = $(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
-		    $(etcdir)/enginedatalogger.conf
+		    $(etcdir)/enginedatalogger.conf.dist
 
 edit = sed \
              -e 's|@datadir[@]|$(pkgdatadir)|g' \
@@ -1002,7 +1002,7 @@ $(dist_myconf_DATA): Makefile
 	chmod og-w $@.tmp
 	mv $@.tmp $@
 
-$(etcdir)/enginedatalogger.conf: $(etcdir)/enginedatalogger.conf.in
+$(etcdir)/enginedatalogger.conf.dist: $(etcdir)/enginedatalogger.conf.dist.in
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

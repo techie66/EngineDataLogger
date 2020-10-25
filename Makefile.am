@@ -24,7 +24,7 @@ endif
 
 myconfdir=$(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
-		    $(etcdir)/enginedatalogger.conf
+		    $(etcdir)/enginedatalogger.conf.dist
 
 $(bin_SCRIPTS):
 	
@@ -70,4 +70,4 @@ $(dist_myconf_DATA): Makefile
 	chmod og-w $@.tmp
 	mv $@.tmp $@
 
-$(etcdir)/enginedatalogger.conf: $(etcdir)/enginedatalogger.conf.in
+$(etcdir)/enginedatalogger.conf.dist: $(etcdir)/enginedatalogger.conf.dist.in
