@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
 
 	// Main Loop
 	engine_data	enData;
-	bike_data log_data;
+	bike_data	log_data;
 	isp2_t		lc2_data = isp2_t();
 	fc_data		fcData;
 	System_CMD	db_from_cmd = NO_CMD;
@@ -230,6 +230,7 @@ int main(int argc, char *argv[])
 			error_message (INFO,"ODO: %d RPM: %d Speed: %f Oil temp: %f pres: %f BatV: %f",enData.odometer,enData.rpm,enData.speed,enData.temp_oil, enData.pres_oil, enData.batteryVoltage);
 		}
 		if ( args_info.ignitech_given ) {
+			ignition->enable_debug();
 			// Read Ignition
 			ignition_read_status = ignition->read_async();
 			if (ignition_read_status < IGN_SUC ) {
@@ -248,7 +249,7 @@ int main(int argc, char *argv[])
 				error_message (DEBUG,"Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(),ignition->get_battery_mV());
 				// TODO read the other stuff
 				log_data.ig_rpm = ignition->get_rpm();
-				log_data.batteryvoltage = ignition->get_battery_mV();
+				log_data.batteryvoltage = ignition->get_battery_mV()/float(1000);
 				log_data.map_kpa = ignition->get_map_kpa();
 			}
 		}
