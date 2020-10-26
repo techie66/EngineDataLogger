@@ -88,8 +88,6 @@ int lc2_open() {
 
 int main(int argc, char *argv[])
 {
-	// TODO: move variable declarations to more sensible spots
-	// keep constants up here
 	// TODO option-ify (part way there)
 	char const	*i2c_device = "/dev/i2c-1";
 	int 		fd_front_controls,
@@ -191,6 +189,7 @@ int main(int argc, char *argv[])
 		//----- READ ENGINE DATA I2C -----
 		// TODO: Make class for engine_data just like the other components
 		// Set I2C addr
+		// TODO run-time and build-time optional
 		if (ioctl(fd_i2c, I2C_SLAVE, engine_data_addr) < 0) {
 			//ERROR HANDLING; you can check errno to see what went wrong
 			error_message (ERROR,"Failed to acquire bus access and/or talk to slave. err:%d - %s",errno,strerror(errno));
@@ -230,13 +229,12 @@ int main(int argc, char *argv[])
 			error_message (INFO,"ODO: %d RPM: %d Speed: %f Oil temp: %f pres: %f BatV: %f",enData.odometer,enData.rpm,enData.speed,enData.temp_oil, enData.pres_oil, enData.batteryVoltage);
 		}
 		if ( args_info.ignitech_given ) {
-			ignition->enable_debug();
+			static int num_failures = 0;
 			// Read Ignition
 			ignition_read_status = ignition->read_async();
-			if (ignition_read_status < IGN_SUC ) {
-				static int num_failures = 0;
-				error_message (INFO,"Failed to Read Ignitech err:%d - %s",errno,strerror(errno));
-				// TODO avoid reading bad data on IGN_ERR
+			if (ignition_read_status != IGN_SUC ) {
+				if (ignition_read_status < IGN_SUC )
+					error_message (INFO,"Failed to Read Ignitech err:%d - %s",errno,strerror(errno));
 				num_failures++;
 				if ( num_failures > IGNITECH_MAX_RESETS ) {
 					num_failures = 0;
@@ -246,8 +244,8 @@ int main(int argc, char *argv[])
 				}
 			}
 			else if (ignition_read_status == IGN_SUC) {
+				num_failures = 0;
 				error_message (DEBUG,"Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(),ignition->get_battery_mV());
-				// TODO read the other stuff
 				log_data.ig_rpm = ignition->get_rpm();
 				log_data.batteryvoltage = ignition->get_battery_mV()/float(1000);
 				log_data.map_kpa = ignition->get_map_kpa();
@@ -270,6 +268,7 @@ int main(int argc, char *argv[])
 		else {
 			fd_front_controls = fc_open();
 		}
+		// TODO LC-2 runtime and build-time optional (libISP)
 		if (fd_lc2 > 0) {
 			error_message(DEBUG,"Adding LC-2 to select");
 			FD_SET(fd_lc2,&readset);
@@ -381,7 +380,8 @@ int main(int argc, char *argv[])
 
 		// Create Flatbuffer
 		// Sent to dashboard and 
-		// TODO: data logfile
+		// TODO: option to write flatbuffer to datafile
+		// TODO runtime and build-time optional dashboard
 		EDL::AppBuffer::BikeT bikeobj;
 		flatbuffers::FlatBufferBuilder fbb;
 
@@ -458,7 +458,7 @@ int main(int argc, char *argv[])
 		log_data.systemvoltage = enData.batteryVoltage;
 		if ( args_info.output_file_given ) {
 			// TODO remove flatbuffers dependency for the log
-			// TODO log both rpms, log advance when available
+			// TODO log advance when available
 			fprintf(fd_log,"%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%s.%06ld,%.2f,%d\n",
 				log_data.ig_rpm,
 				log_data.alt_rpm,
