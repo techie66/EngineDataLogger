@@ -309,7 +309,7 @@ int main(int argc, char *argv[])
 				error_message (DEBUG,"Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(),ignition->get_battery_mV());
 				log_data.ig_rpm = ignition->get_rpm();
 				log_data.batteryvoltage = ignition->get_battery_mV()/float(1000);
-				log_data.map_kpa = ignition->get_map_kpa();
+				log_data.map_kpa = ignition->get_sensor_value();
 			}
 		}
 
