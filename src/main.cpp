@@ -28,6 +28,8 @@
 #include <sys/ioctl.h>			//Needed for I2C port
 #include <linux/i2c-dev.h>		//Needed for I2C port
 #include <time.h>
+#include <string.h>
+#include <libgen.h>
 #include <sys/time.h>
 #include <getopt.h>
 #include <isp2.h>
@@ -53,6 +55,8 @@
 #define LC2_PORT "/dev/serial0"
 #define LC2_POWER_DELAY 15 // delay in seconds
 #define FC_PORT "/dev/front_controls"
+#define TIME_BUF_LEN 256
+#define LOG_FILE_LEN 4096
 
 volatile sig_atomic_t 	time_to_quit = false;
 // Set default Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
@@ -88,6 +92,25 @@ int lc2_open() {
 
 int main(int argc, char *argv[])
 {
+	// register signal handlers
+	signal(SIGINT, signalHandler);  
+	signal(SIGTERM, signalHandler);  
+	signal(SIGHUP, signalHandler);  
+	
+	// Get string for current time
+	char time_buf[TIME_BUF_LEN] = {0};
+	time_t rawtime = time(NULL);
+	if ( rawtime == -1 ) {
+		error_message(ERROR,"time() function failed");
+		return -1;
+	}
+	struct tm *ptm = localtime(&rawtime);
+	if ( ptm == NULL ) {
+		error_message(ERROR,"localtime() failed");
+		return -1;
+	}
+	strftime(time_buf,TIME_BUF_LEN,"%Y%m%d%H%M%S",ptm);
+
 	// TODO option-ify (part way there)
 	char const	*i2c_device = "/dev/i2c-1";
 	int 		fd_front_controls,
@@ -134,7 +157,48 @@ int main(int argc, char *argv[])
 
 	char const *log_file = NULL;
 	if ( args_info.output_file_given ) {
-		log_file = args_info.output_file_arg;
+		if ( args_info.output_file_date_given ) {
+			char log_file_tmp[LOG_FILE_LEN] = {0};
+			char *tmp = strdup(args_info.output_file_arg);
+			char *dir = strdup(dirname(tmp));
+			free(tmp);
+			tmp = strdup(args_info.output_file_arg);
+			char *base = strdup(basename(tmp));
+			free(tmp);
+			tmp = strchr(base,'.');
+			char *ext = NULL;
+			char *file = NULL;
+			if (tmp) {
+				ext = strdup(tmp);
+				file = strndup(base,(strlen(base)-strlen(ext)));
+				free(base);
+			}
+			else {
+				file = strdup(base);
+				free(base);
+			}
+			
+			if (dir) 
+				strcat(log_file_tmp,dir);
+			strcat(log_file_tmp,"/");
+			if (file) {
+				strcat(log_file_tmp,file);
+				free(file);
+			}
+			strcat(log_file_tmp,"-");
+			if (time_buf)
+				strcat(log_file_tmp,time_buf);
+			if (ext) {
+				strcat(log_file_tmp,ext);
+				free(ext);
+			}
+
+			log_file = log_file_tmp;
+		}
+		else {
+			log_file = args_info.output_file_arg;
+		}
+
 		// Open log file
 		if ((fd_log = fopen(log_file,"a")) < 0) {
 			error_message (ERROR,"Failed to open the log file err:%d - %s",errno,strerror(errno));
@@ -145,9 +209,6 @@ int main(int argc, char *argv[])
 
 	// End processing options/config
 
-	// register signal SIGINT and signal handler  
-	signal(SIGINT, signalHandler);  
-	
 	#ifdef FEAT_GPIO
 	// Initialize GPIO output
 	if (!bcm2835_init())

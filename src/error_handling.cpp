@@ -54,7 +54,7 @@ void error_message(e_lvl err_lvl, char const *fmt, ...) {
 }
 
 void signalHandler( int signum ) {
-	error_message(INFO, "Interrupt signal %d received", signum);
+	error_message(INFO, "Signal %d received", signum);
 	time_to_quit = true;
 
 	// cleanup and close up stuff here  

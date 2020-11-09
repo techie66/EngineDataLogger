@@ -47,6 +47,7 @@ struct gengetopt_args_info
   char * output_file_arg;	/**< @brief Output file for CSV logging (default='/dev/null').  */
   char * output_file_orig;	/**< @brief Output file for CSV logging original value given at command line.  */
   const char *output_file_help; /**< @brief Output file for CSV logging help description.  */
+  const char *output_file_date_help; /**< @brief Insert date and time into output filename. help description.  */
   unsigned int v_min; /**< @brief Verbose output. Specify multiple times for increasing verbosity.'s minimum occurreces */
   unsigned int v_max; /**< @brief Verbose output. Specify multiple times for increasing verbosity.'s maximum occurreces */
   const char *v_help; /**< @brief Verbose output. Specify multiple times for increasing verbosity. help description.  */
@@ -86,6 +87,7 @@ struct gengetopt_args_info
   unsigned int version_given ;	/**< @brief Whether version was given.  */
   unsigned int config_file_given ;	/**< @brief Whether config-file was given.  */
   unsigned int output_file_given ;	/**< @brief Whether output-file was given.  */
+  unsigned int output_file_date_given ;	/**< @brief Whether output-file-date was given.  */
   unsigned int v_given ;	/**< @brief Whether v was given.  */
   unsigned int verbose_given ;	/**< @brief Whether verbose was given.  */
   unsigned int quiet_given ;	/**< @brief Whether quiet was given.  */
