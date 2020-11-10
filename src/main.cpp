@@ -293,19 +293,19 @@ int main(int argc, char *argv[])
 			static int num_failures = 0;
 			// Read Ignition
 			ignition_read_status = ignition->read_async();
-			if (ignition_read_status != IGN_SUC ) {
-				if (ignition_read_status < IGN_SUC )
-					error_message (INFO,"Failed to Read Ignitech err:%d - %s",errno,strerror(errno));
-				num_failures++;
-				if ( num_failures > IGNITECH_MAX_RESETS ) {
+			if (ignition_read_status == IGN_ERR ) {
+				//if (ignition_read_status < IGN_SUC )
+					error_message (ERROR,"Failed to Read Ignitech err:%d - %s",errno,strerror(errno));
+				//num_failures++;
+				//if ( num_failures > IGNITECH_MAX_RESETS ) {
 					num_failures = 0;
 					log_data.ig_rpm = 0;
 					log_data.batteryvoltage = 0;
 					log_data.map_kpa = 0;
-				}
+				//}
 			}
-			else if (ignition_read_status == IGN_SUC) {
-				num_failures = 0;
+			else if (ignition_read_status != IGN_ERR) {
+				//num_failures = 0;
 				error_message (DEBUG,"Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(),ignition->get_battery_mV());
 				log_data.ig_rpm = ignition->get_rpm();
 				log_data.batteryvoltage = ignition->get_battery_mV()/float(1000);
