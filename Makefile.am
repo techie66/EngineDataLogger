@@ -50,7 +50,6 @@ $(etcdir)/enginedatalogger.path: $(etcdir)/enginedatalogger.path.in
 $(etcdir)/shutdowncheck.service: $(etcdir)/shutdowncheck.service.in
 
 install-data-hook:
-	sudo systemctl enable enginedatalogger.service || true
 	sudo systemctl enable enginedatalogger.path || true
 	sudo systemctl enable shutdowncheck.service || true
 
