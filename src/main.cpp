@@ -386,7 +386,7 @@ int main(int argc, char *argv[])
 
 		int my_rpm = enData.rpm;
 		if ( args_info.ignitech_given ) {
-			if ( ignition->get_status() == IGN_SUC ) {
+			if ( ignition->get_status() == IGN_SUC || ignition->get_status() == IGN_AGAIN) {
 				my_rpm = ignition->get_rpm();
 			}
 		}
