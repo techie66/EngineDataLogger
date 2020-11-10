@@ -390,6 +390,9 @@ int main(int argc, char *argv[])
 				my_rpm = ignition->get_rpm();
 			}
 		}
+		if (!fcData.kill_on) {
+			my_rpm = 0;
+		}
 		if (my_rpm > RUNNING_RPM) {
 			engineRunning = true;
 			fcData.serialCmdA |= ENGINE_RUNNING;
