@@ -3,9 +3,6 @@
 /* Support direct GPIO */
 #undef FEAT_GPIO
 
-/* define if the compiler supports basic C++11 syntax */
-#undef HAVE_CXX11
-
 /* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
 

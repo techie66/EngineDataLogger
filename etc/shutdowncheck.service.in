@@ -4,7 +4,7 @@ DefaultDependencies=false
 
 [Service]
 Type=simple
-ExecStart=@sbindir@/shutdowncheck.py
+ExecStart=@bindir@/shutdowncheck.py
 WorkingDirectory=@runstatedir@
 
 [Install]
