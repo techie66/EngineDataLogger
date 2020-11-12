@@ -50,6 +50,7 @@ const char *gengetopt_args_info_help[] = {
   "      --lc2-delay=seconds       Delay before powering up LC-2.  (default=`15')",
   "      --lc2-pin=INT             GPIO pin that controls power for LC-2\n                                  (default=`26')",
   "  -s, --sleepy=device           I2C device to communicate with Sleepy Pi.",
+  "      --sleepy-addr=0xXX        Address for Sleepy Pi.  (default=`0x04')",
     0
 };
 
@@ -118,6 +119,7 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->lc2_delay_given = 0 ;
   args_info->lc2_pin_given = 0 ;
   args_info->sleepy_given = 0 ;
+  args_info->sleepy_addr_given = 0 ;
 }
 
 static
@@ -144,6 +146,8 @@ void clear_args (struct gengetopt_args_info *args_info)
   args_info->lc2_pin_orig = NULL;
   args_info->sleepy_arg = NULL;
   args_info->sleepy_orig = NULL;
+  args_info->sleepy_addr_arg = gengetopt_strdup ("0x04");
+  args_info->sleepy_addr_orig = NULL;
   
 }
 
@@ -169,6 +173,7 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->lc2_delay_help = gengetopt_args_info_help[13] ;
   args_info->lc2_pin_help = gengetopt_args_info_help[14] ;
   args_info->sleepy_help = gengetopt_args_info_help[15] ;
+  args_info->sleepy_addr_help = gengetopt_args_info_help[16] ;
   
 }
 
@@ -269,6 +274,8 @@ cmdline_parser_release (struct gengetopt_args_info *args_info)
   free_string_field (&(args_info->lc2_pin_orig));
   free_string_field (&(args_info->sleepy_arg));
   free_string_field (&(args_info->sleepy_orig));
+  free_string_field (&(args_info->sleepy_addr_arg));
+  free_string_field (&(args_info->sleepy_addr_orig));
   
   
 
@@ -377,6 +384,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "lc2-pin", args_info->lc2_pin_orig, 0);
   if (args_info->sleepy_given)
     write_into_file(outfile, "sleepy", args_info->sleepy_orig, 0);
+  if (args_info->sleepy_addr_given)
+    write_into_file(outfile, "sleepy-addr", args_info->sleepy_addr_orig, 0);
   
 
   i = EXIT_SUCCESS;
@@ -568,6 +577,11 @@ cmdline_parser_required2 (struct gengetopt_args_info *args_info, const char *pro
       fprintf (stderr, "%s: '--lc2-pin' option depends on option 'lc2'%s\n", prog_name, (additional_error ? additional_error : ""));
       error_occurred = 1;
     }
+  if (args_info->sleepy_addr_given && ! args_info->sleepy_given)
+    {
+      fprintf (stderr, "%s: '--sleepy-addr' option depends on option 'sleepy'%s\n", prog_name, (additional_error ? additional_error : ""));
+      error_occurred = 1;
+    }
 
   return error_occurred;
 }
@@ -751,6 +765,7 @@ cmdline_parser_internal (
         { "lc2-delay",	1, NULL, 0 },
         { "lc2-pin",	1, NULL, 0 },
         { "sleepy",	1, NULL, 's' },
+        { "sleepy-addr",	1, NULL, 0 },
         { 0,  0, 0, 0 }
       };
 
@@ -927,6 +942,20 @@ cmdline_parser_internal (
                 &(local_args_info.lc2_pin_given), optarg, 0, "26", ARG_INT,
                 check_ambiguity, override, 0, 0,
                 "lc2-pin", '-',
+                additional_error))
+              goto failure;
+          
+          }
+          /* Address for Sleepy Pi..  */
+          else if (strcmp (long_options[option_index].name, "sleepy-addr") == 0)
+          {
+          
+          
+            if (update_arg( (void *)&(args_info->sleepy_addr_arg), 
+                 &(args_info->sleepy_addr_orig), &(args_info->sleepy_addr_given),
+                &(local_args_info.sleepy_addr_given), optarg, 0, "0x04", ARG_STRING,
+                check_ambiguity, override, 0, 0,
+                "sleepy-addr", '-',
                 additional_error))
               goto failure;
           

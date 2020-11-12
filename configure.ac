@@ -15,6 +15,11 @@ AC_PROG_CC
 
 AX_CXX_COMPILE_STDCXX_11
 # Checks for libraries. Based on enabled features.
+AC_ARG_ENABLE([i2c],
+	[AS_HELP_STRING([--disable-i2c],
+		[Disable support for I2C])],
+	[],
+	[enable_i2c=yes])
 AC_ARG_ENABLE([gpio],
 	[AS_HELP_STRING([--disable-gpio],
 		[Disable support for GPIO])],
@@ -28,18 +33,17 @@ AC_ARG_WITH([bcm2835],
 AS_IF([test "x$with_bcm2835" != xno -a "x$enable_gpio" != xno],
 	[AC_CHECK_LIB([bcm2835], [bcm2835_i2c_write_read_rs],[
 		LIBS="$LIBS -lbcm2835"
-		#AC_DEFINE([FEAT_I2C],[1],[Support talking to i2c devices])
 		AC_DEFINE([FEAT_GPIO],[1],[Support direct GPIO])
 		AC_DEFINE([HAVE_LIBBCM2835],[1],[Library bcm2835 found])
 		],[
 		./install-deps.sh bcm2835
 		LIBS="$LIBS -lbcm2835"
-		#AC_DEFINE([FEAT_I2C],[1],[Support talking to i2c devices])
 		AC_DEFINE([FEAT_GPIO],[1],[Support direct GPIO])
 		AC_DEFINE([HAVE_LIBBCM2835],[1],[Library bcm2835 found])
 		      ])
 	])
-
+AS_IF([test "x$enable_i2c" != xno],
+	[AC_DEFINE([FEAT_I2C],[1],[Support I2C])])
 
 AC_CHECK_LIB([bluetooth], [ba2str],,[
 	      ./install-deps.sh bluetooth

@@ -3,6 +3,9 @@
 /* Support direct GPIO */
 #undef FEAT_GPIO
 
+/* Support I2C */
+#undef FEAT_I2C
+
 /* define if the compiler supports basic C++11 syntax */
 #undef HAVE_CXX11
 

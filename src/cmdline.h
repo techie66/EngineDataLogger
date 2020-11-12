@@ -82,6 +82,9 @@ struct gengetopt_args_info
   char * sleepy_arg;	/**< @brief I2C device to communicate with Sleepy Pi..  */
   char * sleepy_orig;	/**< @brief I2C device to communicate with Sleepy Pi. original value given at command line.  */
   const char *sleepy_help; /**< @brief I2C device to communicate with Sleepy Pi. help description.  */
+  char * sleepy_addr_arg;	/**< @brief Address for Sleepy Pi. (default='0x04').  */
+  char * sleepy_addr_orig;	/**< @brief Address for Sleepy Pi. original value given at command line.  */
+  const char *sleepy_addr_help; /**< @brief Address for Sleepy Pi. help description.  */
   
   unsigned int help_given ;	/**< @brief Whether help was given.  */
   unsigned int version_given ;	/**< @brief Whether version was given.  */
@@ -98,6 +101,7 @@ struct gengetopt_args_info
   unsigned int lc2_delay_given ;	/**< @brief Whether lc2-delay was given.  */
   unsigned int lc2_pin_given ;	/**< @brief Whether lc2-pin was given.  */
   unsigned int sleepy_given ;	/**< @brief Whether sleepy was given.  */
+  unsigned int sleepy_addr_given ;	/**< @brief Whether sleepy-addr was given.  */
 
 } ;
 

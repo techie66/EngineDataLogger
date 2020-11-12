@@ -19,3 +19,4 @@ option "lc2"		l "Innovate LC-2 device" string typestr="device" optional
 option "lc2-delay"	- "Delay before powering up LC-2." int typestr="seconds" default="15" dependon="lc2" optional
 option "lc2-pin"	- "GPIO pin that controls power for LC-2" int default="26" dependon="lc2" optional
 option "sleepy"	s	 "I2C device to communicate with Sleepy Pi." string typestr="device" optional
+option "sleepy-addr"	- "Address for Sleepy Pi." string default="0x04" typestr="0xXX" dependon="sleepy" optional

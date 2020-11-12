@@ -22,11 +22,17 @@
 
 #include <cstdint>
 
-const uint16_t		RUNNING_RPM=900,
-      			STOPPED_RPM=500;
-const uint8_t		engine_data_addr = 0x04,
-      			FC_CMD_SIZE = 8;
+// TODO option-ify
+#define RUNNING_RPM 900
+#define STOPPED_RPM 500
+#define O2_PIN 26	// Default //
+#define LC2_POWER_DELAY 15 // delay in seconds. Default //
+#define FC_PORT "/dev/front_controls"
+#define ENGINE_DATA_ADDR 0x04
 
+#define TIME_BUF_LEN 256
+#define LOG_FILE_LEN 4096
+#define FC_CMD_SIZE 8
 
 // CmdD flags
 const uint8_t		BRAKE_ON = 1 << 2,

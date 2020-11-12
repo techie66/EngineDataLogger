@@ -39,7 +39,7 @@
 #endif /* FEAT_GPIO */
 
 #ifdef FEAT_I2C
-#include "I2Cdev.h"
+/*#include "I2Cdev.h"*/
 #endif /* FEAT_I2C */
 
 #include <ignitech.h>
@@ -49,14 +49,6 @@
 #include "front_controls.h"
 #include "bluetooth.h"
 #include "cmdline.h"
-
-// TODO option-ify
-#define O2_PIN 26
-#define LC2_PORT "/dev/serial0"
-#define LC2_POWER_DELAY 15 // delay in seconds
-#define FC_PORT "/dev/front_controls"
-#define TIME_BUF_LEN 256
-#define LOG_FILE_LEN 4096
 
 volatile sig_atomic_t 	time_to_quit = false;
 // Set default Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
@@ -76,11 +68,11 @@ int fc_open() {
 	return fd;
 }
 
-int lc2_open() {
+int lc2_open(const char *filename) {
 	int fd;
-	fd = open (LC2_PORT, O_RDWR | O_NOCTTY | O_SYNC);
+	fd = open (filename, O_RDWR | O_NOCTTY | O_SYNC);
 	if (fd < 0) {
-		error_message (WARN,"error %d opening %s: %s", errno, LC2_PORT, strerror (errno));
+		error_message (WARN,"error %d opening %s: %s", errno, filename, strerror (errno));
 		return -1;
 	}
 
@@ -114,7 +106,6 @@ int main(int argc, char *argv[])
 	// TODO option-ify (part way there)
 	char const	*i2c_device = "/dev/i2c-1";
 	int 		fd_front_controls,
-			fd_lc2,
 			fd_i2c;
 	FILE		*fd_log;
 	EDL_Bluetooth	dashboard;
@@ -204,33 +195,59 @@ int main(int argc, char *argv[])
 			error_message (ERROR,"Failed to open the log file err:%d - %s",errno,strerror(errno));
 			//return -1;
 		}
+		// TODO Put proper CSV header here
 		fprintf(fd_log,"\n");
 	}
 
+	if ( args_info.front_controls_given ) {
+		// TODO front controls
+		// Open Front controls
+		fd_front_controls = fc_open();
+	}
+
+	int fd_lc2 = -1;
+	int o2_pin = O2_PIN;
+	int lc2_power_delay = LC2_POWER_DELAY;
+	if ( args_info.lc2_given ) {
+		// Open LC-2
+		fd_lc2 = lc2_open(args_info.lc2_arg);
+
+		if ( args_info.lc2_delay_given ) {
+
+			lc2_power_delay = args_info.lc2_delay_arg;
+		}
+		
+		#ifdef FEAT_GPIO
+		if ( args_info.lc2_pin_given ) {
+			o2_pin = args_info.lc2_pin_arg;
+		}
+		// Initialize GPIO output
+		if (!bcm2835_init())
+			return 1;
+		// Set pin mode
+		bcm2835_gpio_fsel(o2_pin, BCM2835_GPIO_FSEL_OUTP);
+		#endif /* FEAT_GPIO */
+	}
+
+	#ifdef FEAT_I2C
+	uint8_t engine_data_addr = ENGINE_DATA_ADDR;
+	if ( args_info.sleepy_given ) {
+		// TODO 
+		//----- OPEN THE I2C BUS -----
+		if ((fd_i2c = open(i2c_device, O_RDWR)) < 0) {
+			//ERROR HANDLING: you can check errno to see what went wrong
+			error_message (ERROR,"Failed to open the i2c bus. err:%d - %s",errno,strerror(errno));
+			//return -1;
+		}
+		if ( args_info.sleepy_addr_given ) {
+			// TODO parse string input for valid I2C address
+		}
+	}
+	#endif /* FEAT_I2C */
+
+
 	// End processing options/config
 
-	#ifdef FEAT_GPIO
-	// Initialize GPIO output
-	if (!bcm2835_init())
-		return 1;
-	// Set pin mode
-	bcm2835_gpio_fsel(O2_PIN, BCM2835_GPIO_FSEL_OUTP);
-	#endif /* FEAT_GPIO */
-	
-	// Open Front controls
-	fd_front_controls = fc_open();
-	
-	// Open LC-2
-	fd_lc2 = lc2_open();
-	
-	// Initialize I2C Interface
-	//I2Cdev::initialize();
-	//----- OPEN THE I2C BUS -----
-	if ((fd_i2c = open(i2c_device, O_RDWR)) < 0) {
-		//ERROR HANDLING: you can check errno to see what went wrong
-		error_message (ERROR,"Failed to open the i2c bus. err:%d - %s",errno,strerror(errno));
-		//return -1;
-	}
 	
 
 	// Main Loop
@@ -251,44 +268,49 @@ int main(int argc, char *argv[])
 		// TODO: Make class for engine_data just like the other components
 		// Set I2C addr
 		// TODO run-time and build-time optional
-		if (ioctl(fd_i2c, I2C_SLAVE, engine_data_addr) < 0) {
-			//ERROR HANDLING; you can check errno to see what went wrong
-			error_message (ERROR,"Failed to acquire bus access and/or talk to slave. err:%d - %s",errno,strerror(errno));
-			//return -1;
-		}
+		#ifdef FEAT_I2C
+		if ( args_info.sleepy_given ) {
+			if (ioctl(fd_i2c, I2C_SLAVE, engine_data_addr) < 0) {
+				//ERROR HANDLING; you can check errno to see what went wrong
+				error_message (ERROR,"Failed to acquire bus access and/or talk to slave. err:%d - %s",errno,strerror(errno));
+				//return -1;
+			}
 
-		// length is calculated by fixed size of data stream from Sleepy Pi
-		length = sizeof(enData.rpm) + sizeof(enData.speed) + sizeof(enData.temp_oil) + sizeof(enData.batteryVoltage)
-			+ sizeof(enData.odometer) + 2;		//<<< Number of bytes to read
-		
-		unsigned char 	buffer[60] = {0};
-		unsigned char	*buffer_ptr = buffer;
-		if (read(fd_i2c, buffer, length) != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)KE
-			//ERROR HANDLING: i2c transaction failed
-			error_message (WARN,"Failed to read from the i2c bus.");
+			// length is calculated by fixed size of data stream from Sleepy Pi
+			length = sizeof(enData.rpm) + sizeof(enData.speed) + sizeof(enData.temp_oil) + sizeof(enData.batteryVoltage)
+				+ sizeof(enData.odometer) + 2;		//<<< Number of bytes to read
+			
+			unsigned char 	buffer[60] = {0};
+			unsigned char	*buffer_ptr = buffer;
+			if (read(fd_i2c, buffer, length) != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)KE
+				//ERROR HANDLING: i2c transaction failed
+				error_message (WARN,"Failed to read from the i2c bus.");
+			}
+			else {
+				// Good I2C read, Sort out the various packed variables
+				memcpy((void*)&enData.rpm,(void*)buffer_ptr,sizeof(enData.rpm));
+				buffer_ptr += sizeof(enData.rpm);
+				uint16_t tmp = 0;
+				memcpy((void*)&tmp,(void*)buffer_ptr,sizeof(tmp));
+				enData.temp_oil = tmp / 100.0;
+				buffer_ptr += sizeof(tmp);
+				memcpy((void*)&tmp,(void*)buffer_ptr,sizeof(tmp));
+				enData.speed = tmp / 100.0;
+				buffer_ptr += sizeof(tmp);
+				memcpy((void*)&enData.batteryVoltage,(void*)buffer_ptr,sizeof(enData.batteryVoltage));
+				buffer_ptr += sizeof(enData.batteryVoltage);
+				memcpy((void*)&enData.odometer,(void*)buffer_ptr,sizeof(enData.odometer));
+				buffer_ptr += sizeof(enData.odometer);
+				memcpy((void*)&enData.trip,(void*)buffer_ptr,sizeof(enData.trip));
+				buffer_ptr += sizeof(enData.trip);
+				memcpy((void*)&tmp,(void*)buffer_ptr,sizeof(tmp));
+				enData.pres_oil = tmp / 100.0;
+				buffer_ptr = buffer;
+				error_message (INFO,"ODO: %d RPM: %d Speed: %f Oil temp: %f pres: %f BatV: %f",enData.odometer,enData.rpm,enData.speed,enData.temp_oil, enData.pres_oil, enData.batteryVoltage);
+			}
 		}
-		else {
-			// Good I2C read, Sort out the various packed variables
-			memcpy((void*)&enData.rpm,(void*)buffer_ptr,sizeof(enData.rpm));
-			buffer_ptr += sizeof(enData.rpm);
-			uint16_t tmp = 0;
-			memcpy((void*)&tmp,(void*)buffer_ptr,sizeof(tmp));
-			enData.temp_oil = tmp / 100.0;
-			buffer_ptr += sizeof(tmp);
-			memcpy((void*)&tmp,(void*)buffer_ptr,sizeof(tmp));
-			enData.speed = tmp / 100.0;
-			buffer_ptr += sizeof(tmp);
-			memcpy((void*)&enData.batteryVoltage,(void*)buffer_ptr,sizeof(enData.batteryVoltage));
-			buffer_ptr += sizeof(enData.batteryVoltage);
-			memcpy((void*)&enData.odometer,(void*)buffer_ptr,sizeof(enData.odometer));
-			buffer_ptr += sizeof(enData.odometer);
-			memcpy((void*)&enData.trip,(void*)buffer_ptr,sizeof(enData.trip));
-			buffer_ptr += sizeof(enData.trip);
-			memcpy((void*)&tmp,(void*)buffer_ptr,sizeof(tmp));
-			enData.pres_oil = tmp / 100.0;
-			buffer_ptr = buffer;
-			error_message (INFO,"ODO: %d RPM: %d Speed: %f Oil temp: %f pres: %f BatV: %f",enData.odometer,enData.rpm,enData.speed,enData.temp_oil, enData.pres_oil, enData.batteryVoltage);
-		}
+		#endif /* FEAT_I2C */
+		// TODO Build time option to disable
 		if ( args_info.ignitech_given ) {
 			static int num_failures = 0;
 			// Read Ignition
@@ -330,13 +352,15 @@ int main(int argc, char *argv[])
 			fd_front_controls = fc_open();
 		}
 		// TODO LC-2 runtime and build-time optional (libISP)
-		if (fd_lc2 > 0) {
-			error_message(DEBUG,"Adding LC-2 to select");
-			FD_SET(fd_lc2,&readset);
-			max_fd = (max_fd>fd_lc2)?max_fd:fd_lc2;
-		}
-		else {
-			fd_lc2 = fc_open();
+		if ( args_info.lc2_given ) {
+			if (fd_lc2 > 0) {
+				error_message(DEBUG,"Adding LC-2 to select");
+				FD_SET(fd_lc2,&readset);
+				max_fd = (max_fd>fd_lc2)?max_fd:fd_lc2;
+			}
+			else {
+				fd_lc2 = lc2_open(args_info.lc2_arg);
+			}
 		}
 		if (dashboard.getClient() > 0) {
 			error_message(DEBUG,"Adding dashboard client to select");
@@ -375,7 +399,7 @@ int main(int argc, char *argv[])
 			if (FD_ISSET(fd_lc2,&readset)) {
 				error_message (DEBUG,"Select read LC-2");
 				ISP2::isp2_read(fd_lc2,lc2_data);
-				error_message(ERROR,"Status: %d Lambda: %d\n",lc2_data.status,lc2_data.lambda);
+				error_message(INFO,"Status: %d Lambda: %d\n",lc2_data.status,lc2_data.lambda);
 			}
 		}
 
@@ -402,8 +426,10 @@ int main(int argc, char *argv[])
 				start_running_time = currtime.tv_sec;
 			}
 			#ifdef FEAT_GPIO
-			if (my_time - start_running_time > LC2_POWER_DELAY) {
-				bcm2835_gpio_write(O2_PIN, HIGH);
+			if ( args_info.lc2_given ) {
+				if (my_time - start_running_time > LC2_POWER_DELAY) {
+					bcm2835_gpio_write(o2_pin, HIGH);
+				}
 			}
 			#endif /* FEAT_GPIO */
 			error_message (DEBUG,"Running. %s",exCmd_bin(fcData.serialCmdA));
@@ -413,8 +439,10 @@ int main(int argc, char *argv[])
 			fcData.serialCmdA &= ~ENGINE_RUNNING;
 			start_running_time = 0;
 			#ifdef FEAT_GPIO
-			if (!o2_manual) {
-				bcm2835_gpio_write(O2_PIN, LOW);
+			if ( args_info.lc2_given ) {
+				if (!o2_manual) {
+					bcm2835_gpio_write(o2_pin, LOW);
+				}
 			}
 			#endif /* FEAT_GPIO */
 			error_message (DEBUG,"Not Running. %s",exCmd_bin(fcData.serialCmdA));
@@ -427,18 +455,20 @@ int main(int argc, char *argv[])
 		}
 
 		#ifdef FEAT_GPIO
-		if(db_from_cmd == O2MANON) {
-			error_message(INFO,"Manually turning on O2 sensor");
-			bcm2835_gpio_write(O2_PIN, HIGH);
-			o2_manual = true;
-			db_from_cmd = NO_CMD;
-		}
+		if ( args_info.lc2_given ) {
+			if(db_from_cmd == O2MANON) {
+				error_message(INFO,"Manually turning on O2 sensor");
+				bcm2835_gpio_write(o2_pin, HIGH);
+				o2_manual = true;
+				db_from_cmd = NO_CMD;
+			}
 
-		if(db_from_cmd == O2MANOFF) {
-			error_message(INFO,"Manually turning off O2 sensor");
-			bcm2835_gpio_write(O2_PIN, LOW);
-			o2_manual = false;
-			db_from_cmd = NO_CMD;
+			if(db_from_cmd == O2MANOFF) {
+				error_message(INFO,"Manually turning off O2 sensor");
+				bcm2835_gpio_write(o2_pin, LOW);
+				o2_manual = false;
+				db_from_cmd = NO_CMD;
+			}
 		}
 		#endif /* FEAT_GPIO */
 
@@ -545,8 +575,10 @@ int main(int argc, char *argv[])
 
 	// TODO Make run-time optional
 	#ifdef FEAT_GPIO
-	bcm2835_gpio_write(O2_PIN, LOW);
-	bcm2835_close();
+	if ( args_info.lc2_given ) {
+		bcm2835_gpio_write(o2_pin, LOW);
+		bcm2835_close();
+	}
 	#endif /* FEAT_GPIO */
 	// Return 0 for clean exit
 	return 0;

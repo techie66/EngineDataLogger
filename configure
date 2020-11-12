@@ -738,6 +738,7 @@ enable_option_checking
 enable_silent_rules
 enable_maintainer_mode
 enable_dependency_tracking
+enable_i2c
 enable_gpio
 with_bcm2835
 with_systemdsystemunitdir
@@ -1392,6 +1393,7 @@ Optional Features:
                           do not reject slow dependency extractors
   --disable-dependency-tracking
                           speeds up one-time build
+  --disable-i2c           Disable support for I2C
   --disable-gpio          Disable support for GPIO
 
 Optional Packages:
@@ -4760,6 +4762,13 @@ $as_echo "#define HAVE_CXX11 1" >>confdefs.h
   fi
 
 # Checks for libraries. Based on enabled features.
+# Check whether --enable-i2c was given.
+if test "${enable_i2c+set}" = set; then :
+  enableval=$enable_i2c;
+else
+  enable_i2c=yes
+fi
+
 # Check whether --enable-gpio was given.
 if test "${enable_gpio+set}" = set; then :
   enableval=$enable_gpio;
@@ -4816,7 +4825,6 @@ $as_echo "$ac_cv_lib_bcm2835_bcm2835_i2c_write_read_rs" >&6; }
 if test "x$ac_cv_lib_bcm2835_bcm2835_i2c_write_read_rs" = xyes; then :
 
 		LIBS="$LIBS -lbcm2835"
-		#AC_DEFINE([FEAT_I2C],[1],[Support talking to i2c devices])
 
 $as_echo "#define FEAT_GPIO 1" >>confdefs.h
 
@@ -4828,7 +4836,6 @@ else
 
 		./install-deps.sh bcm2835
 		LIBS="$LIBS -lbcm2835"
-		#AC_DEFINE([FEAT_I2C],[1],[Support talking to i2c devices])
 
 $as_echo "#define FEAT_GPIO 1" >>confdefs.h
 
@@ -4840,7 +4847,11 @@ fi
 
 
 fi
+if test "x$enable_i2c" != xno; then :
 
+$as_echo "#define FEAT_I2C 1" >>confdefs.h
+
+fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ba2str in -lbluetooth" >&5
 $as_echo_n "checking for ba2str in -lbluetooth... " >&6; }
