@@ -1,5 +1,11 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Support Android dashboard */
+#undef FEAT_DASHBOARD
+
+/* Support Front Controls */
+#undef FEAT_FRONTCONTROLS
+
 /* Support direct GPIO */
 #undef FEAT_GPIO
 
@@ -17,9 +23,6 @@
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
-
-/* Library bcm2835 found */
-#undef HAVE_LIBBCM2835
 
 /* Define to 1 if you have the `bluetooth' library (-lbluetooth). */
 #undef HAVE_LIBBLUETOOTH

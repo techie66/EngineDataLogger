@@ -32,23 +32,28 @@
 #include <libgen.h>
 #include <sys/time.h>
 #include <getopt.h>
+#include "cmdline.h"
+
 #include <isp2.h>
 
 #ifdef FEAT_GPIO
 #include <bcm2835.h>
 #endif /* FEAT_GPIO */
 
-#ifdef FEAT_I2C
-/*#include "I2Cdev.h"*/
-#endif /* FEAT_I2C */
-
+#ifdef HAVE_LIBIGNITECH
 #include <ignitech.h>
+#endif /* HAVE_LIBIGNITECH */
+
+#ifdef FEAT_DASHBOARD
+#include "bluetooth.h"
+#endif /* FEAT_DASHBOARD */
+
+#include "front_controls.h"
+
 #include "serial.h"
 #include "definitions.h"
 #include "error_handling.h"
-#include "front_controls.h"
-#include "bluetooth.h"
-#include "cmdline.h"
+
 
 volatile sig_atomic_t 	time_to_quit = false;
 // Set default Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
@@ -104,11 +109,13 @@ int main(int argc, char *argv[])
 	strftime(time_buf,TIME_BUF_LEN,"%Y%m%d%H%M%S",ptm);
 
 	// TODO option-ify (part way there)
-	char const	*i2c_device = "/dev/i2c-1";
-	int 		fd_front_controls,
-			fd_i2c;
+	//char const	*i2c_device = "/dev/i2c-1";
+	int 		fd_front_controls;
 	FILE		*fd_log;
+	
+	#ifdef FEAT_DASHBOARD
 	EDL_Bluetooth	dashboard;
+	#endif /* FEAT_DASHBOARD */
 
 	gengetopt_args_info args_info;
 	struct cmdline_parser_params *params;
@@ -135,6 +142,7 @@ int main(int argc, char *argv[])
 	if ( args_info.quiet_given )
 		LEVEL_DEBUG = NONE;
 
+	#ifdef HAVE_LIBIGNITECH
 	char const *ignitech_device = NULL;
 	IGNITECH* ignition;
 	int ignition_read_status = -1;
@@ -145,6 +153,7 @@ int main(int argc, char *argv[])
 	if ( args_info.ignitech_dump_file_given ) {
 		ignition->enable_raw_dump(args_info.ignitech_dump_file_arg);
 	}
+	#endif /* HAVE_LIBIGNITECH */
 
 	char const *log_file = NULL;
 	if ( args_info.output_file_given ) {
@@ -230,17 +239,19 @@ int main(int argc, char *argv[])
 	}
 
 	#ifdef FEAT_I2C
+	int	fd_i2c;
 	uint8_t engine_data_addr = ENGINE_DATA_ADDR;
 	if ( args_info.sleepy_given ) {
 		// TODO 
 		//----- OPEN THE I2C BUS -----
-		if ((fd_i2c = open(i2c_device, O_RDWR)) < 0) {
+		if ((fd_i2c = open(args_info.sleepy_arg, O_RDWR)) < 0) {
 			//ERROR HANDLING: you can check errno to see what went wrong
 			error_message (ERROR,"Failed to open the i2c bus. err:%d - %s",errno,strerror(errno));
 			//return -1;
 		}
 		if ( args_info.sleepy_addr_given ) {
 			// TODO parse string input for valid I2C address
+			// engine_data_dir = "PARSED INPUT"
 		}
 	}
 	#endif /* FEAT_I2C */
@@ -262,12 +273,13 @@ int main(int argc, char *argv[])
 	while (!time_to_quit) {
 		int	length;
 		// Read all inputs
-	
 
+		#ifdef HAVE_LIBIGNITECH
+		ignition->read_async();
+		#endif /* HAVE_LIBIGNITECH */
 		//----- READ ENGINE DATA I2C -----
 		// TODO: Make class for engine_data just like the other components
 		// Set I2C addr
-		// TODO run-time and build-time optional
 		#ifdef FEAT_I2C
 		if ( args_info.sleepy_given ) {
 			if (ioctl(fd_i2c, I2C_SLAVE, engine_data_addr) < 0) {
@@ -310,7 +322,8 @@ int main(int argc, char *argv[])
 			}
 		}
 		#endif /* FEAT_I2C */
-		// TODO Build time option to disable
+		
+		#ifdef HAVE_LIBIGNITECH
 		if ( args_info.ignitech_given ) {
 			static int num_failures = 0;
 			// Read Ignition
@@ -334,6 +347,7 @@ int main(int argc, char *argv[])
 				log_data.map_kpa = ignition->get_sensor_value();
 			}
 		}
+		#endif /* HAVE_LIBIGNITECH */
 
 		// Setup read sets
 		int	select_result = 0,
@@ -341,8 +355,15 @@ int main(int argc, char *argv[])
 		fd_set	readset,
 			writeset;
 		FD_ZERO(&readset);
+		#ifdef FEAT_DASHBOARD
 		FD_SET(dashboard.getListener(),&readset);
 		max_fd = (max_fd>dashboard.getListener())?max_fd:dashboard.getListener();
+		if (dashboard.getClient() > 0) {
+			error_message(DEBUG,"Adding dashboard client to select");
+			FD_SET(dashboard.getClient(),&readset);
+			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
+		}
+		#endif /* FEAT_DASHBOARD */
 		if (fd_front_controls > 0) {
 			error_message(DEBUG,"Adding front controls to select");
 			FD_SET(fd_front_controls,&readset);
@@ -361,11 +382,6 @@ int main(int argc, char *argv[])
 			else {
 				fd_lc2 = lc2_open(args_info.lc2_arg);
 			}
-		}
-		if (dashboard.getClient() > 0) {
-			error_message(DEBUG,"Adding dashboard client to select");
-			FD_SET(dashboard.getClient(),&readset);
-			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
 		}
 
 		struct timeval	timeout;
@@ -388,6 +404,7 @@ int main(int argc, char *argv[])
 				error_message (DEBUG,"Select read front controls");
 				readFC(fd_front_controls,fcData);
 			}
+			#ifdef FEAT_DASHBOARD
 			if (FD_ISSET(dashboard.getListener(),&readset)) {
 				error_message(DEBUG,"Select new dashboard client");
 				dashboard.Accept();
@@ -396,6 +413,7 @@ int main(int argc, char *argv[])
 				error_message(DEBUG,"Select read dashboard");
 				db_from_cmd = dashboard.Read();
 			}
+			#endif /* FEAT_DASHBOARD */
 			if (FD_ISSET(fd_lc2,&readset)) {
 				error_message (DEBUG,"Select read LC-2");
 				ISP2::isp2_read(fd_lc2,lc2_data);
@@ -403,17 +421,23 @@ int main(int argc, char *argv[])
 			}
 		}
 
+		#ifdef HAVE_LIBIGNITECH
+		ignition->read_async();
+		#endif /* HAVE_LIBIGNITECH */
+
 		// calculate stuff / make decisions
 		static time_t start_running_time;
 		struct timeval	currtime;
 		time_t my_time;
 
 		int my_rpm = enData.rpm;
+		#ifdef HAVE_LIBIGNITECH
 		if ( args_info.ignitech_given ) {
 			if ( ignition->get_status() == IGN_SUC || ignition->get_status() == IGN_AGAIN) {
 				my_rpm = ignition->get_rpm();
 			}
 		}
+		#endif /* HAVE_LIBIGNITECH */
 		if (!fcData.kill_on) {
 			my_rpm = 0;
 		}
@@ -476,6 +500,7 @@ int main(int argc, char *argv[])
 		// Sent to dashboard and 
 		// TODO: option to write flatbuffer to datafile
 		// TODO runtime and build-time optional dashboard
+		#ifdef FEAT_DASHBOARD
 		EDL::AppBuffer::BikeT bikeobj;
 		flatbuffers::FlatBufferBuilder fbb;
 
@@ -490,26 +515,33 @@ int main(int argc, char *argv[])
 		bikeobj.blink_left = fcData.left_on;
 		bikeobj.blink_right = fcData.right_on;
 		bikeobj.trip = enData.trip;
+		#endif /* FEAT_DASHBOARD */
 		if (lc2_data.status == ISP2_NORMAL || o2_manual) {
+			#ifdef FEAT_DASHBOARD
 			bikeobj.lambda = lc2_data.lambda;
+			#endif /* FEAT_DASHBOARD */
 			log_data.lambda = lc2_data.lambda;
 		}
+		#ifdef FEAT_DASHBOARD
 		bikeobj.gear = "?";
 		if (fcData.in_neutral) {
 			bikeobj.gear = "N";
 		}
 		// Serialize into new flatbuffer.
 		fbb.Finish(EDL::AppBuffer::Bike::Pack(fbb, &bikeobj));
+		#endif /* FEAT_DASHBOARD */
 		// Send commands
 		FD_ZERO(&writeset);
+		#ifdef FEAT_DASHBOARD
 		max_fd = (max_fd>dashboard.getListener())?max_fd:dashboard.getListener();
-		if (fd_front_controls > 0) {
-			FD_SET(fd_front_controls,&writeset);
-			max_fd = (max_fd>fd_front_controls)?max_fd:fd_front_controls;
-		}
 		if (dashboard.getClient() > 0) {
 			FD_SET(dashboard.getClient(),&writeset);
 			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
+		}
+		#endif /* FEAT_DASHBOARD */
+		if (fd_front_controls > 0) {
+			FD_SET(fd_front_controls,&writeset);
+			max_fd = (max_fd>fd_front_controls)?max_fd:fd_front_controls;
 		}
 		if (en_to_cmd != 0) {
 			// write to en
@@ -532,10 +564,12 @@ int main(int argc, char *argv[])
 				// Front controls accepts commands
 				writeFC(fd_front_controls,fcData);
 			}
+			#ifdef FEAT_DASHBOARD
 			if (FD_ISSET(dashboard.getClient(),&writeset)) {
 				error_message(DEBUG,"Select write dashboard");
 				dashboard.Send(fbb);
 			}
+			#endif /* FEAT_DASHBOARD */
 		}
 		
 		// Log data

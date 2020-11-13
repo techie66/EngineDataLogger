@@ -635,10 +635,16 @@ PKG_CONFIG
 EGREP
 GREP
 CPP
-I2C_FALSE
-I2C_TRUE
+DASHBOARD_FALSE
+DASHBOARD_TRUE
+ISP2_FALSE
+ISP2_TRUE
 GPIO_FALSE
 GPIO_TRUE
+I2C_FALSE
+I2C_TRUE
+FRONTCONTROLS_FALSE
+FRONTCONTROLS_TRUE
 HAVE_CXX11
 am__fastdepCC_FALSE
 am__fastdepCC_TRUE
@@ -738,9 +744,17 @@ enable_option_checking
 enable_silent_rules
 enable_maintainer_mode
 enable_dependency_tracking
+enable_frontcontrols
 enable_i2c
 enable_gpio
 with_bcm2835
+with_ignitech
+enable_ignitech
+with_isp2
+enable_isp2
+with_bluetooth
+with_flatbuffers
+enable_dashboard
 with_systemdsystemunitdir
 '
       ac_precious_vars='build_alias
@@ -1393,14 +1407,26 @@ Optional Features:
                           do not reject slow dependency extractors
   --disable-dependency-tracking
                           speeds up one-time build
+  --disable-frontcontrols Disable support for Front Controls
   --disable-i2c           Disable support for I2C
   --disable-gpio          Disable support for GPIO
+  --disable-ignitech      Disable support for Ignitech Ignition
+  --disable-isp2          Disable support for Innovate LC-2 Lambda controller.
+  --disable-dashboard     Disable support for the Android dashboard.
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --without-bcm3835       compile without bcm2835, which is needed for gpio
                           such as O2 sensor power control.
+  --without-ignitech      Compile without libIgnitech, which is needed to
+                          communicate with an Ignitech TCIP-4 ignition.
+  --without-isp2          Compile without libISP2, which is needed to
+                          communicate with an Innovate LC-2 lambda controller.
+  --without-bluetooth     Compile without bluetooth, which is needed to
+                          communicate with the Android dashboard.
+  --without-flatbuffers   Compile without Flatbuffers, which is needed to
+                          communicate with the Android dashboard.
   --with-systemdsystemunitdir=DIR
                           Directory for systemd service files
 
@@ -4762,12 +4788,49 @@ $as_echo "#define HAVE_CXX11 1" >>confdefs.h
   fi
 
 # Checks for libraries. Based on enabled features.
+# Check whether --enable-frontcontrols was given.
+if test "${enable_frontcontrols+set}" = set; then :
+  enableval=$enable_frontcontrols;
+else
+  enable_frontcontrols=yes
+fi
+
+if test "x$enable_frontcontrols" != xno; then :
+
+$as_echo "#define FEAT_FRONTCONTROLS 1" >>confdefs.h
+
+	front_controls=true
+
+fi
+ if test "x$front_controls" = xtrue; then
+  FRONTCONTROLS_TRUE=
+  FRONTCONTROLS_FALSE='#'
+else
+  FRONTCONTROLS_TRUE='#'
+  FRONTCONTROLS_FALSE=
+fi
+
+
 # Check whether --enable-i2c was given.
 if test "${enable_i2c+set}" = set; then :
   enableval=$enable_i2c;
 else
   enable_i2c=yes
 fi
+
+if test "x$enable_i2c" != xno; then :
+
+$as_echo "#define FEAT_I2C 1" >>confdefs.h
+
+fi
+ if test "x$FEAT_I2C" = x1; then
+  I2C_TRUE=
+  I2C_FALSE='#'
+else
+  I2C_TRUE='#'
+  I2C_FALSE=
+fi
+
 
 # Check whether --enable-gpio was given.
 if test "${enable_gpio+set}" = set; then :
@@ -4828,32 +4891,181 @@ if test "x$ac_cv_lib_bcm2835_bcm2835_i2c_write_read_rs" = xyes; then :
 
 $as_echo "#define FEAT_GPIO 1" >>confdefs.h
 
-
-$as_echo "#define HAVE_LIBBCM2835 1" >>confdefs.h
-
+		#AC_DEFINE([HAVE_LIBBCM2835],[1],[Library bcm2835 found])
 
 else
 
-		./install-deps.sh bcm2835
-		LIBS="$LIBS -lbcm2835"
-
-$as_echo "#define FEAT_GPIO 1" >>confdefs.h
-
-
-$as_echo "#define HAVE_LIBBCM2835 1" >>confdefs.h
-
+		as_fn_error $? "libbcm2835 NOT FOUND! You can try automatic installation with: \`./install-deps.sh bcm2835\`" "$LINENO" 5
 
 fi
 
 
 fi
-if test "x$enable_i2c" != xno; then :
+ if test "x$FEAT_GPIO" = x1; then
+  GPIO_TRUE=
+  GPIO_FALSE='#'
+else
+  GPIO_TRUE='#'
+  GPIO_FALSE=
+fi
 
-$as_echo "#define FEAT_I2C 1" >>confdefs.h
+
+
+# Check whether --with-ignitech was given.
+if test "${with_ignitech+set}" = set; then :
+  withval=$with_ignitech;
+else
+  with_ignitech=yes
+fi
+
+# Check whether --enable-ignitech was given.
+if test "${enable_ignitech+set}" = set; then :
+  enableval=$enable_ignitech;
+else
+  enable_ignitech=yes
+fi
+
+if test "x$with_ignitech" != xno -a "x$enable_ignitech" != xno; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lignitech" >&5
+$as_echo_n "checking for main in -lignitech... " >&6; }
+if ${ac_cv_lib_ignitech_main+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lignitech  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+return main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_ignitech_main=yes
+else
+  ac_cv_lib_ignitech_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_ignitech_main" >&5
+$as_echo "$ac_cv_lib_ignitech_main" >&6; }
+if test "x$ac_cv_lib_ignitech_main" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBIGNITECH 1
+_ACEOF
+
+  LIBS="-lignitech $LIBS"
+
+else
+
+		as_fn_error $? "libIgnitech NOT FOUND! You can try automatic installation with: \`./install-deps.sh ignitech\`" "$LINENO" 5
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ba2str in -lbluetooth" >&5
+
+fi
+
+
+# Check whether --with-isp2 was given.
+if test "${with_isp2+set}" = set; then :
+  withval=$with_isp2;
+else
+  with_isp2=yes
+fi
+
+# Check whether --enable-isp2 was given.
+if test "${enable_isp2+set}" = set; then :
+  enableval=$enable_isp2;
+else
+  enable_isp2=yes
+fi
+
+if test "x$with_isp2" != xno -a "x$enable_isp2" != xno; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lisp2" >&5
+$as_echo_n "checking for main in -lisp2... " >&6; }
+if ${ac_cv_lib_isp2_main+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lisp2  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+return main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_isp2_main=yes
+else
+  ac_cv_lib_isp2_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_isp2_main" >&5
+$as_echo "$ac_cv_lib_isp2_main" >&6; }
+if test "x$ac_cv_lib_isp2_main" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBISP2 1
+_ACEOF
+
+  LIBS="-lisp2 $LIBS"
+
+else
+  as_fn_error $? "libISP NOT FOUND! You can try automatic installation with: ./install-deps.sh isp" "$LINENO" 5
+
+fi
+
+
+fi
+ if test "x$HAVE_LIBISP2" = x1; then
+  ISP2_TRUE=
+  ISP2_FALSE='#'
+else
+  ISP2_TRUE='#'
+  ISP2_FALSE=
+fi
+
+
+
+# Check whether --with-bluetooth was given.
+if test "${with_bluetooth+set}" = set; then :
+  withval=$with_bluetooth;
+else
+  with_bluetooth=yes
+fi
+
+
+# Check whether --with-flatbuffers was given.
+if test "${with_flatbuffers+set}" = set; then :
+  withval=$with_flatbuffers;
+else
+  with_flatbuffers=yes
+fi
+
+# Check whether --enable-dashboard was given.
+if test "${enable_dashboard+set}" = set; then :
+  enableval=$enable_dashboard;
+else
+  enable_dashboard=yes
+fi
+
+if test "x$with_bluetooth" != xno -a "x$with_flatbuffers" != xno -a "x$enable_dashboard" != xno; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ba2str in -lbluetooth" >&5
 $as_echo_n "checking for ba2str in -lbluetooth... " >&6; }
 if ${ac_cv_lib_bluetooth_ba2str+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -4898,100 +5110,11 @@ _ACEOF
 
 else
 
-	      ./install-deps.sh bluetooth
-	      LIBS="-lbluetooth $LIBS"
+		as_fn_error $? "bluetooth support NOT FOUND! You can try automatic installation with: ./install-deps.sh bluetooth" "$LINENO" 5
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lignitech" >&5
-$as_echo_n "checking for main in -lignitech... " >&6; }
-if ${ac_cv_lib_ignitech_main+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lignitech  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-int
-main ()
-{
-return main ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_ignitech_main=yes
-else
-  ac_cv_lib_ignitech_main=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_ignitech_main" >&5
-$as_echo "$ac_cv_lib_ignitech_main" >&6; }
-if test "x$ac_cv_lib_ignitech_main" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBIGNITECH 1
-_ACEOF
-
-  LIBS="-lignitech $LIBS"
-
-else
-
-	      ./install-deps.sh ignitech
-	      LIBS="$LIBS -lignitech"
-
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lisp2" >&5
-$as_echo_n "checking for main in -lisp2... " >&6; }
-if ${ac_cv_lib_isp2_main+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lisp2  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-int
-main ()
-{
-return main ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_isp2_main=yes
-else
-  ac_cv_lib_isp2_main=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_isp2_main" >&5
-$as_echo "$ac_cv_lib_isp2_main" >&6; }
-if test "x$ac_cv_lib_isp2_main" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBISP2 1
-_ACEOF
-
-  LIBS="-lisp2 $LIBS"
-
-else
-
-	      ./install-deps.sh isp
-	      LIBS="-lisp2 $LIBS"
-
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lflatbuffers" >&5
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lflatbuffers" >&5
 $as_echo_n "checking for main in -lflatbuffers... " >&6; }
 if ${ac_cv_lib_flatbuffers_main+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -5030,26 +5153,21 @@ _ACEOF
 
 else
 
-	      ./install-deps.sh flatbuffers
-	      LIBS="-lflatbuffers $LIBS"
+		as_fn_error $? "flatbuffers NOT FOUND! You can try automatic installation with: ./install-deps.sh flatbuffers" "$LINENO" 5
 
 fi
 
 
- if test "x$FEAT_GPIO" = x1; then
-  GPIO_TRUE=
-  GPIO_FALSE='#'
-else
-  GPIO_TRUE='#'
-  GPIO_FALSE=
-fi
+$as_echo "#define FEAT_DASHBOARD 1" >>confdefs.h
 
- if test "x$FEAT_I2C" = x1; then
-  I2C_TRUE=
-  I2C_FALSE='#'
+
+fi
+ if test "x$FEAT_DASHBOARD" = x1; then
+  DASHBOARD_TRUE=
+  DASHBOARD_FALSE='#'
 else
-  I2C_TRUE='#'
-  I2C_FALSE=
+  DASHBOARD_TRUE='#'
+  DASHBOARD_FALSE=
 fi
 
 
@@ -5970,12 +6088,24 @@ if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
-if test -z "${GPIO_TRUE}" && test -z "${GPIO_FALSE}"; then
-  as_fn_error $? "conditional \"GPIO\" was never defined.
+if test -z "${FRONTCONTROLS_TRUE}" && test -z "${FRONTCONTROLS_FALSE}"; then
+  as_fn_error $? "conditional \"FRONTCONTROLS\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${I2C_TRUE}" && test -z "${I2C_FALSE}"; then
   as_fn_error $? "conditional \"I2C\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${GPIO_TRUE}" && test -z "${GPIO_FALSE}"; then
+  as_fn_error $? "conditional \"GPIO\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ISP2_TRUE}" && test -z "${ISP2_FALSE}"; then
+  as_fn_error $? "conditional \"ISP2\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${DASHBOARD_TRUE}" && test -z "${DASHBOARD_FALSE}"; then
+  as_fn_error $? "conditional \"DASHBOARD\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${HAVE_SYSTEMD_TRUE}" && test -z "${HAVE_SYSTEMD_FALSE}"; then

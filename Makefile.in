@@ -89,6 +89,14 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 bin_PROGRAMS = enginedatalogger$(EXEEXT)
+@DASHBOARD_TRUE@am__append_1 = \
+@DASHBOARD_TRUE@		    src/bluetooth.cpp \
+@DASHBOARD_TRUE@		    src/bluetooth.h
+
+@FRONTCONTROLS_TRUE@am__append_2 = \
+@FRONTCONTROLS_TRUE@		    src/front_controls.cpp \
+@FRONTCONTROLS_TRUE@		    src/front_controls.h
+
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -106,11 +114,17 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(myconfdir)" "$(DESTDIR)$(systemdsystemunitdir)"
 PROGRAMS = $(bin_PROGRAMS)
+am__enginedatalogger_SOURCES_DIST = src/main.cpp src/serial.cpp \
+	src/serial.h src/error_handling.cpp src/error_handling.h \
+	src/cmdline.c src/cmdline.h src/cb1100f-app_generated.h \
+	src/definitions.h src/bluetooth.cpp src/bluetooth.h \
+	src/front_controls.cpp src/front_controls.h
 am__dirstamp = $(am__leading_dot)dirstamp
-am_enginedatalogger_OBJECTS = src/main.$(OBJEXT) \
-	src/bluetooth.$(OBJEXT) src/serial.$(OBJEXT) \
-	src/error_handling.$(OBJEXT) src/front_controls.$(OBJEXT) \
-	src/cmdline.$(OBJEXT)
+@DASHBOARD_TRUE@am__objects_1 = src/bluetooth.$(OBJEXT)
+@FRONTCONTROLS_TRUE@am__objects_2 = src/front_controls.$(OBJEXT)
+am_enginedatalogger_OBJECTS = src/main.$(OBJEXT) src/serial.$(OBJEXT) \
+	src/error_handling.$(OBJEXT) src/cmdline.$(OBJEXT) \
+	$(am__objects_1) $(am__objects_2)
 enginedatalogger_OBJECTS = $(am_enginedatalogger_OBJECTS)
 enginedatalogger_LDADD = $(LDADD)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -183,7 +197,7 @@ am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
 SOURCES = $(enginedatalogger_SOURCES)
-DIST_SOURCES = $(enginedatalogger_SOURCES)
+DIST_SOURCES = $(am__enginedatalogger_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -336,21 +350,10 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 etcdir = $(srcdir)/etc
 bin_SCRIPTS = bin/shutdowncheck.py
-enginedatalogger_SOURCES = \
-		    src/main.cpp \
-		    src/bluetooth.cpp \
-		    src/bluetooth.h \
-		    src/serial.cpp \
-		    src/serial.h \
-		    src/error_handling.cpp \
-		    src/error_handling.h \
-		    src/front_controls.cpp \
-		    src/front_controls.h \
-		    src/cmdline.c \
-		    src/cmdline.h \
-		    src/cb1100f-app_generated.h \
-		    src/definitions.h
-
+enginedatalogger_SOURCES = src/main.cpp src/serial.cpp src/serial.h \
+	src/error_handling.cpp src/error_handling.h src/cmdline.c \
+	src/cmdline.h src/cb1100f-app_generated.h src/definitions.h \
+	$(am__append_1) $(am__append_2)
 myconfdir = $(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
 		    $(etcdir)/enginedatalogger.conf.dist
@@ -473,15 +476,15 @@ src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/$(DEPDIR)
 	@: > src/$(DEPDIR)/$(am__dirstamp)
 src/main.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/bluetooth.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
 src/serial.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/error_handling.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/front_controls.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
 src/cmdline.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/bluetooth.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/front_controls.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 
 enginedatalogger$(EXEEXT): $(enginedatalogger_OBJECTS) $(enginedatalogger_DEPENDENCIES) $(EXTRA_enginedatalogger_DEPENDENCIES) 
@@ -973,10 +976,6 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 
 .PRECIOUS: Makefile
 
-
-@I2C_TRUE@	enginedatalogger_SOURCES += \
-@I2C_TRUE@	src/I2Cdev.cpp \
-@I2C_TRUE@	src/I2Cdev.h
 
 $(bin_SCRIPTS):
 
