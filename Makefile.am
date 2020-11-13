@@ -9,12 +9,12 @@ enginedatalogger_SOURCES= \
 		    src/error_handling.h \
 		    src/cmdline.c \
 		    src/cmdline.h \
-		    src/cb1100f-app_generated.h \
 		    src/definitions.h
 
 if DASHBOARD
 enginedatalogger_SOURCES += \
 		    src/bluetooth.cpp \
+		    src/cb1100f-app_generated.h \
 		    src/bluetooth.h
 endif
 

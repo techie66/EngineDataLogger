@@ -32,8 +32,10 @@ AC_ARG_ENABLE([i2c],
 	[],
 	[enable_i2c=yes])
 AS_IF([test "x$enable_i2c" != xno],
-	[AC_DEFINE([FEAT_I2C],[1],[Support I2C])])
-AM_CONDITIONAL([I2C], [test "x$FEAT_I2C" = x1])
+	[AC_DEFINE([FEAT_I2C],[1],[Support I2C])
+	feat_i2c=true
+])
+AM_CONDITIONAL([I2C], [test "x$feat_i2c" = xtrue])
 
 AC_ARG_ENABLE([gpio],
 	[AS_HELP_STRING([--disable-gpio],
@@ -49,12 +51,13 @@ AS_IF([test "x$with_bcm2835" != xno -a "x$enable_gpio" != xno],
 	[AC_CHECK_LIB([bcm2835], [bcm2835_i2c_write_read_rs],[
 		LIBS="$LIBS -lbcm2835"
 		AC_DEFINE([FEAT_GPIO],[1],[Support direct GPIO])
+		feat_gpio=true
 		#AC_DEFINE([HAVE_LIBBCM2835],[1],[Library bcm2835 found])
 		],[
 		AC_MSG_ERROR([libbcm2835 NOT FOUND! You can try automatic installation with: `./install-deps.sh bcm2835`])
 		      ])
 	])
-AM_CONDITIONAL([GPIO], [test "x$FEAT_GPIO" = x1])
+AM_CONDITIONAL([GPIO], [test "x$feat_gpio" = xtrue])
 
 AC_ARG_WITH([ignitech],
 	[AS_HELP_STRING([--without-ignitech],
@@ -87,7 +90,6 @@ AS_IF([test "x$with_isp2" != xno -a "x$enable_isp2" != xno],
 		[AC_MSG_ERROR([libISP NOT FOUND! You can try automatic installation with: ./install-deps.sh isp])
 	])
 ])
-AM_CONDITIONAL([ISP2], [test "x$HAVE_LIBISP2" = x1])
 
 AC_ARG_WITH([bluetooth],
 	[AS_HELP_STRING([--without-bluetooth],
@@ -112,8 +114,9 @@ AS_IF([test "x$with_bluetooth" != xno -a "x$with_flatbuffers" != xno -a "x$enabl
 		AC_MSG_ERROR([flatbuffers NOT FOUND! You can try automatic installation with: ./install-deps.sh flatbuffers])
 	])
 	AC_DEFINE([FEAT_DASHBOARD],[1],[Support Android dashboard])
+	feat_dashboard=true
 ])
-AM_CONDITIONAL([DASHBOARD], [test "x$FEAT_DASHBOARD" = x1])
+AM_CONDITIONAL([DASHBOARD], [test "x$feat_dashboard" = xtrue])
 
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h termios.h unistd.h])

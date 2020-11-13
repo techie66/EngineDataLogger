@@ -91,6 +91,7 @@ POST_UNINSTALL = :
 bin_PROGRAMS = enginedatalogger$(EXEEXT)
 @DASHBOARD_TRUE@am__append_1 = \
 @DASHBOARD_TRUE@		    src/bluetooth.cpp \
+@DASHBOARD_TRUE@		    src/cb1100f-app_generated.h \
 @DASHBOARD_TRUE@		    src/bluetooth.h
 
 @FRONTCONTROLS_TRUE@am__append_2 = \
@@ -116,8 +117,8 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
 PROGRAMS = $(bin_PROGRAMS)
 am__enginedatalogger_SOURCES_DIST = src/main.cpp src/serial.cpp \
 	src/serial.h src/error_handling.cpp src/error_handling.h \
-	src/cmdline.c src/cmdline.h src/cb1100f-app_generated.h \
-	src/definitions.h src/bluetooth.cpp src/bluetooth.h \
+	src/cmdline.c src/cmdline.h src/definitions.h \
+	src/bluetooth.cpp src/cb1100f-app_generated.h src/bluetooth.h \
 	src/front_controls.cpp src/front_controls.h
 am__dirstamp = $(am__leading_dot)dirstamp
 @DASHBOARD_TRUE@am__objects_1 = src/bluetooth.$(OBJEXT)
@@ -352,8 +353,8 @@ etcdir = $(srcdir)/etc
 bin_SCRIPTS = bin/shutdowncheck.py
 enginedatalogger_SOURCES = src/main.cpp src/serial.cpp src/serial.h \
 	src/error_handling.cpp src/error_handling.h src/cmdline.c \
-	src/cmdline.h src/cb1100f-app_generated.h src/definitions.h \
-	$(am__append_1) $(am__append_2)
+	src/cmdline.h src/definitions.h $(am__append_1) \
+	$(am__append_2)
 myconfdir = $(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
 		    $(etcdir)/enginedatalogger.conf.dist

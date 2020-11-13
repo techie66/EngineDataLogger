@@ -637,8 +637,6 @@ GREP
 CPP
 DASHBOARD_FALSE
 DASHBOARD_TRUE
-ISP2_FALSE
-ISP2_TRUE
 GPIO_FALSE
 GPIO_TRUE
 I2C_FALSE
@@ -4822,8 +4820,10 @@ if test "x$enable_i2c" != xno; then :
 
 $as_echo "#define FEAT_I2C 1" >>confdefs.h
 
+	feat_i2c=true
+
 fi
- if test "x$FEAT_I2C" = x1; then
+ if test "x$feat_i2c" = xtrue; then
   I2C_TRUE=
   I2C_FALSE='#'
 else
@@ -4891,6 +4891,7 @@ if test "x$ac_cv_lib_bcm2835_bcm2835_i2c_write_read_rs" = xyes; then :
 
 $as_echo "#define FEAT_GPIO 1" >>confdefs.h
 
+		feat_gpio=true
 		#AC_DEFINE([HAVE_LIBBCM2835],[1],[Library bcm2835 found])
 
 else
@@ -4901,7 +4902,7 @@ fi
 
 
 fi
- if test "x$FEAT_GPIO" = x1; then
+ if test "x$feat_gpio" = xtrue; then
   GPIO_TRUE=
   GPIO_FALSE='#'
 else
@@ -5032,14 +5033,6 @@ fi
 
 
 fi
- if test "x$HAVE_LIBISP2" = x1; then
-  ISP2_TRUE=
-  ISP2_FALSE='#'
-else
-  ISP2_TRUE='#'
-  ISP2_FALSE=
-fi
-
 
 
 # Check whether --with-bluetooth was given.
@@ -5160,9 +5153,10 @@ fi
 
 $as_echo "#define FEAT_DASHBOARD 1" >>confdefs.h
 
+	feat_dashboard=true
 
 fi
- if test "x$FEAT_DASHBOARD" = x1; then
+ if test "x$feat_dashboard" = xtrue; then
   DASHBOARD_TRUE=
   DASHBOARD_FALSE='#'
 else
@@ -6098,10 +6092,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${GPIO_TRUE}" && test -z "${GPIO_FALSE}"; then
   as_fn_error $? "conditional \"GPIO\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${ISP2_TRUE}" && test -z "${ISP2_FALSE}"; then
-  as_fn_error $? "conditional \"ISP2\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${DASHBOARD_TRUE}" && test -z "${DASHBOARD_FALSE}"; then
