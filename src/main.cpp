@@ -48,7 +48,9 @@
 #include "bluetooth.h"
 #endif /* FEAT_DASHBOARD */
 
+#ifdef FEAT_FRONTCONTROLS
 #include "front_controls.h"
+#endif /* FEAT_FRONTCONTROLS */
 
 #include "serial.h"
 #include "definitions.h"
@@ -400,10 +402,12 @@ int main(int argc, char *argv[])
 		else if (select_result > 0) {
 			error_message(DEBUG,"Select something");
 
+			#ifdef FEAT_FRONTCONTROLS
 			if (FD_ISSET(fd_front_controls,&readset)) {
 				error_message (DEBUG,"Select read front controls");
 				readFC(fd_front_controls,fcData);
 			}
+			#endif /* FEAT_FRONTCONTROLS */
 			#ifdef FEAT_DASHBOARD
 			if (FD_ISSET(dashboard.getListener(),&readset)) {
 				error_message(DEBUG,"Select new dashboard client");
@@ -456,7 +460,10 @@ int main(int argc, char *argv[])
 				}
 			}
 			#endif /* FEAT_GPIO */
+
+			#ifdef FEAT_FRONTCONTROLS
 			error_message (DEBUG,"Running. %s",exCmd_bin(fcData.serialCmdA));
+			#endif /* FEAT_FRONTCONTROLS */
 		}
 		else if ( my_rpm <= STOPPED_RPM ) {
 			engineRunning = false;
@@ -469,7 +476,9 @@ int main(int argc, char *argv[])
 				}
 			}
 			#endif /* FEAT_GPIO */
+			#ifdef FEAT_FRONTCONTROLS
 			error_message (DEBUG,"Not Running. %s",exCmd_bin(fcData.serialCmdA));
+			#endif /* FEAT_FRONTCONTROLS */
 		}
 
 		if(db_from_cmd == TRPRST) {
@@ -560,10 +569,12 @@ int main(int argc, char *argv[])
 			// #Dontcare
 		}
 		else if (select_result > 0) {
+			#ifdef FEAT_FRONTCONTROLS
 			if (FD_ISSET(fd_front_controls,&writeset)) {
 				// Front controls accepts commands
 				writeFC(fd_front_controls,fcData);
 			}
+			#endif /* FEAT_FRONTCONTROLS */
 			#ifdef FEAT_DASHBOARD
 			if (FD_ISSET(dashboard.getClient(),&writeset)) {
 				error_message(DEBUG,"Select write dashboard");

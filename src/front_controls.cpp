@@ -116,12 +116,19 @@ int writeFC(int fd_front_controls, fc_data& fcData) {
 	}
 }
 
+/**
+ * exCmd_bin - Create a string representation of an 8-bit binary value
+ * @param@ uint8_t the 8 bits of data to be represented
+ * @return@ pointer to char array containing string of '1's and '0's
+ *
+ */
 char *exCmd_bin(uint8_t cmd) {
 	static char buf[9];
 	int i;
 	for(i=0;i<8;i++) {
 		buf[7-i] = '0'+((cmd >> i) & 0x01);
 	}
+	buf[8] = 0;
 	return buf;
 }
 
