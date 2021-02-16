@@ -50,6 +50,7 @@ const char *gengetopt_args_info_help[] = {
   "      --lc2-pin=INT             GPIO pin that controls power for LC-2\n                                  (default=`26')",
   "  -s, --sleepy=device           I2C device to communicate with Sleepy Pi.",
   "      --sleepy-addr=0xXX        Address for Sleepy Pi.  (default=`0x04')",
+  "  -g, --gear-ratios=STRING      RPM/Speed ratios. Comma separated. (Eg. -g\n                                  \"145,121,99,85,65\")",
   "\nIgnitech specific options:",
   "      --ignitech-dump-file=filename\n                                File to dump raw responses from Ignitech",
   "      --ignitech-servo-as-iap   Treat servo reading as IAP. Requires\n                                  calibration options.  (default=off)",
@@ -126,6 +127,7 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->lc2_pin_given = 0 ;
   args_info->sleepy_given = 0 ;
   args_info->sleepy_addr_given = 0 ;
+  args_info->gear_ratios_given = 0 ;
   args_info->ignitech_dump_file_given = 0 ;
   args_info->ignitech_servo_as_iap_given = 0 ;
   args_info->ignitech_sai_low_given = 0 ;
@@ -158,6 +160,8 @@ void clear_args (struct gengetopt_args_info *args_info)
   args_info->sleepy_orig = NULL;
   args_info->sleepy_addr_arg = gengetopt_strdup ("0x04");
   args_info->sleepy_addr_orig = NULL;
+  args_info->gear_ratios_arg = NULL;
+  args_info->gear_ratios_orig = NULL;
   args_info->ignitech_dump_file_arg = NULL;
   args_info->ignitech_dump_file_orig = NULL;
   args_info->ignitech_servo_as_iap_flag = 0;
@@ -190,12 +194,13 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->lc2_pin_help = gengetopt_args_info_help[13] ;
   args_info->sleepy_help = gengetopt_args_info_help[14] ;
   args_info->sleepy_addr_help = gengetopt_args_info_help[15] ;
-  args_info->ignitech_dump_file_help = gengetopt_args_info_help[17] ;
-  args_info->ignitech_servo_as_iap_help = gengetopt_args_info_help[18] ;
-  args_info->ignitech_sai_low_help = gengetopt_args_info_help[19] ;
-  args_info->ignitech_sai_low_mv_help = gengetopt_args_info_help[20] ;
-  args_info->ignitech_sai_high_help = gengetopt_args_info_help[21] ;
-  args_info->ignitech_sai_high_mv_help = gengetopt_args_info_help[22] ;
+  args_info->gear_ratios_help = gengetopt_args_info_help[16] ;
+  args_info->ignitech_dump_file_help = gengetopt_args_info_help[18] ;
+  args_info->ignitech_servo_as_iap_help = gengetopt_args_info_help[19] ;
+  args_info->ignitech_sai_low_help = gengetopt_args_info_help[20] ;
+  args_info->ignitech_sai_low_mv_help = gengetopt_args_info_help[21] ;
+  args_info->ignitech_sai_high_help = gengetopt_args_info_help[22] ;
+  args_info->ignitech_sai_high_mv_help = gengetopt_args_info_help[23] ;
   
 }
 
@@ -302,6 +307,8 @@ cmdline_parser_release (struct gengetopt_args_info *args_info)
   free_string_field (&(args_info->sleepy_orig));
   free_string_field (&(args_info->sleepy_addr_arg));
   free_string_field (&(args_info->sleepy_addr_orig));
+  free_string_field (&(args_info->gear_ratios_arg));
+  free_string_field (&(args_info->gear_ratios_orig));
   free_string_field (&(args_info->ignitech_dump_file_arg));
   free_string_field (&(args_info->ignitech_dump_file_orig));
   free_string_field (&(args_info->ignitech_sai_low_orig));
@@ -416,6 +423,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "sleepy", args_info->sleepy_orig, 0);
   if (args_info->sleepy_addr_given)
     write_into_file(outfile, "sleepy-addr", args_info->sleepy_addr_orig, 0);
+  if (args_info->gear_ratios_given)
+    write_into_file(outfile, "gear-ratios", args_info->gear_ratios_orig, 0);
   if (args_info->ignitech_dump_file_given)
     write_into_file(outfile, "ignitech-dump-file", args_info->ignitech_dump_file_orig, 0);
   if (args_info->ignitech_servo_as_iap_given)
@@ -842,6 +851,7 @@ cmdline_parser_internal (
         { "lc2-pin",	1, NULL, 0 },
         { "sleepy",	1, NULL, 's' },
         { "sleepy-addr",	1, NULL, 0 },
+        { "gear-ratios",	1, NULL, 'g' },
         { "ignitech-dump-file",	1, NULL, 0 },
         { "ignitech-servo-as-iap",	0, NULL, 0 },
         { "ignitech-sai-low",	1, NULL, 0 },
@@ -851,7 +861,7 @@ cmdline_parser_internal (
         { 0,  0, 0, 0 }
       };
 
-      c = getopt_long (argc, argv, "hVc:o:dvqf:i:l:s:", long_options, &option_index);
+      c = getopt_long (argc, argv, "hVc:o:dvqf:i:l:s:g:", long_options, &option_index);
 
       if (c == -1) break;	/* Exit from `while (1)' loop.  */
 
@@ -964,6 +974,18 @@ cmdline_parser_internal (
               &(local_args_info.sleepy_given), optarg, 0, 0, ARG_STRING,
               check_ambiguity, override, 0, 0,
               "sleepy", 's',
+              additional_error))
+            goto failure;
+        
+          break;
+        case 'g':	/* RPM/Speed ratios. Comma separated. (Eg. -g \"145,121,99,85,65\").  */
+        
+        
+          if (update_arg( (void *)&(args_info->gear_ratios_arg), 
+               &(args_info->gear_ratios_orig), &(args_info->gear_ratios_given),
+              &(local_args_info.gear_ratios_given), optarg, 0, 0, ARG_STRING,
+              check_ambiguity, override, 0, 0,
+              "gear-ratios", 'g',
               additional_error))
             goto failure;
         

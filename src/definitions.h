@@ -27,7 +27,6 @@
 #define STOPPED_RPM 500
 #define O2_PIN 26	// Default //
 #define LC2_POWER_DELAY 15 // delay in seconds. Default //
-#define FC_PORT "/dev/front_controls"
 #define ENGINE_DATA_ADDR 0x04
 
 #define TIME_BUF_LEN 256

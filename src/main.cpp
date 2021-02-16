@@ -61,11 +61,11 @@ volatile sig_atomic_t 	time_to_quit = false;
 // Set default Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
 e_lvl			LEVEL_DEBUG = ERROR;
 
-int fc_open() {
+int fc_open(const char *filename) {
 	int fd;
-	fd = open (FC_PORT, O_RDWR | O_NOCTTY | O_SYNC);
+	fd = open (filename, O_RDWR | O_NOCTTY | O_SYNC);
 	if (fd < 0) {
-		error_message (WARN,"error %d opening %s: %s", errno, FC_PORT, strerror (errno));
+		error_message (WARN,"error %d opening %s: %s", errno, filename, strerror (errno));
 		return -1;
 	}
 
@@ -148,15 +148,26 @@ int main(int argc, char *argv[])
 	char const *ignitech_device = NULL;
 	IGNITECH* ignition;
 	int ignition_read_status = -1;
+	double sai_slope = 0;
 	if ( args_info.ignitech_given ) {
 		ignitech_device = args_info.ignitech_arg;
 		ignition = new IGNITECH(ignitech_device);
 		if ( args_info.ignitech_dump_file_given ) {
 			ignition->enable_raw_dump(args_info.ignitech_dump_file_arg);
 		}
+		if ( args_info.ignitech_sai_high_mv_given ) {
+			if ( ! args_info.ignitech_servo_as_iap_flag ) {
+				error_message (ERROR,"Option --ignitech-sai-high-mv depends on --ignitech-servo-as-iap");
+				return -1;
+			}
+		}
 		if ( args_info.ignitech_servo_as_iap_flag ) {
-			//TODO Linear Interpolation
 			//Calculate slope here
+			if ( args_info.ignitech_sai_low_mv != args_info.ignitech_sai_high_mv ) {
+				sai_slope = (args_info.ignitech_sai_high - args_info.ignitech_sai_low ) /
+					(args_info.ignitech_sai_high_mv - args_info.ignitech_sai_low_mv)
+			}
+		}
 
 		}
 	}
@@ -185,8 +196,10 @@ int main(int argc, char *argv[])
 				free(base);
 			}
 			
-			if (dir) 
+			if (dir) { 
 				strcat(log_file_tmp,dir);
+				free(dir);
+			}
 			strcat(log_file_tmp,"/");
 			if (file) {
 				strcat(log_file_tmp,file);
@@ -215,10 +228,23 @@ int main(int argc, char *argv[])
 		fprintf(fd_log,"\n");
 	}
 
+
+	double gear_ratios[] = {0};
+	if ( args_info.gear_ratios_given ) {
+		//TODO parse gear ratios
+		char *pt;
+		pt = strtok(args_info.gear_ratios_arg,",");
+		int i = 0;
+		while ( pt != NULL && i < 5 ) {
+			gear_ratios[i] = atof(pt);
+			pt = strtok(args_info.gear_ratios_arg,",");
+			i++;
+		}
+	}
+	char const *fc_file = NULL;
 	if ( args_info.front_controls_given ) {
-		// TODO front controls
 		// Open Front controls
-		fd_front_controls = fc_open();
+		fd_front_controls = fc_open(args_info.front_controls_arg);
 	}
 
 	int fd_lc2 = -1;
@@ -357,6 +383,10 @@ int main(int argc, char *argv[])
 				else if (ignition->get_sersor_type == SENSOR_TPS) {
 					log_data.tps_percent = ignition->get_sensor_value();
 				}
+				if ( args_info.ignitech_servo_as_iap_flag ) {
+					log_data.map_kpa = ((ignition->get_servo_measured() - args_info.ignitech_sai_low_mv) *
+						sai_slope) + args_info.ignitech_sai_low;
+				}
 			}
 		}
 		#endif /* HAVE_LIBIGNITECH */
@@ -376,13 +406,15 @@ int main(int argc, char *argv[])
 			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
 		}
 		#endif /* FEAT_DASHBOARD */
-		if (fd_front_controls > 0) {
-			error_message(DEBUG,"Adding front controls to select");
-			FD_SET(fd_front_controls,&readset);
-			max_fd = (max_fd>fd_front_controls)?max_fd:fd_front_controls;
-		}
-		else {
-			fd_front_controls = fc_open();
+		if ( args_info.front_controls_given ) {
+			if (fd_front_controls > 0) {
+				error_message(DEBUG,"Adding front controls to select");
+				FD_SET(fd_front_controls,&readset);
+				max_fd = (max_fd>fd_front_controls)?max_fd:fd_front_controls;
+			}
+			else {
+				fd_front_controls = fc_open(args_info.front_controls_arg);
+			}
 		}
 		// TODO LC-2 runtime and build-time optional (libISP)
 		if ( args_info.lc2_given ) {
@@ -403,7 +435,7 @@ int main(int argc, char *argv[])
 		// Do Select()
 		select_result = select(max_fd+1, &readset, &writeset, NULL, &timeout);
 		if (select_result < 0) {
-			error_message (WARN, "error %d Port: %s: %s", errno, FC_PORT, strerror (errno));
+			error_message (WARN, "Select read error %d : %s", errno, strerror (errno));
 		}
 		else if (select_result == 0){
 			// Timeout
@@ -543,6 +575,21 @@ int main(int argc, char *argv[])
 		}
 		#ifdef FEAT_DASHBOARD
 		bikeobj.gear = "?";
+		if ( args_info.gear_ratios_given ) {
+			char gears[5] = '1','2','3','4','5';
+			double current_ratio = 0;
+			if ( bikeobj.speed !=0 ) {
+				current_ratio = bikeobj.rpm / bikeobj.speed;
+			}
+			double smallest_delta = DBL_MAX;
+			for (int i=0;i<5;i++) {
+				double delta = fabs(current_ratio - gear_ratios[i]);
+				if ( delta < smallest_delta ) {
+					smallest_delta = delta;
+					bikeobj.gear = gears[i];
+				}
+			}
+		}
 		if (fcData.in_neutral) {
 			bikeobj.gear = "N";
 		}

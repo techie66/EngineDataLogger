@@ -82,6 +82,9 @@ struct gengetopt_args_info
   char * sleepy_addr_arg;	/**< @brief Address for Sleepy Pi. (default='0x04').  */
   char * sleepy_addr_orig;	/**< @brief Address for Sleepy Pi. original value given at command line.  */
   const char *sleepy_addr_help; /**< @brief Address for Sleepy Pi. help description.  */
+  char * gear_ratios_arg;	/**< @brief RPM/Speed ratios. Comma separated. (Eg. -g \"145,121,99,85,65\").  */
+  char * gear_ratios_orig;	/**< @brief RPM/Speed ratios. Comma separated. (Eg. -g \"145,121,99,85,65\") original value given at command line.  */
+  const char *gear_ratios_help; /**< @brief RPM/Speed ratios. Comma separated. (Eg. -g \"145,121,99,85,65\") help description.  */
   char * ignitech_dump_file_arg;	/**< @brief File to dump raw responses from Ignitech.  */
   char * ignitech_dump_file_orig;	/**< @brief File to dump raw responses from Ignitech original value given at command line.  */
   const char *ignitech_dump_file_help; /**< @brief File to dump raw responses from Ignitech help description.  */
@@ -115,6 +118,7 @@ struct gengetopt_args_info
   unsigned int lc2_pin_given ;	/**< @brief Whether lc2-pin was given.  */
   unsigned int sleepy_given ;	/**< @brief Whether sleepy was given.  */
   unsigned int sleepy_addr_given ;	/**< @brief Whether sleepy-addr was given.  */
+  unsigned int gear_ratios_given ;	/**< @brief Whether gear-ratios was given.  */
   unsigned int ignitech_dump_file_given ;	/**< @brief Whether ignitech-dump-file was given.  */
   unsigned int ignitech_servo_as_iap_given ;	/**< @brief Whether ignitech-servo-as-iap was given.  */
   unsigned int ignitech_sai_low_given ;	/**< @brief Whether ignitech-sai-low was given.  */

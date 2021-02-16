@@ -19,6 +19,7 @@ option "lc2-delay"	- "Delay before powering up LC-2." int typestr="seconds" defa
 option "lc2-pin"	- "GPIO pin that controls power for LC-2" int default="26" dependon="lc2" optional
 option "sleepy"	s	 "I2C device to communicate with Sleepy Pi." string typestr="device" optional
 option "sleepy-addr"	- "Address for Sleepy Pi." string default="0x04" typestr="0xXX" dependon="sleepy" optional
+option "gear-ratios"	g "RPM/Speed ratios. Comma separated. (Eg. -g \"145,121,99,85,65\")" string optional
 section "Ignitech specific options"
 option "ignitech-dump-file"	- "File to dump raw responses from Ignitech" string typestr="filename" dependon="ignitech" optional
 option "ignitech-servo-as-iap" - "Treat servo reading as IAP. Requires calibration options." flag off dependon="ignitech" dependon="ignitech-sai-low"
