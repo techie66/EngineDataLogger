@@ -1,0 +1,13 @@
+[Unit]
+Description=ShutdownCheck
+DefaultDependencies=false
+
+[Service]
+Type=simple
+ExecStart=@bindir@/shutdowncheck.py
+# Probably don't need, but don't enable until we make sure the directory exists
+#WorkingDirectory=@runstatedir@
+
+[Install]
+WantedBy=local-fs.target
+

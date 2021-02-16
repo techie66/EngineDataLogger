@@ -1,0 +1,30 @@
+package "EngineDataLogger"
+version "v0.1.0"
+args "--func-name=cmdline_parser --conf-parser"
+
+
+option "config-file"	c "Configuration file." string typestr="filename" optional
+option "output-file"	o "Output file for CSV logging" string typestr="filename" default="/dev/null" optional
+option "output-file-date"	d "Insert date and time into output filename." optional
+option "v"		v "Verbose output. Specify multiple times for increasing verbosity." optional multiple(1-3)
+option "verbose"	- "Set level of verbosity explicitly. \n(Overrides -v)\n" enum typestr="VERBOSITY" values="NONE","ERROR","WARN","INFO","DEBUG" default="ERROR" optional
+option "quiet"		q "Suppress output. Same as --verbose=NONE (Overrides both -v and --verbose)" optional
+
+section "Device Interfaces"
+
+option "front-controls"	f "Front controls device" string typestr="device" optional
+option "ignitech"	i "Ignitech ignition device" string typestr="device" optional 
+option "lc2"		l "Innovate LC-2 device" string typestr="device" optional
+option "lc2-delay"	- "Delay before powering up LC-2." int typestr="seconds" default="15" dependon="lc2" optional
+option "lc2-pin"	- "GPIO pin that controls power for LC-2" int default="26" dependon="lc2" optional
+option "sleepy"	s	 "I2C device to communicate with Sleepy Pi." string typestr="device" optional
+option "sleepy-addr"	- "Address for Sleepy Pi." string default="0x04" typestr="0xXX" dependon="sleepy" optional
+option "gear-ratios"	g "RPM/Speed ratios. Comma separated. (Eg. -g \"145,121,99,85,65\")" string optional
+section "Ignitech specific options"
+option "ignitech-dump-file"	- "File to dump raw responses from Ignitech" string typestr="filename" dependon="ignitech" optional
+option "ignitech-servo-as-iap" - "Treat servo reading as IAP. Requires calibration options." flag off dependon="ignitech" dependon="ignitech-sai-low"
+option "ignitech-sai-low" - "Low kpa reading. Eg: 22" int optional dependon="ignitech-sai-low-mv"
+option "ignitech-sai-low-mv" - "Low mv value. Eg: 171" int optional dependon="ignitech-sai-high"
+option "ignitech-sai-high" - "High kpa reading. Eg: 102" int optional dependon="ignitech-sai-high-mv"
+option "ignitech-sai-high-mv" - "High mv value. Eg: 4782" int optional dependon="ignitech"
+

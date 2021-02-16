@@ -1,0 +1,13 @@
+#test
+[Unit]
+Description=EngineDataLogger
+DefaultDependencies=false
+
+[Service]
+Type=simple
+Restart=always
+ExecStart = @bindir@/enginedatalogger -c @myconfdir@/enginedatalogger.conf
+#WorkingDirectory=@runstatedir@/enginedatalogger
+
+#[Install]
+#WantedBy=local-fs.target

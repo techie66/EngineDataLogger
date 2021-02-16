@@ -22,10 +22,16 @@
 
 #include <cstdint>
 
-const uint16_t		RUNNING_RPM=900;
-const uint8_t		engine_data_addr = 0x04,
-      			FC_CMD_SIZE = 8;
+// TODO option-ify
+#define RUNNING_RPM 900
+#define STOPPED_RPM 500
+#define O2_PIN 26	// Default //
+#define LC2_POWER_DELAY 15 // delay in seconds. Default //
+#define ENGINE_DATA_ADDR 0x04
 
+#define TIME_BUF_LEN 256
+#define LOG_FILE_LEN 4096
+#define FC_CMD_SIZE 8
 
 // CmdD flags
 const uint8_t		BRAKE_ON = 1 << 2,
@@ -78,4 +84,21 @@ enum System_CMD {
 	O2MANOFF
 };
 
+struct	bike_data {
+	int ig_rpm;
+	int32_t alt_rpm;
+	float speed;
+	uint32_t odometer;
+	uint32_t trip;
+	float systemvoltage;
+	float batteryvoltage;
+	float oil_temp;
+	float oil_pres;
+	bool blink_left;
+	bool blink_right;
+	uint16_t lambda;
+	int map_kpa;
+	int tps_percent;
+	bool engineRunning;
+};
 #endif
