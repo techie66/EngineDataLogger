@@ -163,9 +163,9 @@ int main(int argc, char *argv[])
 		}
 		if ( args_info.ignitech_servo_as_iap_flag ) {
 			//Calculate slope here
-			if ( args_info.ignitech_sai_low_mv != args_info.ignitech_sai_high_mv ) {
-				sai_slope = (args_info.ignitech_sai_high - args_info.ignitech_sai_low ) /
-					(args_info.ignitech_sai_high_mv - args_info.ignitech_sai_low_mv)
+			if ( args_info.ignitech_sai_low_mv_arg != args_info.ignitech_sai_high_mv_arg ) {
+				sai_slope = (args_info.ignitech_sai_high_arg - args_info.ignitech_sai_low_arg ) /
+					(args_info.ignitech_sai_high_mv_arg - args_info.ignitech_sai_low_mv_arg)
 			}
 		}
 
