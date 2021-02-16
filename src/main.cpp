@@ -33,6 +33,7 @@
 #include <libgen.h>
 #include <sys/time.h>
 #include <getopt.h>
+#include <vector>
 #include "cmdline.h"
 
 #include <isp2.h>
@@ -111,8 +112,6 @@ int main(int argc, char *argv[])
 	}
 	strftime(time_buf,TIME_BUF_LEN,"%Y%m%d%H%M%S",ptm);
 
-	// TODO option-ify (part way there)
-	//char const	*i2c_device = "/dev/i2c-1";
 	int 		fd_front_controls;
 	FILE		*fd_log;
 	
@@ -173,6 +172,7 @@ int main(int argc, char *argv[])
 	#endif /* HAVE_LIBIGNITECH */
 
 	char const *log_file = NULL;
+	std::vector<log_fmt_data> log_format;
 	if ( args_info.output_file_given ) {
 		if ( args_info.output_file_date_given ) {
 			char log_file_tmp[LOG_FILE_LEN] = {0};
@@ -218,25 +218,70 @@ int main(int argc, char *argv[])
 			log_file = args_info.output_file_arg;
 		}
 
+		// Parse format string
+		char *pt;
+		pt = strtok(args_info.output_file_format_arg,",");
+		while (pt != NULL) {
+			if ( strcmp(pt,"rpm") == 0 )
+				log_format.push_back(FMT_RPM);
+			else if ( strcmp(pt,"alt_rpm") == 0 ) 
+                log_format.push_back(FMT_ALT_RPM);
+			else if ( strcmp(pt,"speed") == 0 ) 
+                log_format.push_back(FMT_SPEED);
+			else if ( strcmp(pt,"odometer") == 0 ) 
+                log_format.push_back(FMT_ODOMETER);
+			else if ( strcmp(pt,"trip") == 0 ) 
+                log_format.push_back(FMT_TRIP);
+			else if ( strcmp(pt,"systemvoltage") == 0 ) 
+                log_format.push_back(FMT_SYSTEMVOLTAGE);
+			else if ( strcmp(pt,"batteryvoltage") == 0 ) 
+                log_format.push_back(FMT_BATTERYVOLTAGE);
+			else if ( strcmp(pt,"oil_temp") == 0 ) 
+                log_format.push_back(FMT_OIL_TEMP);
+			else if ( strcmp(pt,"oil_pres") == 0 ) 
+                log_format.push_back(FMT_OIL_PRES);
+			else if ( strcmp(pt,"blink_left") == 0 ) 
+                log_format.push_back(FMT_BLINK_LEFT);
+			else if ( strcmp(pt,"blink_right") == 0 ) 
+                log_format.push_back(FMT_BLINK_RIGHT);
+			else if ( strcmp(pt,"lambda") == 0 ) 
+                log_format.push_back(FMT_LAMBDA);
+			else if ( strcmp(pt,"map_kpa") == 0 ) 
+                log_format.push_back(FMT_MAP_KPA);
+			else if ( strcmp(pt,"tps_percent") == 0 ) 
+                log_format.push_back(FMT_TPS_PERCENT);
+			else if ( strcmp(pt,"enginerunning") == 0 ) 
+                log_format.push_back(FMT_ENGINERUNNING);
+			else if ( strcmp(pt,"time") == 0 ) 
+                log_format.push_back(FMT_TIME);
+			else {
+				error_message (ERROR,"Invalid output-file-format");
+				return -1;
+			}
+
+			printf("%s",pt);
+			pt = strtok(NULL, ",");
+		}
+
 		// Open log file
 		if ((fd_log = fopen(log_file,"a")) < 0) {
 			error_message (ERROR,"Failed to open the log file err:%d - %s",errno,strerror(errno));
 			//return -1;
 		}
-		// TODO Put proper CSV header here
-		fprintf(fd_log,"\n");
+		// Put proper CSV header here
+		fprintf(fd_log,"%s\n",args_info.output_file_format_orig);
 	}
 
 
 	double gear_ratios[] = {0};
 	if ( args_info.gear_ratios_given ) {
-		//TODO parse gear ratios
+		//parse gear ratios
 		char *pt;
 		pt = strtok(args_info.gear_ratios_arg,",");
 		int i = 0;
 		while ( pt != NULL && i < 5 ) {
 			gear_ratios[i] = atof(pt);
-			pt = strtok(args_info.gear_ratios_arg,",");
+			pt = strtok(NULL,",");
 			i++;
 		}
 	}
@@ -653,8 +698,7 @@ int main(int argc, char *argv[])
 		log_data.speed = enData.speed;
 		log_data.systemvoltage = enData.batteryVoltage;
 		if ( args_info.output_file_given ) {
-			// TODO remove flatbuffers dependency for the log
-			// TODO log advance when available
+			/*
 			fprintf(fd_log,"%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%s.%06ld,%.2f,%d\n",
 				log_data.ig_rpm,
 				log_data.alt_rpm,
@@ -669,13 +713,66 @@ int main(int argc, char *argv[])
 				log_data.lambda/1000.0, 
 				log_data.map_kpa
 			);
+			*/
+			for (std::vector<log_fmt_data>::iterator it = log_format.begin() ; it != log_format.end(); ++it) {
+				switch(*it) {
+					case FMT_RPM:
+						fprintf(fd_log,"%d,",log_data.ig_rpm);
+						break;
+					case FMT_ALT_RPM:
+						fprintf(fd_log,"%d,",log_data.alt_rpm);
+						break;
+					case FMT_SPEED:
+						fprintf(fd_log,"%.2f,",log_data.speed);
+						break;
+					case FMT_ODOMETER:
+						fprintf(fd_log,"%d,",log_data.odometer);
+						break;
+					case FMT_TRIP:
+						fprintf(fd_log,"%d,",log_data.trip);
+						break;
+					case FMT_SYSTEMVOLTAGE:
+						fprintf(fd_log,"%.2f,",log_data.systemvoltage);
+						break;
+					case FMT_BATTERYVOLTAGE:
+						fprintf(fd_log,"%.2f,",log_data.systemvoltage);
+						break;
+					case FMT_OIL_TEMP:
+						fprintf(fd_log,"%.2f,",log_data.oil_temp);
+						break;
+					case FMT_OIL_PRES:
+						fprintf(fd_log,"%.2f,",log_data.oil_pres);
+						break;
+					case FMT_BLINK_LEFT:
+						fprintf(fd_log,"%d,",log_data.blink_left);
+						break;
+					case FMT_BLINK_RIGHT:
+						fprintf(fd_log,"%d,",log_data.blink_right);
+						break;
+					case FMT_LAMBDA:
+						fprintf(fd_log,"%.2f,",log_data.lambda/1000.0);
+						break;
+					case FMT_MAP_KPA:
+						fprintf(fd_log,"%d,",log_data.map_kpa);
+						break;
+					case FMT_TPS_PERCENT:
+						fprintf(fd_log,"%d,",log_data.tps_percent);
+						break;
+					case FMT_ENGINERUNNING:
+						fprintf(fd_log,"%d,",log_data.engineRunning);
+						break;
+					case FMT_TIME:
+						fprintf(fd_log,"%s.%06ld,",time_buf,currtime.tv_usec);
+						break;
+				}
+			}
+			fprintf(fd_log,"\n");
 			fflush(fd_log);
 		}
 
 		usleep(50000);
 	}
 
-	// TODO Make run-time optional
 	#ifdef FEAT_GPIO
 	if ( args_info.lc2_given ) {
 		bcm2835_gpio_write(o2_pin, LOW);
