@@ -29,6 +29,7 @@
 #include <linux/i2c-dev.h>		//Needed for I2C port
 #include <time.h>
 #include <string.h>
+#include <float.h>
 #include <libgen.h>
 #include <sys/time.h>
 #include <getopt.h>
@@ -164,11 +165,9 @@ int main(int argc, char *argv[])
 		if ( args_info.ignitech_servo_as_iap_flag ) {
 			//Calculate slope here
 			if ( args_info.ignitech_sai_low_mv_arg != args_info.ignitech_sai_high_mv_arg ) {
-				sai_slope = (args_info.ignitech_sai_high_arg - args_info.ignitech_sai_low_arg ) /
-					(args_info.ignitech_sai_high_mv_arg - args_info.ignitech_sai_low_mv_arg);
+				sai_slope = ((double)args_info.ignitech_sai_high_arg - args_info.ignitech_sai_low_arg ) /
+					((double)args_info.ignitech_sai_high_mv_arg - args_info.ignitech_sai_low_mv_arg);
 			}
-		}
-
 		}
 	}
 	#endif /* HAVE_LIBIGNITECH */
@@ -377,15 +376,16 @@ int main(int argc, char *argv[])
 				error_message (DEBUG,"Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(),ignition->get_battery_mV());
 				log_data.ig_rpm = ignition->get_rpm();
 				log_data.batteryvoltage = ignition->get_battery_mV()/float(1000);
-				if (ignition->get_sersor_type == SENSOR_IAP) {
+				if (ignition->get_sensor_type() == SENSOR_IAP) {
 					log_data.map_kpa = ignition->get_sensor_value();
 				}
-				else if (ignition->get_sersor_type == SENSOR_TPS) {
+				else if (ignition->get_sensor_type() == SENSOR_TPS) {
 					log_data.tps_percent = ignition->get_sensor_value();
 				}
 				if ( args_info.ignitech_servo_as_iap_flag ) {
-					log_data.map_kpa = ((ignition->get_servo_measured() - args_info.ignitech_sai_low_mv) *
-						sai_slope) + args_info.ignitech_sai_low;
+					error_message (DEBUG,"Servo mV: %d, Slope: %f", ignition->get_servo_measured(),sai_slope);
+					log_data.map_kpa = ((ignition->get_servo_measured() - args_info.ignitech_sai_low_mv_arg) *
+						sai_slope) + args_info.ignitech_sai_low_arg;
 				}
 			}
 		}
@@ -576,7 +576,7 @@ int main(int argc, char *argv[])
 		#ifdef FEAT_DASHBOARD
 		bikeobj.gear = "?";
 		if ( args_info.gear_ratios_given ) {
-			char gears[5] = '1','2','3','4','5';
+			char gears[5] = {'1','2','3','4','5'};
 			double current_ratio = 0;
 			if ( bikeobj.speed !=0 ) {
 				current_ratio = bikeobj.rpm / bikeobj.speed;

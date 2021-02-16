@@ -119,7 +119,7 @@ AS_IF([test "x$with_bluetooth" != xno -a "x$with_flatbuffers" != xno -a "x$enabl
 AM_CONDITIONAL([DASHBOARD], [test "x$feat_dashboard" = xtrue])
 
 # Checks for header files.
-AC_CHECK_HEADERS([fcntl.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h termios.h unistd.h])
+AC_CHECK_HEADERS([fcntl.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h termios.h unistd.h float.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
