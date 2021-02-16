@@ -21,6 +21,19 @@ verbose = WARN
 #	Only really useful for debugging
 #ignitech-dump-file = @runstatedir@/ignitech.dump.bin
 
+# Ignitech Servo as IAP
+#  read servo measurment as an IAP(MAP) sensor
+#  All 5 options must be set
+#ignitech_servo_as_iap = off
+#ignitech_sai_low = 21
+#ignitech_sai_low_mv = 708
+#ignitech_sai_high = 101
+#ignitech_sai_high_mv = 4252
+
+# Gear Ratios
+#  Comma-separated list of rpm/speed ratios from 1-5
+#gear_ratios = "175,122,95,78,67"
+
 ## Innovate LC-2 device settings
 # set 'lc2' to the serial port the LC-2 is connected to
 #lc2 = /dev/ttyAMA0
