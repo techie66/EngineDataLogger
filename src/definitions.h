@@ -99,6 +99,7 @@ struct	bike_data {
 	bool blink_right;
 	uint16_t lambda;
 	int map_kpa;
+	int tps_percent;
 	bool engineRunning;
 };
 #endif

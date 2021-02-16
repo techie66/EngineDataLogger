@@ -151,9 +151,14 @@ int main(int argc, char *argv[])
 	if ( args_info.ignitech_given ) {
 		ignitech_device = args_info.ignitech_arg;
 		ignition = new IGNITECH(ignitech_device);
-	}
-	if ( args_info.ignitech_dump_file_given ) {
-		ignition->enable_raw_dump(args_info.ignitech_dump_file_arg);
+		if ( args_info.ignitech_dump_file_given ) {
+			ignition->enable_raw_dump(args_info.ignitech_dump_file_arg);
+		}
+		if ( args_info.ignitech_servo_as_iap_flag ) {
+			//TODO Linear Interpolation
+			//Calculate slope here
+
+		}
 	}
 	#endif /* HAVE_LIBIGNITECH */
 
@@ -346,7 +351,12 @@ int main(int argc, char *argv[])
 				error_message (DEBUG,"Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(),ignition->get_battery_mV());
 				log_data.ig_rpm = ignition->get_rpm();
 				log_data.batteryvoltage = ignition->get_battery_mV()/float(1000);
-				log_data.map_kpa = ignition->get_sensor_value();
+				if (ignition->get_sersor_type == SENSOR_IAP) {
+					log_data.map_kpa = ignition->get_sensor_value();
+				}
+				else if (ignition->get_sersor_type == SENSOR_TPS) {
+					log_data.tps_percent = ignition->get_sensor_value();
+				}
 			}
 		}
 		#endif /* HAVE_LIBIGNITECH */
