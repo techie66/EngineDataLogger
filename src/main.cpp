@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
 			//Calculate slope here
 			if ( args_info.ignitech_sai_low_mv_arg != args_info.ignitech_sai_high_mv_arg ) {
 				sai_slope = (args_info.ignitech_sai_high_arg - args_info.ignitech_sai_low_arg ) /
-					(args_info.ignitech_sai_high_mv_arg - args_info.ignitech_sai_low_mv_arg)
+					(args_info.ignitech_sai_high_mv_arg - args_info.ignitech_sai_low_mv_arg);
 			}
 		}
 
