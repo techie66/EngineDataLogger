@@ -273,7 +273,7 @@ int main(int argc, char *argv[])
 	}
 
 
-	double gear_ratios[] = {0};
+	double gear_ratios[5] = {0};
 	if ( args_info.gear_ratios_given ) {
 		//parse gear ratios
 		char *pt;
