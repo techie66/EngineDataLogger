@@ -5,6 +5,15 @@
 #	location of the output log file
 output-file = /var/log/enginedatalogger.log
 
+# Output file date
+#	If given (un-commented) will append current date and time to log file name when opening
+#output-file-date
+
+# Output file format
+#  Comma-separated list of loggable values
+#  output file will follow this list
+#output-file-format = "rpm,speed"
+
 # Verbosity
 # Options: NONE,ERROR,WARN,INFO,DEBUG
 # in order of how much is written to stdout

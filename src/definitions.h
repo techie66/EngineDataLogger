@@ -101,4 +101,23 @@ struct	bike_data {
 	int tps_percent;
 	bool engineRunning;
 };
+
+typedef enum {
+	FMT_RPM,
+	FMT_ALT_RPM,
+	FMT_SPEED,
+	FMT_ODOMETER,
+	FMT_TRIP,
+	FMT_SYSTEMVOLTAGE,
+	FMT_BATTERYVOLTAGE,
+	FMT_OIL_TEMP,
+	FMT_OIL_PRES,
+	FMT_BLINK_LEFT,
+	FMT_BLINK_RIGHT,
+	FMT_LAMBDA,
+	FMT_MAP_KPA,
+	FMT_TPS_PERCENT,
+	FMT_ENGINERUNNING,
+	FMT_TIME
+} log_fmt_data;
 #endif

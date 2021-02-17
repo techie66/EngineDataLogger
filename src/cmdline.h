@@ -40,6 +40,7 @@ enum enum_verbose { verbose__NULL = -1, verbose_arg_NONE = 0, verbose_arg_ERROR,
 struct gengetopt_args_info
 {
   const char *help_help; /**< @brief Print help and exit help description.  */
+  const char *detailed_help_help; /**< @brief Print help, including all details and hidden options, and exit help description.  */
   const char *version_help; /**< @brief Print version and exit help description.  */
   char * config_file_arg;	/**< @brief Configuration file..  */
   char * config_file_orig;	/**< @brief Configuration file. original value given at command line.  */
@@ -48,6 +49,12 @@ struct gengetopt_args_info
   char * output_file_orig;	/**< @brief Output file for CSV logging original value given at command line.  */
   const char *output_file_help; /**< @brief Output file for CSV logging help description.  */
   const char *output_file_date_help; /**< @brief Insert date and time into output filename. help description.  */
+  char * output_file_format_arg;	/**< @brief Format string of output CSV file.  */
+  char * output_file_format_orig;	/**< @brief Format string of output CSV file original value given at command line.  */
+  const char *output_file_format_help; /**< @brief Format string of output CSV file help description.  */
+  char * gear_ratios_arg;	/**< @brief RPM/Speed ratios. Comma separated. (Eg. -g \"175,122,95,78,67\").  */
+  char * gear_ratios_orig;	/**< @brief RPM/Speed ratios. Comma separated. (Eg. -g \"175,122,95,78,67\") original value given at command line.  */
+  const char *gear_ratios_help; /**< @brief RPM/Speed ratios. Comma separated. (Eg. -g \"175,122,95,78,67\") help description.  */
   unsigned int v_min; /**< @brief Verbose output. Specify multiple times for increasing verbosity.'s minimum occurreces */
   unsigned int v_max; /**< @brief Verbose output. Specify multiple times for increasing verbosity.'s maximum occurreces */
   const char *v_help; /**< @brief Verbose output. Specify multiple times for increasing verbosity. help description.  */
@@ -82,32 +89,32 @@ struct gengetopt_args_info
   char * sleepy_addr_arg;	/**< @brief Address for Sleepy Pi. (default='0x04').  */
   char * sleepy_addr_orig;	/**< @brief Address for Sleepy Pi. original value given at command line.  */
   const char *sleepy_addr_help; /**< @brief Address for Sleepy Pi. help description.  */
-  char * gear_ratios_arg;	/**< @brief RPM/Speed ratios. Comma separated. (Eg. -g \"145,121,99,85,65\").  */
-  char * gear_ratios_orig;	/**< @brief RPM/Speed ratios. Comma separated. (Eg. -g \"145,121,99,85,65\") original value given at command line.  */
-  const char *gear_ratios_help; /**< @brief RPM/Speed ratios. Comma separated. (Eg. -g \"145,121,99,85,65\") help description.  */
   char * ignitech_dump_file_arg;	/**< @brief File to dump raw responses from Ignitech.  */
   char * ignitech_dump_file_orig;	/**< @brief File to dump raw responses from Ignitech original value given at command line.  */
   const char *ignitech_dump_file_help; /**< @brief File to dump raw responses from Ignitech help description.  */
   int ignitech_servo_as_iap_flag;	/**< @brief Treat servo reading as IAP. Requires calibration options. (default=off).  */
   const char *ignitech_servo_as_iap_help; /**< @brief Treat servo reading as IAP. Requires calibration options. help description.  */
-  int ignitech_sai_low_arg;	/**< @brief Low kpa reading. Eg: 22.  */
-  char * ignitech_sai_low_orig;	/**< @brief Low kpa reading. Eg: 22 original value given at command line.  */
-  const char *ignitech_sai_low_help; /**< @brief Low kpa reading. Eg: 22 help description.  */
-  int ignitech_sai_low_mv_arg;	/**< @brief Low mv value. Eg: 171.  */
-  char * ignitech_sai_low_mv_orig;	/**< @brief Low mv value. Eg: 171 original value given at command line.  */
-  const char *ignitech_sai_low_mv_help; /**< @brief Low mv value. Eg: 171 help description.  */
+  int ignitech_sai_low_arg;	/**< @brief Low kpa reading. Eg: 21.  */
+  char * ignitech_sai_low_orig;	/**< @brief Low kpa reading. Eg: 21 original value given at command line.  */
+  const char *ignitech_sai_low_help; /**< @brief Low kpa reading. Eg: 21 help description.  */
+  int ignitech_sai_low_mv_arg;	/**< @brief Low mv value. Eg: 708.  */
+  char * ignitech_sai_low_mv_orig;	/**< @brief Low mv value. Eg: 708 original value given at command line.  */
+  const char *ignitech_sai_low_mv_help; /**< @brief Low mv value. Eg: 708 help description.  */
   int ignitech_sai_high_arg;	/**< @brief High kpa reading. Eg: 102.  */
   char * ignitech_sai_high_orig;	/**< @brief High kpa reading. Eg: 102 original value given at command line.  */
   const char *ignitech_sai_high_help; /**< @brief High kpa reading. Eg: 102 help description.  */
-  int ignitech_sai_high_mv_arg;	/**< @brief High mv value. Eg: 4782.  */
-  char * ignitech_sai_high_mv_orig;	/**< @brief High mv value. Eg: 4782 original value given at command line.  */
-  const char *ignitech_sai_high_mv_help; /**< @brief High mv value. Eg: 4782 help description.  */
+  int ignitech_sai_high_mv_arg;	/**< @brief High mv value. Eg: 4252.  */
+  char * ignitech_sai_high_mv_orig;	/**< @brief High mv value. Eg: 4252 original value given at command line.  */
+  const char *ignitech_sai_high_mv_help; /**< @brief High mv value. Eg: 4252 help description.  */
   
   unsigned int help_given ;	/**< @brief Whether help was given.  */
+  unsigned int detailed_help_given ;	/**< @brief Whether detailed-help was given.  */
   unsigned int version_given ;	/**< @brief Whether version was given.  */
   unsigned int config_file_given ;	/**< @brief Whether config-file was given.  */
   unsigned int output_file_given ;	/**< @brief Whether output-file was given.  */
   unsigned int output_file_date_given ;	/**< @brief Whether output-file-date was given.  */
+  unsigned int output_file_format_given ;	/**< @brief Whether output-file-format was given.  */
+  unsigned int gear_ratios_given ;	/**< @brief Whether gear-ratios was given.  */
   unsigned int v_given ;	/**< @brief Whether v was given.  */
   unsigned int verbose_given ;	/**< @brief Whether verbose was given.  */
   unsigned int quiet_given ;	/**< @brief Whether quiet was given.  */
@@ -118,7 +125,6 @@ struct gengetopt_args_info
   unsigned int lc2_pin_given ;	/**< @brief Whether lc2-pin was given.  */
   unsigned int sleepy_given ;	/**< @brief Whether sleepy was given.  */
   unsigned int sleepy_addr_given ;	/**< @brief Whether sleepy-addr was given.  */
-  unsigned int gear_ratios_given ;	/**< @brief Whether gear-ratios was given.  */
   unsigned int ignitech_dump_file_given ;	/**< @brief Whether ignitech-dump-file was given.  */
   unsigned int ignitech_servo_as_iap_given ;	/**< @brief Whether ignitech-servo-as-iap was given.  */
   unsigned int ignitech_sai_low_given ;	/**< @brief Whether ignitech-sai-low was given.  */
@@ -146,6 +152,8 @@ extern const char *gengetopt_args_info_usage;
 extern const char *gengetopt_args_info_description;
 /** @brief all the lines making the help output */
 extern const char *gengetopt_args_info_help[];
+/** @brief all the lines making the detailed help output (including hidden options and details) */
+extern const char *gengetopt_args_info_detailed_help[];
 
 /**
  * The command line parser
@@ -207,6 +215,10 @@ int cmdline_parser_file_save(const char *filename,
  * Print the help
  */
 void cmdline_parser_print_help(void);
+/**
+ * Print the detailed help (including hidden options and details)
+ */
+void cmdline_parser_print_detailed_help(void);
 /**
  * Print the version
  */
