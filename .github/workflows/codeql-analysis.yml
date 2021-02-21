@@ -60,7 +60,11 @@ jobs:
     #    uses a compiled language
 
     - run: |
-       ./install-deps
+       ./install-deps ignitech
+       ./install-deps isp
+       ./install-deps flatbuffers
+       ./install-deps bcm2835
+       ./install-deps bluetooth
        ./configure
        make
 
