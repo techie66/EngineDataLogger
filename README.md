@@ -1,4 +1,5 @@
 # Engine Data Logger
+![Build](https://github.com/techie66/EngineDataLogger/actions/workflows/c-cpp.yml/badge.svg)
 This program is designed to work with custom hardware to act as data logger and central control ECU for a 1983 Honda CB1100F.
 It is written to run on a raspberry pi zero W and communicate with arduinos and other sensors to control and record various aspects of the motorcycle's operation.
 
