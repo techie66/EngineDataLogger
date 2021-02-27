@@ -273,7 +273,7 @@ int main(int argc, char *argv[])
 	}
 
 
-	double gear_ratios[] = {0};
+	double gear_ratios[5] = {0};
 	if ( args_info.gear_ratios_given ) {
 		//parse gear ratios
 		char *pt;
@@ -352,7 +352,9 @@ int main(int argc, char *argv[])
 		// Read all inputs
 
 		#ifdef HAVE_LIBIGNITECH
-		ignition->read_async();
+		if ( args_info.ignitech_given ) {
+			ignition->read_async();
+		}
 		#endif /* HAVE_LIBIGNITECH */
 		//----- READ ENGINE DATA I2C -----
 		// TODO: Make class for engine_data just like the other components
@@ -513,7 +515,9 @@ int main(int argc, char *argv[])
 		}
 
 		#ifdef HAVE_LIBIGNITECH
-		ignition->read_async();
+		if ( args_info.ignitech_given ) {
+			ignition->read_async();
+		}
 		#endif /* HAVE_LIBIGNITECH */
 
 		// calculate stuff / make decisions
