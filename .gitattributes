@@ -1,6 +1,9 @@
+# Autoconf / Automake generated files
 configure linguist-vendored
-config.status linguist-vendored
 config.guess linguist-vendored
+config.sub linguist-vendored
+install-sh linguist-vendored
 compile linguist-vendored
 depcomp linguist-vendored
-autogen.sh linguist-vendored
+missing linguist-vendored
+aclocal.m4 linguist-vendored
