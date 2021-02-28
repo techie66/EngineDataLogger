@@ -1,11 +1,11 @@
 # Autoconf / Automake generated files
 * linguist-vendored
 src/* linguist-detectable
-configure linguist-vendored
-config.guess linguist-vendored
-config.sub linguist-vendored
-install-sh linguist-vendored
-compile linguist-vendored
-depcomp linguist-vendored
-missing linguist-vendored
-aclocal.m4 linguist-vendored
+configure linguist-generated
+config.guess linguist-generated
+config.sub linguist-generated
+install-sh linguist-generated
+compile linguist-generated
+depcomp linguist-generated
+missing linguist-generated
+aclocal.m4 linguist-generated
