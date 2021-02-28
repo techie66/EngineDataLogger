@@ -1,6 +1,6 @@
 # Autoconf / Automake generated files
-* linguist-vendored
-src/* linguist-detectable
+#* linguist-vendored
+#src/* linguist-detectable
 configure linguist-generated
 config.guess linguist-generated
 config.sub linguist-generated
