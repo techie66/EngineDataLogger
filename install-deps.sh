@@ -48,4 +48,9 @@ case "$1" in
 		sudo make install
 		cd ..
 		;;
+	build-essential)
+	#    - name: Install build-essential
+		sudo apt-get install build-essential
+		cd ..
+		;;
 esac
