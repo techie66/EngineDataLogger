@@ -39,6 +39,13 @@
 
 #include <isp2.h>
 
+#define FEAT_CAN 1
+#ifdef FEAT_CAN
+#include <net/if.h>
+#include <linux/can.h>
+#include <linux/can/raw.h>
+#endif
+
 #ifdef FEAT_GPIO
 #include <bcm2835.h>
 #endif /* FEAT_GPIO */
@@ -173,6 +180,34 @@ int main(int argc, char *argv[])
 		}
 	}
 	#endif /* HAVE_LIBIGNITECH */
+
+	bool active_can = false;
+	#ifdef FEAT_CAN
+	char const *can_if = NULL;
+	int can_s = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+	if (can_s < 0) {
+		perror("socket"); //TODO
+		//return 1;
+	}
+	struct sockaddr_can addr;
+	struct ifreq ifr;
+	struct can_frame frame;
+	frame.can_id = 0;
+	frame.can_dlc = 0;
+	if ( args_info.can_given ) {
+		//TODO setup CAN interface properly
+		active_can = true;
+		strcpy(ifr.ifr_name, args_info.can_arg);
+		ioctl(can_s, SIOCGIFINDEX, &ifr);
+		addr.can_family = AF_CAN;
+		addr.can_ifindex = ifr.ifr_ifindex;
+		if ( bind(can_s, (struct sockaddr *)&addr, sizeof(addr)) < 0 ) {
+			perror("bind-CAN"); //TODO
+			active_can = false;
+		}
+
+	}
+	#endif
 
 	char const *log_file = NULL;
 	std::vector<log_fmt_data> log_format;
@@ -491,6 +526,10 @@ int main(int argc, char *argv[])
 				fd_front_controls = fc_open(args_info.front_controls_arg);
 			}
 		}
+		if ( active_can ) {
+			FD_SET(can_s,&readset);
+			max_fd = (max_fd>can_s)?max_fd:can_s;
+		}
 		// TODO LC-2 runtime and build-time optional (libISP)
 		if ( args_info.lc2_given ) {
 			if (fd_lc2 > 0) {
@@ -519,6 +558,7 @@ int main(int argc, char *argv[])
 		else if (select_result > 0) {
 			error_message(DEBUG,"Select something");
 
+
 			#ifdef FEAT_FRONTCONTROLS
 			if (FD_ISSET(fd_front_controls,&readset)) {
 				error_message (DEBUG,"Select read front controls");
@@ -539,6 +579,18 @@ int main(int argc, char *argv[])
 				error_message (DEBUG,"Select read LC-2");
 				ISP2::isp2_read(fd_lc2,lc2_data);
 				error_message(INFO,"Status: %d Lambda: %d\n",lc2_data.status,lc2_data.lambda);
+			}
+			if (FD_ISSET(can_s,&readset)) {
+				error_message (DEBUG,"Select read CAN");
+				int nbytes = read(can_s, &frame, sizeof(struct can_frame));
+				error_message(INFO,"CAN:Read %d bytes\n",nbytes);
+			}
+		}
+
+		if ( active_can ) {
+			if ( frame.can_id == 0x322 ) { //TODO read config ID
+				log_data.lambda = (frame.data[0] + frame.data[1] * 0x100u);
+				error_message(INFO,"Ignitech WC-2: %d\n",log_data.lambda);
 			}
 		}
 

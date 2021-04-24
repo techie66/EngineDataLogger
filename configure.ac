@@ -43,7 +43,7 @@ AC_ARG_ENABLE([gpio],
 	[],
 	[enable_gpio=yes])
 AC_ARG_WITH([bcm2835],
-	[AS_HELP_STRING([--without-bcm3835],
+	[AS_HELP_STRING([--without-bcm2835],
 		[compile without bcm2835, which is needed for gpio such as O2 sensor power control.])],
 		[],
 		[with_bcm2835=yes])

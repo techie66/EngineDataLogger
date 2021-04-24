@@ -22,8 +22,9 @@ option "ignitech"	i "Ignitech ignition device" string typestr="device" optional
 option "lc2"		l "Innovate LC-2 device" string typestr="device" optional
 option "lc2-delay"	- "Delay before powering up LC-2." int typestr="seconds" default="15" dependon="lc2" optional
 option "lc2-pin"	- "GPIO pin that controls power for LC-2" int default="26" dependon="lc2" optional
-option "sleepy"	s	 "I2C device to communicate with Sleepy Pi." string typestr="device" optional
+option "sleepy"		s "I2C device to communicate with Sleepy Pi." string typestr="device" optional
 option "sleepy-addr"	- "Address for Sleepy Pi." string default="0x04" typestr="0xXX" dependon="sleepy" optional
+option "can"		- "CAN device to bind to. CAN disabled if not set." string typestr="device" optional
 
 section "Ignitech specific options"
 
@@ -34,3 +35,5 @@ option "ignitech-sai-low-mv" - "Low mv value. Eg: 708" int optional dependon="ig
 option "ignitech-sai-high" - "High kpa reading. Eg: 102" int optional dependon="ignitech-sai-high-mv"
 option "ignitech-sai-high-mv" - "High mv value. Eg: 4252" int optional dependon="ignitech"
 
+section "CAN Options"
+option "can-id-wc2"	- "CAN id of Ignitech WC-2 packets. WC-2 packets disabled if not set" string typestr="0xXXX" dependon="can" optional 
