@@ -347,6 +347,7 @@ int main(int argc, char *argv[])
 	char		en_to_cmd = 0;
 	bool		engineRunning = false;
 	bool		o2_manual = false;
+	struct		timeval log_time_last;
 	while (!time_to_quit) {
 		int	length;
 		// Read all inputs
@@ -477,7 +478,7 @@ int main(int argc, char *argv[])
 
 		struct timeval	timeout;
 		timeout.tv_sec = 0;
-		timeout.tv_usec = 0;
+		timeout.tv_usec = LOG_INTERVAL;
 		
 		// Do Select()
 		select_result = select(max_fd+1, &readset, &writeset, NULL, &timeout);
@@ -702,79 +703,67 @@ int main(int argc, char *argv[])
 		log_data.speed = enData.speed;
 		log_data.systemvoltage = enData.batteryVoltage;
 		if ( args_info.output_file_given ) {
-			/*
-			fprintf(fd_log,"%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%s.%06ld,%.2f,%d\n",
-				log_data.ig_rpm,
-				log_data.alt_rpm,
-				log_data.speed,
-				log_data.systemvoltage,
-				log_data.batteryvoltage,
-				log_data.oil_temp,
-				log_data.oil_pres,
-				engineRunning,
-				time_buf,
-				currtime.tv_usec,
-				log_data.lambda/1000.0, 
-				log_data.map_kpa
-			);
-			*/
-			for (std::vector<log_fmt_data>::iterator it = log_format.begin() ; it != log_format.end(); ++it) {
-				switch(*it) {
-					case FMT_RPM:
-						fprintf(fd_log,"%d,",log_data.ig_rpm);
-						break;
-					case FMT_ALT_RPM:
-						fprintf(fd_log,"%d,",log_data.alt_rpm);
-						break;
-					case FMT_SPEED:
-						fprintf(fd_log,"%.2f,",log_data.speed);
-						break;
-					case FMT_ODOMETER:
-						fprintf(fd_log,"%d,",log_data.odometer);
-						break;
-					case FMT_TRIP:
-						fprintf(fd_log,"%d,",log_data.trip);
-						break;
-					case FMT_SYSTEMVOLTAGE:
-						fprintf(fd_log,"%.2f,",log_data.systemvoltage);
-						break;
-					case FMT_BATTERYVOLTAGE:
-						fprintf(fd_log,"%.2f,",log_data.systemvoltage);
-						break;
-					case FMT_OIL_TEMP:
-						fprintf(fd_log,"%.2f,",log_data.oil_temp);
-						break;
-					case FMT_OIL_PRES:
-						fprintf(fd_log,"%.2f,",log_data.oil_pres);
-						break;
-					case FMT_BLINK_LEFT:
-						fprintf(fd_log,"%d,",log_data.blink_left);
-						break;
-					case FMT_BLINK_RIGHT:
-						fprintf(fd_log,"%d,",log_data.blink_right);
-						break;
-					case FMT_LAMBDA:
-						fprintf(fd_log,"%.2f,",log_data.lambda/1000.0);
-						break;
-					case FMT_MAP_KPA:
-						fprintf(fd_log,"%d,",log_data.map_kpa);
-						break;
-					case FMT_TPS_PERCENT:
-						fprintf(fd_log,"%d,",log_data.tps_percent);
-						break;
-					case FMT_ENGINERUNNING:
-						fprintf(fd_log,"%d,",log_data.engineRunning);
-						break;
-					case FMT_TIME:
-						fprintf(fd_log,"%s.%06ld,",time_buf,currtime.tv_usec);
-						break;
+			if ( ( (currtime.tv_sec - log_time_last.tv_sec) * 1000000 + currtime.tv_usec - log_time_last.tv_usec ) > LOG_INTERVAL ) {
+					log_time_last.tv_sec = currtime.tv_sec;
+					log_time_last.tv_usec = currtime.tv_usec;
+				for (std::vector<log_fmt_data>::iterator it = log_format.begin() ; it != log_format.end(); ++it) {
+					switch(*it) {
+						case FMT_RPM:
+							fprintf(fd_log,"%d,",log_data.ig_rpm);
+							break;
+						case FMT_ALT_RPM:
+							fprintf(fd_log,"%d,",log_data.alt_rpm);
+							break;
+						case FMT_SPEED:
+							fprintf(fd_log,"%.2f,",log_data.speed);
+							break;
+						case FMT_ODOMETER:
+							fprintf(fd_log,"%d,",log_data.odometer);
+							break;
+						case FMT_TRIP:
+							fprintf(fd_log,"%d,",log_data.trip);
+							break;
+						case FMT_SYSTEMVOLTAGE:
+							fprintf(fd_log,"%.2f,",log_data.systemvoltage);
+							break;
+						case FMT_BATTERYVOLTAGE:
+							fprintf(fd_log,"%.2f,",log_data.systemvoltage);
+							break;
+						case FMT_OIL_TEMP:
+							fprintf(fd_log,"%.2f,",log_data.oil_temp);
+							break;
+						case FMT_OIL_PRES:
+							fprintf(fd_log,"%.2f,",log_data.oil_pres);
+							break;
+						case FMT_BLINK_LEFT:
+							fprintf(fd_log,"%d,",log_data.blink_left);
+							break;
+						case FMT_BLINK_RIGHT:
+							fprintf(fd_log,"%d,",log_data.blink_right);
+							break;
+						case FMT_LAMBDA:
+							fprintf(fd_log,"%.2f,",log_data.lambda/1000.0);
+							break;
+						case FMT_MAP_KPA:
+							fprintf(fd_log,"%d,",log_data.map_kpa);
+							break;
+						case FMT_TPS_PERCENT:
+							fprintf(fd_log,"%d,",log_data.tps_percent);
+							break;
+						case FMT_ENGINERUNNING:
+							fprintf(fd_log,"%d,",log_data.engineRunning);
+							break;
+						case FMT_TIME:
+							fprintf(fd_log,"%s.%06ld,",time_buf,currtime.tv_usec);
+							break;
+					}
 				}
+				fprintf(fd_log,"\n");
+				fflush(fd_log);
 			}
-			fprintf(fd_log,"\n");
-			fflush(fd_log);
 		}
 
-		usleep(50000);
+		//usleep(50000);
 	}
 
 	#ifdef FEAT_GPIO

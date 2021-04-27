@@ -25,6 +25,7 @@
 // TODO option-ify
 #define RUNNING_RPM 900
 #define STOPPED_RPM 500
+#define LOG_INTERVAL 50000
 #define O2_PIN 26	// Default //
 #define LC2_POWER_DELAY 15 // delay in seconds. Default //
 #define ENGINE_DATA_ADDR 0x04
