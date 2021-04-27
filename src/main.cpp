@@ -144,12 +144,14 @@ int main(int argc, char *argv[])
 	if ( args_info.quiet_given )
 		LEVEL_DEBUG = NONE;
 
+	bool active_tcip4 = false;
 	#ifdef HAVE_LIBIGNITECH
 	char const *ignitech_device = NULL;
 	IGNITECH* ignition;
 	int ignition_read_status = -1;
 	double sai_slope = 0;
 	if ( args_info.ignitech_given ) {
+		active_tcip4 = true;
 		ignitech_device = args_info.ignitech_arg;
 		ignition = new IGNITECH(ignitech_device);
 		if ( args_info.ignitech_dump_file_given ) {
@@ -225,35 +227,43 @@ int main(int argc, char *argv[])
 			if ( strcmp(pt,"rpm") == 0 )
 				log_format.push_back(FMT_RPM);
 			else if ( strcmp(pt,"alt_rpm") == 0 ) 
-                log_format.push_back(FMT_ALT_RPM);
+				log_format.push_back(FMT_ALT_RPM);
 			else if ( strcmp(pt,"speed") == 0 ) 
-                log_format.push_back(FMT_SPEED);
+				log_format.push_back(FMT_SPEED);
 			else if ( strcmp(pt,"odometer") == 0 ) 
-                log_format.push_back(FMT_ODOMETER);
+				log_format.push_back(FMT_ODOMETER);
 			else if ( strcmp(pt,"trip") == 0 ) 
-                log_format.push_back(FMT_TRIP);
+				log_format.push_back(FMT_TRIP);
 			else if ( strcmp(pt,"systemvoltage") == 0 ) 
-                log_format.push_back(FMT_SYSTEMVOLTAGE);
+				log_format.push_back(FMT_SYSTEMVOLTAGE);
 			else if ( strcmp(pt,"batteryvoltage") == 0 ) 
-                log_format.push_back(FMT_BATTERYVOLTAGE);
+				log_format.push_back(FMT_BATTERYVOLTAGE);
 			else if ( strcmp(pt,"oil_temp") == 0 ) 
-                log_format.push_back(FMT_OIL_TEMP);
+				log_format.push_back(FMT_OIL_TEMP);
 			else if ( strcmp(pt,"oil_pres") == 0 ) 
-                log_format.push_back(FMT_OIL_PRES);
+				log_format.push_back(FMT_OIL_PRES);
 			else if ( strcmp(pt,"blink_left") == 0 ) 
-                log_format.push_back(FMT_BLINK_LEFT);
+				log_format.push_back(FMT_BLINK_LEFT);
 			else if ( strcmp(pt,"blink_right") == 0 ) 
-                log_format.push_back(FMT_BLINK_RIGHT);
+				log_format.push_back(FMT_BLINK_RIGHT);
 			else if ( strcmp(pt,"lambda") == 0 ) 
-                log_format.push_back(FMT_LAMBDA);
+				log_format.push_back(FMT_LAMBDA);
 			else if ( strcmp(pt,"map_kpa") == 0 ) 
-                log_format.push_back(FMT_MAP_KPA);
+				log_format.push_back(FMT_MAP_KPA);
 			else if ( strcmp(pt,"tps_percent") == 0 ) 
-                log_format.push_back(FMT_TPS_PERCENT);
+				log_format.push_back(FMT_TPS_PERCENT);
 			else if ( strcmp(pt,"enginerunning") == 0 ) 
-                log_format.push_back(FMT_ENGINERUNNING);
+				log_format.push_back(FMT_ENGINERUNNING);
+			else if ( strcmp(pt,"advance1") == 0 ) 
+				log_format.push_back(FMT_ADVANCE1);
+			else if ( strcmp(pt,"advance2") == 0 ) 
+				log_format.push_back(FMT_ADVANCE2);
+			else if ( strcmp(pt,"advance3") == 0 ) 
+				log_format.push_back(FMT_ADVANCE3);
+			else if ( strcmp(pt,"advance4") == 0 ) 
+				log_format.push_back(FMT_ADVANCE4);
 			else if ( strcmp(pt,"time") == 0 ) 
-                log_format.push_back(FMT_TIME);
+				log_format.push_back(FMT_TIME);
 			else {
 				error_message (ERROR,"Invalid output-file-format");
 				return -1;
@@ -353,7 +363,7 @@ int main(int argc, char *argv[])
 		// Read all inputs
 
 		#ifdef HAVE_LIBIGNITECH
-		if ( args_info.ignitech_given ) {
+		if ( active_tcip4 ) {
 			ignition->read_async();
 		}
 		#endif /* HAVE_LIBIGNITECH */
@@ -404,7 +414,7 @@ int main(int argc, char *argv[])
 		#endif /* FEAT_I2C */
 		
 		#ifdef HAVE_LIBIGNITECH
-		if ( args_info.ignitech_given ) {
+		if ( active_tcip4 ) {
 			static int num_failures = 0;
 			// Read Ignition
 			ignition_read_status = ignition->read_async();
@@ -423,6 +433,10 @@ int main(int argc, char *argv[])
 				//num_failures = 0;
 				error_message (DEBUG,"Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(),ignition->get_battery_mV());
 				log_data.ig_rpm = ignition->get_rpm();
+				log_data.advance1 = ignition->get_advance1();
+				log_data.advance1 = ignition->get_advance2();
+				log_data.advance1 = ignition->get_advance3();
+				log_data.advance1 = ignition->get_advance4();
 				log_data.batteryvoltage = ignition->get_battery_mV()/float(1000);
 				if (ignition->get_sensor_type() == SENSOR_IAP) {
 					log_data.map_kpa = ignition->get_sensor_value();
@@ -516,7 +530,7 @@ int main(int argc, char *argv[])
 		}
 
 		#ifdef HAVE_LIBIGNITECH
-		if ( args_info.ignitech_given ) {
+		if ( active_tcip4 ) {
 			ignition->read_async();
 		}
 		#endif /* HAVE_LIBIGNITECH */
@@ -527,8 +541,8 @@ int main(int argc, char *argv[])
 		time_t my_time;
 
 		int my_rpm = enData.rpm;
-		#ifdef HAVE_LIBIGNITECH
-		if ( args_info.ignitech_given ) {
+		#if HAVE_LIBIGNITECH
+		if ( active_tcip4 ) {
 			if ( ignition->get_status() == IGN_SUC || ignition->get_status() == IGN_AGAIN) {
 				my_rpm = ignition->get_rpm();
 			}
@@ -752,6 +766,18 @@ int main(int argc, char *argv[])
 							break;
 						case FMT_ENGINERUNNING:
 							fprintf(fd_log,"%d,",log_data.engineRunning);
+							break;
+						case FMT_ADVANCE1:
+							fprintf(fd_log,"%d,",log_data.advance1);
+							break;
+						case FMT_ADVANCE2:
+							fprintf(fd_log,"%d,",log_data.advance2);
+							break;
+						case FMT_ADVANCE3:
+							fprintf(fd_log,"%d,",log_data.advance3);
+							break;
+						case FMT_ADVANCE4:
+							fprintf(fd_log,"%d,",log_data.advance4);
 							break;
 						case FMT_TIME:
 							fprintf(fd_log,"%s.%06ld,",time_buf,currtime.tv_usec);

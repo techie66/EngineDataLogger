@@ -101,6 +101,10 @@ struct	bike_data {
 	int map_kpa;
 	int tps_percent;
 	bool engineRunning;
+	uint8_t advance1;
+	uint8_t advance2;
+	uint8_t advance3;
+	uint8_t advance4;
 };
 
 typedef enum {
@@ -119,6 +123,10 @@ typedef enum {
 	FMT_MAP_KPA,
 	FMT_TPS_PERCENT,
 	FMT_ENGINERUNNING,
-	FMT_TIME
+	FMT_TIME,
+	FMT_ADVANCE1,
+	FMT_ADVANCE2,
+	FMT_ADVANCE3,
+	FMT_ADVANCE4
 } log_fmt_data;
 #endif
