@@ -3,6 +3,7 @@ bin_PROGRAMS = enginedatalogger
 bin_SCRIPTS = bin/shutdowncheck.py
 enginedatalogger_SOURCES= \
 		    src/main.cpp \
+		    src/hexconvert.cpp \
 		    src/serial.cpp \
 		    src/serial.h \
 		    src/error_handling.cpp \

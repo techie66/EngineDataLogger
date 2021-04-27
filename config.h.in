@@ -12,9 +12,6 @@
 /* Support I2C */
 #undef FEAT_I2C
 
-/* define if the compiler supports basic C++11 syntax */
-#undef HAVE_CXX11
-
 /* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
 

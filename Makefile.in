@@ -115,15 +115,17 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(myconfdir)" "$(DESTDIR)$(systemdsystemunitdir)"
 PROGRAMS = $(bin_PROGRAMS)
-am__enginedatalogger_SOURCES_DIST = src/main.cpp src/serial.cpp \
-	src/serial.h src/error_handling.cpp src/error_handling.h \
-	src/cmdline.c src/cmdline.h src/definitions.h \
-	src/bluetooth.cpp src/cb1100f-app_generated.h src/bluetooth.h \
+am__enginedatalogger_SOURCES_DIST = src/main.cpp src/hexconvert.cpp \
+	src/serial.cpp src/serial.h src/error_handling.cpp \
+	src/error_handling.h src/cmdline.c src/cmdline.h \
+	src/definitions.h src/bluetooth.cpp \
+	src/cb1100f-app_generated.h src/bluetooth.h \
 	src/front_controls.cpp src/front_controls.h
 am__dirstamp = $(am__leading_dot)dirstamp
 @DASHBOARD_TRUE@am__objects_1 = src/bluetooth.$(OBJEXT)
 @FRONTCONTROLS_TRUE@am__objects_2 = src/front_controls.$(OBJEXT)
-am_enginedatalogger_OBJECTS = src/main.$(OBJEXT) src/serial.$(OBJEXT) \
+am_enginedatalogger_OBJECTS = src/main.$(OBJEXT) \
+	src/hexconvert.$(OBJEXT) src/serial.$(OBJEXT) \
 	src/error_handling.$(OBJEXT) src/cmdline.$(OBJEXT) \
 	$(am__objects_1) $(am__objects_2)
 enginedatalogger_OBJECTS = $(am_enginedatalogger_OBJECTS)
@@ -173,8 +175,8 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = src/$(DEPDIR)/bluetooth.Po \
 	src/$(DEPDIR)/cmdline.Po src/$(DEPDIR)/error_handling.Po \
-	src/$(DEPDIR)/front_controls.Po src/$(DEPDIR)/main.Po \
-	src/$(DEPDIR)/serial.Po
+	src/$(DEPDIR)/front_controls.Po src/$(DEPDIR)/hexconvert.Po \
+	src/$(DEPDIR)/main.Po src/$(DEPDIR)/serial.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -279,7 +281,6 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 GREP = @GREP@
-HAVE_CXX11 = @HAVE_CXX11@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -355,10 +356,10 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 etcdir = $(srcdir)/etc
 bin_SCRIPTS = bin/shutdowncheck.py
-enginedatalogger_SOURCES = src/main.cpp src/serial.cpp src/serial.h \
-	src/error_handling.cpp src/error_handling.h src/cmdline.c \
-	src/cmdline.h src/definitions.h $(am__append_1) \
-	$(am__append_2)
+enginedatalogger_SOURCES = src/main.cpp src/hexconvert.cpp \
+	src/serial.cpp src/serial.h src/error_handling.cpp \
+	src/error_handling.h src/cmdline.c src/cmdline.h \
+	src/definitions.h $(am__append_1) $(am__append_2)
 myconfdir = $(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
 		    $(etcdir)/enginedatalogger.conf.dist
@@ -481,6 +482,8 @@ src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/$(DEPDIR)
 	@: > src/$(DEPDIR)/$(am__dirstamp)
 src/main.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/hexconvert.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/serial.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/error_handling.$(OBJEXT): src/$(am__dirstamp) \
@@ -542,6 +545,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cmdline.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/error_handling.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/front_controls.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/hexconvert.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/serial.Po@am__quote@ # am--include-marker
 
@@ -901,6 +905,7 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/cmdline.Po
 	-rm -f src/$(DEPDIR)/error_handling.Po
 	-rm -f src/$(DEPDIR)/front_controls.Po
+	-rm -f src/$(DEPDIR)/hexconvert.Po
 	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f src/$(DEPDIR)/serial.Po
 	-rm -f Makefile
@@ -956,6 +961,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/cmdline.Po
 	-rm -f src/$(DEPDIR)/error_handling.Po
 	-rm -f src/$(DEPDIR)/front_controls.Po
+	-rm -f src/$(DEPDIR)/hexconvert.Po
 	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f src/$(DEPDIR)/serial.Po
 	-rm -f Makefile

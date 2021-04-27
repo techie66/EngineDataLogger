@@ -35,6 +35,7 @@
 #include <getopt.h>
 #include <vector>
 #include "cmdline.h"
+#include "hexconvert.h"
 
 #include <isp2.h>
 
@@ -334,11 +335,23 @@ int main(int argc, char *argv[])
 		if ((fd_i2c = open(args_info.sleepy_arg, O_RDWR)) < 0) {
 			//ERROR HANDLING: you can check errno to see what went wrong
 			error_message (ERROR,"Failed to open the i2c bus. err:%d - %s",errno,strerror(errno));
-			//return -1;
+			return -1;
 		}
 		if ( args_info.sleepy_addr_given ) {
 			// TODO parse string input for valid I2C address
-			// engine_data_dir = "PARSED INPUT"
+			if (strlen(args_info.sleepy_addr_arg) == 4) {
+				try {
+					hex2bin(args_info.sleepy_addr_arg,&engine_data_addr);
+				}
+				catch (const std::invalid_argument& ia) {
+					error_message(ERROR,"Invalid I2C address for SleepyPi");
+					return -1;
+				}
+			}
+			else {
+				error_message(ERROR,"Invalid I2C address for SleepyPi");
+				return -1;
+			}
 		}
 	}
 	#endif /* FEAT_I2C */
