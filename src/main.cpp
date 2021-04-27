@@ -183,11 +183,12 @@ int main(int argc, char *argv[])
 
 	bool active_can = false;
 	#ifdef FEAT_CAN
+	unsigned int can_id_wb2;
+	unsigned char hexbuffer[4] = {0};
 	char const *can_if = NULL;
 	int can_s = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 	if (can_s < 0) {
-		perror("socket"); //TODO
-		//return 1;
+		error_message(ERROR,"socket");
 	}
 	struct sockaddr_can addr;
 	struct ifreq ifr;
@@ -195,19 +196,34 @@ int main(int argc, char *argv[])
 	frame.can_id = 0;
 	frame.can_dlc = 0;
 	if ( args_info.can_given ) {
-		//TODO setup CAN interface properly
 		active_can = true;
 		strcpy(ifr.ifr_name, args_info.can_arg);
 		ioctl(can_s, SIOCGIFINDEX, &ifr);
 		addr.can_family = AF_CAN;
 		addr.can_ifindex = ifr.ifr_ifindex;
 		if ( bind(can_s, (struct sockaddr *)&addr, sizeof(addr)) < 0 ) {
-			perror("bind-CAN"); //TODO
+			error_message(ERROR,"bind-CAN");
 			active_can = false;
 		}
+		if ( args_info.can_id_wb2_given ) {
+			if ( strlen(args_info.can_id_wb2_arg) == 5 ) {
+				try {
+					hex2bin(args_info.can_id_wb2_arg,hexbuffer);
+				}
+				catch (const std::invalid_argument& ia) {
+					error_message(ERROR,"Invalid can-id-wb2");
+					return -1;
+				}
 
+			}
+			else {
+				error_message(ERROR,"Invalid can-id-wb2");
+				return -1;
+			}
+			can_id_wb2 = hexbuffer[0] * 0x100 + hexbuffer[1];
+		}
 	}
-	#endif
+	#endif /* FEAT_CAN */
 
 	char const *log_file = NULL;
 	std::vector<log_fmt_data> log_format;
@@ -575,22 +591,24 @@ int main(int argc, char *argv[])
 				db_from_cmd = dashboard.Read();
 			}
 			#endif /* FEAT_DASHBOARD */
-			if (FD_ISSET(fd_lc2,&readset)) {
-				error_message (DEBUG,"Select read LC-2");
-				ISP2::isp2_read(fd_lc2,lc2_data);
-				error_message(INFO,"Status: %d Lambda: %d\n",lc2_data.status,lc2_data.lambda);
+			if ( args_info.lc2_given ) {
+				if (FD_ISSET(fd_lc2,&readset)) {
+					error_message (DEBUG,"Select read LC-2");
+					ISP2::isp2_read(fd_lc2,lc2_data);
+					error_message(INFO,"Status: %d Lambda: %d",lc2_data.status,lc2_data.lambda);
+				}
 			}
 			if (FD_ISSET(can_s,&readset)) {
 				error_message (DEBUG,"Select read CAN");
 				int nbytes = read(can_s, &frame, sizeof(struct can_frame));
-				error_message(INFO,"CAN:Read %d bytes\n",nbytes);
+				error_message(INFO,"CAN:Read %d bytes",nbytes);
 			}
 		}
 
 		if ( active_can ) {
-			if ( frame.can_id == 0x322 ) { //TODO read config ID
+			if ( frame.can_id == can_id_wb2 ) {
 				log_data.lambda = (frame.data[0] + frame.data[1] * 0x100u);
-				error_message(INFO,"Ignitech WC-2: %d\n",log_data.lambda);
+				error_message(INFO,"Ignitech WB-2: %d",log_data.lambda);
 			}
 		}
 
