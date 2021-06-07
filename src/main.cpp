@@ -198,11 +198,15 @@ int main(int argc, char *argv[])
 	if ( args_info.can_given ) {
 		active_can = true;
 		strcpy(ifr.ifr_name, args_info.can_arg);
-		ioctl(can_s, SIOCGIFINDEX, &ifr);
+		if ( ioctl(can_s, SIOCGIFINDEX, &ifr) < 0 ) {
+			error_message(ERROR,"Error: ioctl->CAN : %s",strerror(errno));
+			active_can = false;
+		}
+
 		addr.can_family = AF_CAN;
 		addr.can_ifindex = ifr.ifr_ifindex;
 		if ( bind(can_s, (struct sockaddr *)&addr, sizeof(addr)) < 0 ) {
-			error_message(ERROR,"bind-CAN");
+			error_message(ERROR,"Error: bind->CAN : %s",strerror(errno));
 			active_can = false;
 		}
 		if ( args_info.can_id_wb2_given ) {
