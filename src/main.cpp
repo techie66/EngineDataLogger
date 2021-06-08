@@ -420,6 +420,7 @@ int main(int argc, char *argv[])
 	engine_data	enData;
 	bike_data	log_data;
 	isp2_t		lc2_data = isp2_t();
+	lc2_data.status = ISP2_WARMING;
 	fc_data		fcData;
 	System_CMD	db_from_cmd = NO_CMD;
 	char		en_to_cmd = 0;
