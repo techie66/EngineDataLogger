@@ -6,6 +6,8 @@ enginedatalogger_SOURCES= \
 		    src/hexconvert.cpp \
 		    src/serial.cpp \
 		    src/serial.h \
+		    src/can.cpp \
+		    src/can.h \
 		    src/error_handling.cpp \
 		    src/error_handling.h \
 		    src/cmdline.c \
