@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
     - name: Install libIgnitech
       run: |
         ./install-deps.sh ignitech
@@ -26,7 +27,6 @@ jobs:
     - name: Install bcm2835lib
       run: |
         ./install-deps.sh bcm2835
-    - uses: actions/checkout@v2
     - name: configure
       run: ./configure
     - name: make
