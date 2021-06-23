@@ -45,15 +45,12 @@ AM_DISTCHECK_CONFIGURE_FLAGS = \
 if HAVE_SYSTEMD
 dist_systemdsystemunit_DATA = \
 			 $(etcdir)/enginedatalogger.service \
-			 $(etcdir)/enginedatalogger.path \
 			 $(etcdir)/shutdowncheck.service
 
 $(etcdir)/enginedatalogger.service: $(etcdir)/enginedatalogger.service.in
-$(etcdir)/enginedatalogger.path: $(etcdir)/enginedatalogger.path.in
 $(etcdir)/shutdowncheck.service: $(etcdir)/shutdowncheck.service.in
 
 install-data-hook:
-	sudo systemctl enable enginedatalogger.path || true
 	sudo systemctl enable shutdowncheck.service || true
 
 $(dist_systemdsystemunit_DATA): Makefile

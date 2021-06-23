@@ -2,6 +2,8 @@
 [Unit]
 Description=EngineDataLogger
 DefaultDependencies=false
+After=timers.target
+Wants=timers.target
 
 [Service]
 Type=simple
@@ -10,4 +12,4 @@ ExecStart = @bindir@/enginedatalogger -c @myconfdir@/enginedatalogger.conf
 #WorkingDirectory=@runstatedir@/enginedatalogger
 
 #[Install]
-#WantedBy=local-fs.target
+WantedBy=multi-user.target
