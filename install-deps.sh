@@ -26,6 +26,7 @@ case "$1" in
 
 	bluetooth)
 	#    - name: Install Bluetooth headers
+		sudo apt-get update
 		sudo apt-get install libbluetooth-dev
 		;;
 	flatbuffers)
@@ -50,6 +51,7 @@ case "$1" in
 		;;
 	build-essential)
 	#    - name: Install build-essential
+		sudo apt-get update
 		sudo apt-get install build-essential
 		cd ..
 		;;

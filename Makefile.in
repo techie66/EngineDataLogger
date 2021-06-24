@@ -212,7 +212,6 @@ am__can_run_installinfo = \
   esac
 am__dist_systemdsystemunit_DATA_DIST =  \
 	$(etcdir)/enginedatalogger.service \
-	$(etcdir)/enginedatalogger.path \
 	$(etcdir)/shutdowncheck.service
 DATA = $(dist_myconf_DATA) $(dist_systemdsystemunit_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) \
@@ -378,7 +377,6 @@ AM_DISTCHECK_CONFIGURE_FLAGS = \
 
 @HAVE_SYSTEMD_TRUE@dist_systemdsystemunit_DATA = \
 @HAVE_SYSTEMD_TRUE@			 $(etcdir)/enginedatalogger.service \
-@HAVE_SYSTEMD_TRUE@			 $(etcdir)/enginedatalogger.path \
 @HAVE_SYSTEMD_TRUE@			 $(etcdir)/shutdowncheck.service
 
 @HAVE_SYSTEMD_TRUE@MOSTLYCLEANFILES = $(dist_systemdsystemunit_DATA)
@@ -1018,11 +1016,9 @@ $(bin_SCRIPTS):
 $(dist_myconf_DATA):
 
 @HAVE_SYSTEMD_TRUE@$(etcdir)/enginedatalogger.service: $(etcdir)/enginedatalogger.service.in
-@HAVE_SYSTEMD_TRUE@$(etcdir)/enginedatalogger.path: $(etcdir)/enginedatalogger.path.in
 @HAVE_SYSTEMD_TRUE@$(etcdir)/shutdowncheck.service: $(etcdir)/shutdowncheck.service.in
 
 @HAVE_SYSTEMD_TRUE@install-data-hook:
-@HAVE_SYSTEMD_TRUE@	sudo systemctl enable enginedatalogger.path || true
 @HAVE_SYSTEMD_TRUE@	sudo systemctl enable shutdowncheck.service || true
 
 @HAVE_SYSTEMD_TRUE@$(dist_systemdsystemunit_DATA): Makefile
