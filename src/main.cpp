@@ -447,9 +447,9 @@ int main(int argc, char *argv[])
 				error_message (DEBUG,"Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(),ignition->get_battery_mV());
 				log_data.ig_rpm = ignition->get_rpm();
 				log_data.advance1 = ignition->get_advance1();
-				log_data.advance1 = ignition->get_advance2();
-				log_data.advance1 = ignition->get_advance3();
-				log_data.advance1 = ignition->get_advance4();
+				log_data.advance2 = ignition->get_advance2();
+				log_data.advance3 = ignition->get_advance3();
+				log_data.advance4 = ignition->get_advance4();
 				log_data.batteryvoltage = ignition->get_battery_mV()/float(1000);
 				if (ignition->get_sensor_type() == SENSOR_IAP) {
 					log_data.map_kpa = ignition->get_sensor_value();
