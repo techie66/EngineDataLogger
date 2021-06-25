@@ -845,7 +845,7 @@ int main(int argc, char *argv[])
 							fprintf(fd_log,"%d,",log_data.blink_right);
 							break;
 						case FMT_LAMBDA:
-							fprintf(fd_log,"%.2f,",log_data.lambda/1000.0);
+							fprintf(fd_log,"%.2f,",log_data.lambda/100.0);
 							break;
 						case FMT_MAP_KPA:
 							fprintf(fd_log,"%d,",log_data.map_kpa);
