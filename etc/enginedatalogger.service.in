@@ -11,5 +11,5 @@ Restart=always
 ExecStart = @bindir@/enginedatalogger -c @myconfdir@/enginedatalogger.conf
 #WorkingDirectory=@runstatedir@/enginedatalogger
 
-#[Install]
+[Install]
 WantedBy=multi-user.target
