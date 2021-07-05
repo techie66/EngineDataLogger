@@ -52,6 +52,7 @@ $(etcdir)/shutdowncheck.service: $(etcdir)/shutdowncheck.service.in
 
 install-data-hook:
 	sudo systemctl enable shutdowncheck.service || true
+	sudo systemctl enable enginedatalogger.service || true
 
 $(dist_systemdsystemunit_DATA): Makefile
 	rm -f $@ $@.tmp

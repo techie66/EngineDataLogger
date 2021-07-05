@@ -989,6 +989,7 @@ $(dist_myconf_DATA):
 
 @HAVE_SYSTEMD_TRUE@install-data-hook:
 @HAVE_SYSTEMD_TRUE@	sudo systemctl enable shutdowncheck.service || true
+@HAVE_SYSTEMD_TRUE@	sudo systemctl enable enginedatalogger.service || true
 
 @HAVE_SYSTEMD_TRUE@$(dist_systemdsystemunit_DATA): Makefile
 @HAVE_SYSTEMD_TRUE@	rm -f $@ $@.tmp
