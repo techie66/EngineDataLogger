@@ -57,6 +57,7 @@ autom4te.cache
 
 # generated config files
 etc/enginedatalogger.conf.dist
+etc/enginedatalogger.conf
 etc/enginedatalogger.service
 etc/enginedatalogger.path
 etc/shutdowncheck.service
