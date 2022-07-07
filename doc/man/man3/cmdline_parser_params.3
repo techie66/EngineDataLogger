@@ -1,0 +1,42 @@
+.TH "cmdline_parser_params" 3 "Thu Jul 7 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+cmdline_parser_params \- The additional parameters to pass to parser functions\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <cmdline\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "int \fBoverride\fP"
+.br
+.RI "whether to override possibly already present options (default 0) "
+.ti -1c
+.RI "int \fBinitialize\fP"
+.br
+.RI "whether to initialize the option structure \fBgengetopt_args_info\fP (default 1) "
+.ti -1c
+.RI "int \fBcheck_required\fP"
+.br
+.RI "whether to check that all required options were provided (default 1) "
+.ti -1c
+.RI "int \fBcheck_ambiguity\fP"
+.br
+.RI "whether to check for options already specified in the option structure \fBgengetopt_args_info\fP (default 0) "
+.ti -1c
+.RI "int \fBprint_errors\fP"
+.br
+.RI "whether getopt_long should print an error message for a bad option (default 1) "
+.in -1c
+.SH "Detailed Description"
+.PP 
+The additional parameters to pass to parser functions\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Engine Data Logger (EDL) from the source code\&.

@@ -1,0 +1,576 @@
+.TH "gengetopt_args_info" 3 "Thu Jul 7 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gengetopt_args_info \- Where the command line options are stored\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <cmdline\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "const char * \fBhelp_help\fP"
+.br
+.RI "Print help and exit help description\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBdetailed_help_help\fP"
+.br
+.RI "Print help, including all details and hidden options, and exit help description\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBversion_help\fP"
+.br
+.RI "Print version and exit help description\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBconfig_file_arg\fP"
+.br
+.RI "Configuration file\&.\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBconfig_file_orig\fP"
+.br
+.RI "Configuration file\&. original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBconfig_file_help\fP"
+.br
+.RI "Configuration file\&. help description\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBoutput_file_arg\fP"
+.br
+.RI "Output file for CSV logging (default='/dev/null')\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBoutput_file_orig\fP"
+.br
+.RI "Output file for CSV logging original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBoutput_file_help\fP"
+.br
+.RI "Output file for CSV logging help description\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBoutput_file_date_help\fP"
+.br
+.RI "Insert date and time into output filename\&. help description\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBoutput_file_format_arg\fP"
+.br
+.RI "Format string of output CSV file\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBoutput_file_format_orig\fP"
+.br
+.RI "Format string of output CSV file original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBoutput_file_format_help\fP"
+.br
+.RI "Format string of output CSV file help description\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBgear_ratios_arg\fP"
+.br
+.RI "RPM/Speed ratios\&. Comma separated\&. (Eg\&. -g "175,122,95,78,67")\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBgear_ratios_orig\fP"
+.br
+.RI "RPM/Speed ratios\&. Comma separated\&. (Eg\&. -g "175,122,95,78,67") original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBgear_ratios_help\fP"
+.br
+.RI "RPM/Speed ratios\&. Comma separated\&. (Eg\&. -g "175,122,95,78,67") help description\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBv_min\fP"
+.br
+.RI "Verbose output\&. Specify multiple times for increasing verbosity\&.'s minimum occurreces\&. "
+.ti -1c
+.RI "unsigned int \fBv_max\fP"
+.br
+.RI "Verbose output\&. Specify multiple times for increasing verbosity\&.'s maximum occurreces\&. "
+.ti -1c
+.RI "const char * \fBv_help\fP"
+.br
+.RI "Verbose output\&. Specify multiple times for increasing verbosity\&. help description\&. 
+.br
+ "
+.ti -1c
+.RI "enum enum_verbose \fBverbose_arg\fP"
+.br
+.RI "Set level of verbosity explicitly\&. (Overrides -v) (default='ERROR')\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBverbose_orig\fP"
+.br
+.RI "Set level of verbosity explicitly\&. (Overrides -v) original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBverbose_help\fP"
+.br
+.RI "Set level of verbosity explicitly\&. (Overrides -v) help description\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBquiet_help\fP"
+.br
+.RI "Suppress output\&. Same as --verbose=NONE (Overrides both -v and --verbose) help description\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBfront_controls_arg\fP"
+.br
+.RI "Front controls device\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBfront_controls_orig\fP"
+.br
+.RI "Front controls device original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBfront_controls_help\fP"
+.br
+.RI "Front controls device help description\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBignitech_arg\fP"
+.br
+.RI "Ignitech ignition device\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBignitech_orig\fP"
+.br
+.RI "Ignitech ignition device original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBignitech_help\fP"
+.br
+.RI "Ignitech ignition device help description\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBlc2_arg\fP"
+.br
+.RI "Innovate LC-2 device\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBlc2_orig\fP"
+.br
+.RI "Innovate LC-2 device original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBlc2_help\fP"
+.br
+.RI "Innovate LC-2 device help description\&. 
+.br
+ "
+.ti -1c
+.RI "int \fBlc2_delay_arg\fP"
+.br
+.RI "Delay before powering up LC-2\&. (default='15')\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBlc2_delay_orig\fP"
+.br
+.RI "Delay before powering up LC-2\&. original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBlc2_delay_help\fP"
+.br
+.RI "Delay before powering up LC-2\&. help description\&. 
+.br
+ "
+.ti -1c
+.RI "int \fBlc2_pin_arg\fP"
+.br
+.RI "GPIO pin that controls power for LC-2 (default='26')\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBlc2_pin_orig\fP"
+.br
+.RI "GPIO pin that controls power for LC-2 original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBlc2_pin_help\fP"
+.br
+.RI "GPIO pin that controls power for LC-2 help description\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBsleepy_arg\fP"
+.br
+.RI "I2C device to communicate with Sleepy Pi\&.\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBsleepy_orig\fP"
+.br
+.RI "I2C device to communicate with Sleepy Pi\&. original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBsleepy_help\fP"
+.br
+.RI "I2C device to communicate with Sleepy Pi\&. help description\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBsleepy_addr_arg\fP"
+.br
+.RI "Address for Sleepy Pi\&. (default='0x04')\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBsleepy_addr_orig\fP"
+.br
+.RI "Address for Sleepy Pi\&. original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBsleepy_addr_help\fP"
+.br
+.RI "Address for Sleepy Pi\&. help description\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBcan_arg\fP"
+.br
+.RI "CAN device to bind to\&. CAN disabled if not set\&.\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBcan_orig\fP"
+.br
+.RI "CAN device to bind to\&. CAN disabled if not set\&. original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBcan_help\fP"
+.br
+.RI "CAN device to bind to\&. CAN disabled if not set\&. help description\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBignitech_dump_file_arg\fP"
+.br
+.RI "File to dump raw responses from Ignitech\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBignitech_dump_file_orig\fP"
+.br
+.RI "File to dump raw responses from Ignitech original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBignitech_dump_file_help\fP"
+.br
+.RI "File to dump raw responses from Ignitech help description\&. 
+.br
+ "
+.ti -1c
+.RI "int \fBignitech_servo_as_iap_flag\fP"
+.br
+.RI "Treat servo reading as IAP\&. Requires calibration options\&. (default=off)\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBignitech_servo_as_iap_help\fP"
+.br
+.RI "Treat servo reading as IAP\&. Requires calibration options\&. help description\&. 
+.br
+ "
+.ti -1c
+.RI "int \fBignitech_sai_low_arg\fP"
+.br
+.RI "Low kpa reading\&. Eg: 21\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBignitech_sai_low_orig\fP"
+.br
+.RI "Low kpa reading\&. Eg: 21 original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBignitech_sai_low_help\fP"
+.br
+.RI "Low kpa reading\&. Eg: 21 help description\&. 
+.br
+ "
+.ti -1c
+.RI "int \fBignitech_sai_low_mv_arg\fP"
+.br
+.RI "Low mv value\&. Eg: 708\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBignitech_sai_low_mv_orig\fP"
+.br
+.RI "Low mv value\&. Eg: 708 original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBignitech_sai_low_mv_help\fP"
+.br
+.RI "Low mv value\&. Eg: 708 help description\&. 
+.br
+ "
+.ti -1c
+.RI "int \fBignitech_sai_high_arg\fP"
+.br
+.RI "High kpa reading\&. Eg: 102\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBignitech_sai_high_orig\fP"
+.br
+.RI "High kpa reading\&. Eg: 102 original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBignitech_sai_high_help\fP"
+.br
+.RI "High kpa reading\&. Eg: 102 help description\&. 
+.br
+ "
+.ti -1c
+.RI "int \fBignitech_sai_high_mv_arg\fP"
+.br
+.RI "High mv value\&. Eg: 4252\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBignitech_sai_high_mv_orig\fP"
+.br
+.RI "High mv value\&. Eg: 4252 original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBignitech_sai_high_mv_help\fP"
+.br
+.RI "High mv value\&. Eg: 4252 help description\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBcan_id_wb2_arg\fP"
+.br
+.RI "CAN id of Ignitech WB-2 packets\&. WB-2 packets disabled if not set\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBcan_id_wb2_orig\fP"
+.br
+.RI "CAN id of Ignitech WB-2 packets\&. WB-2 packets disabled if not set original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBcan_id_wb2_help\fP"
+.br
+.RI "CAN id of Ignitech WB-2 packets\&. WB-2 packets disabled if not set help description\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBhelp_given\fP"
+.br
+.RI "Whether help was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBdetailed_help_given\fP"
+.br
+.RI "Whether detailed-help was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBversion_given\fP"
+.br
+.RI "Whether version was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBconfig_file_given\fP"
+.br
+.RI "Whether config-file was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBoutput_file_given\fP"
+.br
+.RI "Whether output-file was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBoutput_file_date_given\fP"
+.br
+.RI "Whether output-file-date was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBoutput_file_format_given\fP"
+.br
+.RI "Whether output-file-format was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBgear_ratios_given\fP"
+.br
+.RI "Whether gear-ratios was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBv_given\fP"
+.br
+.RI "Whether v was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBverbose_given\fP"
+.br
+.RI "Whether verbose was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBquiet_given\fP"
+.br
+.RI "Whether quiet was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBfront_controls_given\fP"
+.br
+.RI "Whether front-controls was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBignitech_given\fP"
+.br
+.RI "Whether ignitech was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBlc2_given\fP"
+.br
+.RI "Whether lc2 was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBlc2_delay_given\fP"
+.br
+.RI "Whether lc2-delay was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBlc2_pin_given\fP"
+.br
+.RI "Whether lc2-pin was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBsleepy_given\fP"
+.br
+.RI "Whether sleepy was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBsleepy_addr_given\fP"
+.br
+.RI "Whether sleepy-addr was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBcan_given\fP"
+.br
+.RI "Whether can was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBignitech_dump_file_given\fP"
+.br
+.RI "Whether ignitech-dump-file was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBignitech_servo_as_iap_given\fP"
+.br
+.RI "Whether ignitech-servo-as-iap was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBignitech_sai_low_given\fP"
+.br
+.RI "Whether ignitech-sai-low was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBignitech_sai_low_mv_given\fP"
+.br
+.RI "Whether ignitech-sai-low-mv was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBignitech_sai_high_given\fP"
+.br
+.RI "Whether ignitech-sai-high was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBignitech_sai_high_mv_given\fP"
+.br
+.RI "Whether ignitech-sai-high-mv was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBcan_id_wb2_given\fP"
+.br
+.RI "Whether can-id-wb2 was given\&. 
+.br
+ "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Where the command line options are stored\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Engine Data Logger (EDL) from the source code\&.
