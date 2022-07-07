@@ -35,7 +35,8 @@ The configure script will install these for you under Raspberry Pi OS
 - libISP2 - Library for reading the Innovate ISP V2
 	- https://github.com/techie66/libISP2
 ### Development
-	- Build flatbuffers header with  "flatc -c --gen-object-api cb1100f-app.fbs"  
-	- Build cmdline header with "gengetopt -C -i cmdline.ggo"
+	- Build flatbuffers header with  `flatc -c --gen-object-api ../data/cb1100f-app.fbs` Do this from within `src/` directory.
+	- Build cmdline header with `gengetopt -C -i ../data/cmdline.ggo` Do this from within `src/` directory.
+  - Generate code from modified DBC files `python3 -m cantools generate_c_source ../data/xxxx.dbc` Do this from within `src/` directory.
 ## License
 EngineDataLogger is licensed under the GNU GPLv3. Dependencies are licensed under their respective licenses. See LICENSE for full text of GPLv3.
