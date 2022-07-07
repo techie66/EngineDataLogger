@@ -38,5 +38,6 @@ The configure script will install these for you under Raspberry Pi OS
 	- Build flatbuffers header with  `flatc -c --gen-object-api ../data/cb1100f-app.fbs` Do this from within `src/` directory.
 	- Build cmdline header with `gengetopt -C -i ../data/cmdline.ggo` Do this from within `src/` directory.
   - Generate code from modified DBC files `python3 -m cantools generate_c_source ../data/xxxx.dbc` Do this from within `src/` directory.
+  - Adhere to coding style. Source files formatted with astyle accourding to _astylerc in root directory. Eg. `astyle --project src/main.cpp`
 ## License
 EngineDataLogger is licensed under the GNU GPLv3. Dependencies are licensed under their respective licenses. See LICENSE for full text of GPLv3.
