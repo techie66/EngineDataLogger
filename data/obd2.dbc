@@ -35,7 +35,31 @@ BS_:
 
 BU_:
 
+BO_ 2015 OBD2_Request: 8 Vector__XXX
+ SG_ MODE : 11|4@0+ (1,0) [0|255] "" Vector_XXX
+ SG_ PID : 23|8@0+ (1,0) [0|255] "" Vector_XXX
 
+BO_ 2016 OBD2_ISO_TP: 8 Vector__XXX
+ SG_ TYPE M : 7|4@0+ (1,0) [0|3] "" Vector_XXX
+ SG_ SF_SIZE m0 : 3|4@0+ (1,0) [0|7] "" Vector_XXX
+ SG_ FF_SIZE m1 : 3|12@0+ (1,0) [8|4095] "" Vector_XXX
+ SG_ CF_INDEX m2 : 3|4@0+ (1,0) [0|15] "" Vector_XXX
+ SG_ FC_FLAG m3 : 3|4@0+ (1,0) [0|2] "" Vector_XXX
+ SG_ FC_BLOCK_SIZE m3 : 15|8@0+ (1,0) [0|255] "" Vector_XXX
+ SG_ FC_ST m3M : 23|1@0+ (1,0) [0|1] "" Vector_XXX
+ SG_ FC_ST_ms m0 : 22|7@0+ (1,0) [0|127] "ms" Vector_XXX
+ SG_ FC_ST_us_mux m1M : 22|3@0+ (1,0) [7|7] "" Vector_XXX
+ SG_ FC_ST_us m7 : 19|4@0+ (100,0) [100|900] "us" Vector_XXX
+
+SG_MUL_VAL_ 2016 SF_SIZE TYPE 0-0;
+SG_MUL_VAL_ 2016 FF_SIZE TYPE 1-1;
+SG_MUL_VAL_ 2016 CF_INDEX TYPE 2-2;
+SG_MUL_VAL_ 2016 FC_ST TYPE 3-3;
+SG_MUL_VAL_ 2016 FC_FLAG TYPE 3-3;
+SG_MUL_VAL_ 2016 FC_BLOCK_SIZE TYPE 3-3;
+SG_MUL_VAL_ 2016 FC_ST_ms FC_ST 0-0;
+SG_MUL_VAL_ 2016 FC_ST_us_mux FC_ST 1-1;
+SG_MUL_VAL_ 2016 FC_ST_us FC_ST_us_mux 7-7;
 
 BO_ 2024 OBD2: 8 Vector__XXX
  SG_ S1_PID_00_PIDsSupported_01_20 m0 : 31|32@0+ (1,0) [0|4294967295] "" Vector__XXX
