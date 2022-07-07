@@ -60,3 +60,6 @@ etc/enginedatalogger.conf.dist
 etc/enginedatalogger.service
 etc/enginedatalogger.path
 etc/shutdowncheck.service
+
+# A-Style backups
+*.orig
