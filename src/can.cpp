@@ -109,7 +109,7 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
         _obd2_response.parameter_id_service01 = OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_0_C_ENGINE_RPM_CHOICE;
         obd2_obd2_pack(_response.data,&_obd2_response,8);
-        _response.len = 8;
+        _response.can_dlc = 8;
         _response.can_id = OBD2_OBD2_FRAME_ID;
         if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
           error_message(ERROR, "OBD2: Response Write failed");
