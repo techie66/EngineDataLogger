@@ -1,0 +1,40 @@
+.TH "gps_gps_nav_t" 3 "Thu Jul 7 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gps_gps_nav_t
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <gps\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "uint16_t \fBspeed\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBheading\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBaltitude\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Signals in message GPS_Nav\&.
+.PP
+All signal values are as on the CAN bus\&. 
+.SH "Member Data Documentation"
+.PP 
+.SS "uint16_t gps_gps_nav_t::altitude"
+Range: 0\&.\&.65535 (0\&.\&.65535 m) Scale: 1 Offset: 0 
+.SS "uint16_t gps_gps_nav_t::heading"
+Range: 0\&.\&.35990 (0\&.\&.3599 Deg) Scale: 0\&.1 Offset: 0 
+.SS "uint16_t gps_gps_nav_t::speed"
+Range: 0\&.\&.655350 (0\&.\&.65535 km/h) Scale: 0\&.1 Offset: 0 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Engine Data Logger (EDL) from the source code\&.

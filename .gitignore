@@ -4,6 +4,9 @@ output.txt
 system_log.csv
 example_serial.txt
 
+# Generated code that needs to be regened every build
+src/cb1100f-app_generated.h
+
 # Vim swap files
 .*.swp
 *~
@@ -57,6 +60,10 @@ autom4te.cache
 
 # generated config files
 etc/enginedatalogger.conf.dist
+etc/enginedatalogger.conf
 etc/enginedatalogger.service
 etc/enginedatalogger.path
 etc/shutdowncheck.service
+
+# A-Style backups
+*.orig

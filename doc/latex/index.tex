@@ -1,0 +1,56 @@
+\label{index_md_README}%
+\Hypertarget{index_md_README}%
+ This program is designed to work with custom hardware to act as data logger and central control ECU for a 1983 Honda CB1100F. It is written to run on a raspberry pi zero W and communicate with arduinos and other sensors to control and record various aspects of the motorcycle\textquotesingle{}s operation.\hypertarget{index_autotoc_md1}{}\doxysection{Componenents}\label{index_autotoc_md1}
+
+\begin{DoxyItemize}
+\item -\/$>$\href{https://github.com/techie66/EngineDataLogger}{\texttt{ Engine\+Data\+Logger(\+EDL)}}
+\item \href{https://github.com/techie66/EngineDataLogger---Dashboard}{\texttt{ EDL -\/ Dashboard}}
+\item \href{https://github.com/techie66/EngineDataLogger-FrontControls}{\texttt{ EDL -\/ Front Controls}}
+\item \href{https://github.com/techie66/EngineDataLogger-EngineData}{\texttt{ EDL -\/ Engine\+Data}}
+\end{DoxyItemize}\hypertarget{index_autotoc_md2}{}\doxysection{Installation}\label{index_autotoc_md2}
+\hypertarget{index_autotoc_md3}{}\doxysubsection{Quick Start}\label{index_autotoc_md3}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git clone git@github.com:techie66/EngineDataLogger.git}
+\DoxyCodeLine{.cd EngineDataLogger}
+\DoxyCodeLine{./configure}
+\DoxyCodeLine{make}
+\DoxyCodeLine{sudo make install}
+
+\end{DoxyCode}
+ After installation it will be necessary to setup a config file. An example is distrubuted as {\ttfamily /usr/local/etc/enginedatalogger/enginedatalogger.conf.\+dist} (on most systems, other systems may be in a different directory, see output from {\ttfamily sudo make install}) Copy this file to {\ttfamily /usr/local/etc/enginedatalogger/enginedatalogger.conf} and edit as necessary.\hypertarget{index_autotoc_md4}{}\doxysubsection{Dependencies}\label{index_autotoc_md4}
+\hypertarget{index_autotoc_md5}{}\doxysubsubsection{Included\+:$<$br$>$}\label{index_autotoc_md5}
+
+\begin{DoxyItemize}
+\item I2C dev Lib -\/ \href{https://github.com/jrowberg/i2cdevlib}{\texttt{ https\+://github.\+com/jrowberg/i2cdevlib}} ~\newline
+
+\end{DoxyItemize}\hypertarget{index_autotoc_md6}{}\doxysubsubsection{Not Included}\label{index_autotoc_md6}
+The configure script will install these for you under Raspberry Pi OS
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{bluetooth_8h_source}{bluetooth.\+h}} -\/ BLuetooth Headers
+\item bcm2835 library -\/ \href{http://www.airspayce.com/mikem/bcm2835/index.html}{\texttt{ http\+://www.\+airspayce.\+com/mikem/bcm2835/index.\+html}} ~\newline
+
+\item Flat\+Buffers -\/ \href{https://github.com/google/flatbuffers}{\texttt{ https\+://github.\+com/google/flatbuffers}} ~\newline
+
+\begin{DoxyItemize}
+\item Google API for data serialization. ~\newline
+
+\item Build header with \char`\"{}flatc -\/c -\/-\/gen-\/object-\/api cb1100f-\/app.\+fbs\char`\"{} ~\newline
+
+\end{DoxyItemize}
+\item lib\+ISP2 -\/ Library for reading the Innovate ISP V2
+\begin{DoxyItemize}
+\item \href{https://github.com/techie66/libISP2}{\texttt{ https\+://github.\+com/techie66/lib\+ISP2}} 
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{index_autotoc_md7}{}\doxysubsection{Development}\label{index_autotoc_md7}
+
+\begin{DoxyItemize}
+\item Build flatbuffers header with {\ttfamily flatc -\/c -\/-\/gen-\/object-\/api ../data/cb1100f-\/app.fbs} Do this from within {\ttfamily src/} directory.
+\item Build cmdline header with {\ttfamily gengetopt -\/C -\/i ../data/cmdline.ggo} Do this from within {\ttfamily src/} directory.
+\end{DoxyItemize}
+
+Generate code from modified DBC files {\ttfamily python3 -\/m cantools generate\+\_\+c\+\_\+source ../data/xxxx.dbc} Do this from within {\ttfamily src/} directory.
+\begin{DoxyItemize}
+\item Adhere to coding style. Source files formatted with astyle accourding to \+\_\+astylerc in root directory. Eg. {\ttfamily astyle -\/-\/project src/main.\+cpp} 
+\end{DoxyItemize}\hypertarget{index_autotoc_md8}{}\doxysection{License}\label{index_autotoc_md8}
+Engine\+Data\+Logger is licensed under the GNU GPLv3. Dependencies are licensed under their respective licenses. See LICENSE for full text of GPLv3. 

@@ -1,4 +1,3 @@
-etcdir=$(srcdir)/etc
 bin_PROGRAMS = enginedatalogger
 bin_SCRIPTS = bin/shutdowncheck.py
 enginedatalogger_SOURCES= \
@@ -12,6 +11,18 @@ enginedatalogger_SOURCES= \
 		    src/cmdline.h \
 		    src/definitions.h
 
+if CANBUS
+enginedatalogger_SOURCES += \
+		    src/can.cpp \
+		    src/can.h \
+		    src/imu_can.c \
+		    src/imu_can.h \
+		    src/ignitech_can.c \
+		    src/ignitech_can.h \
+		    src/obd2.c \
+		    src/obd2.h
+endif
+
 if DASHBOARD
 enginedatalogger_SOURCES += \
 		    src/bluetooth.cpp \
@@ -24,7 +35,16 @@ enginedatalogger_SOURCES += \
 		    src/front_controls.cpp \
 		    src/front_controls.h
 endif
+BUILT_SOURCES= \
+		    src/cb1100f-app_generated.h
 
+datadir=$(srcdir)/data
+
+src/cb1100f-app_generated.h: $(datadir)/cb1100f-app.fbs
+	flatc -c --gen-object-api -o $(srcdir)/src $(datadir)/cb1100f-app.fbs
+	touch $(datadir)/cb1100f-app.fbs
+
+etcdir=$(srcdir)/etc
 myconfdir=$(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
 		    $(etcdir)/enginedatalogger.conf.dist

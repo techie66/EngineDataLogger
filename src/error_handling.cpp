@@ -35,6 +35,9 @@ void error_message(e_lvl err_lvl, char const *fmt, ...) {
 				} else if (*fmt == 'c') {
 					int c = va_arg(args, int);
 					printf( "%c", (char)c ) ;
+				} else if (*fmt == 'X') {
+					int X = va_arg(args, int);
+					printf( "%X", X ) ;
 				} else if (*fmt == 'f') {
 					double d = va_arg(args, double);
 					printf( "%f", d ) ;

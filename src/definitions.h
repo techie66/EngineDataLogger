@@ -36,97 +36,100 @@
 
 // CmdD flags
 const uint8_t		BRAKE_ON = 1 << 2,
-      			HORN_ON = 1 << 3,
-			LEFT_ON = 1 << 4,
-			RIGHT_ON = 1 << 5,
-			HIGH_BEAMS_ON = 1 << 6,
-			KILL_ON = 1 << 7;
+                HORN_ON = 1 << 3,
+                LEFT_ON = 1 << 4,
+                RIGHT_ON = 1 << 5,
+                HIGH_BEAMS_ON = 1 << 6,
+                KILL_ON = 1 << 7;
 
 // CmdC flags
 const uint8_t		CLUTCH_DISENGAGED = 1 << 2,
-      			KICKSTAND_UP = 1 << 3,
-			IN_NEUTRAL = 1 << 4;
+                KICKSTAND_UP = 1 << 3,
+                IN_NEUTRAL = 1 << 4;
 
 // CmdA flags
 const uint8_t		ENGINE_RUNNING = 1 << 7;
 
 struct			fc_data {
-				uint8_t serialCmdD = 0,
-					serialCmdB = 0,
-					serialCmdC = 0,
-					serialCmdA = 0,
-					inputCmdD = 0,
-					inputCmdC = 0;
-				float	systemVoltage = 0.0;
-				bool	brake_on = false;
-				bool	horn_on = false;
-				bool	left_on = false;
-				bool	right_on = false;
-				bool	high_on = false;
-				bool	kill_on = false;
-				bool	clutch_disengaged = false;
-				bool	kickstand_up = false;
-				bool	in_neutral = false;
-			};
+  uint8_t serialCmdD = 0,
+          serialCmdB = 0,
+          serialCmdC = 0,
+          serialCmdA = 0,
+          inputCmdD = 0,
+          inputCmdC = 0;
+  float	systemVoltage = 0.0;
+  bool	brake_on = false;
+  bool	horn_on = false;
+  bool	left_on = false;
+  bool	right_on = false;
+  bool	high_on = false;
+  bool	kill_on = false;
+  bool	clutch_disengaged = false;
+  bool	kickstand_up = false;
+  bool	in_neutral = false;
+};
 struct			engine_data {
-				uint16_t	rpm = 0;
-				float		batteryVoltage = 0.0,
-						temp_oil = 0, // divide by 100 for actual temp
-						pres_oil = 0, // divide by 100 for actual pressure
-						speed = 0; // divide by 100 for actual speed
-				uint32_t	odometer = 0;
-				uint32_t	trip = 0;
-			};
-
-enum System_CMD {
-	NO_CMD,
-	TRPRST,
-	O2MANON,
-	O2MANOFF
+  uint16_t	rpm = 0;
+  float		batteryVoltage = 0.0,
+          temp_oil = 0, // divide by 100 for actual temp
+          pres_oil = 0, // divide by 100 for actual pressure
+          speed = 0; // divide by 100 for actual speed
+  uint32_t	odometer = 0;
+  uint32_t	trip = 0;
 };
 
+enum System_CMD {
+  NO_CMD,
+  TRPRST,
+  O2MANON,
+  O2MANOFF
+};
+
+// TODO make members Build-time optional
 struct	bike_data {
-	int ig_rpm;
-	int32_t alt_rpm;
-	float speed;
-	uint32_t odometer;
-	uint32_t trip;
-	float systemvoltage;
-	float batteryvoltage;
-	float oil_temp;
-	float oil_pres;
-	bool blink_left;
-	bool blink_right;
-	uint16_t lambda;
-	int map_kpa;
-	int tps_percent;
-	bool engineRunning;
-	uint8_t advance1;
-	uint8_t advance2;
-	uint8_t advance3;
-	uint8_t advance4;
+  int rpm;
+  int ig_rpm;
+  int32_t alt_rpm;
+  float speed;
+  uint32_t odometer;
+  uint32_t trip;
+  float systemvoltage;
+  float batteryvoltage;
+  float oil_temp;
+  float oil_pres;
+  bool blink_left;
+  bool blink_right;
+  /// Lambda. Fixed point number 2 places after decimal, 0.01 (divide by 100)
+  uint16_t lambda;
+  int map_kpa;
+  int tps_percent;
+  bool engineRunning;
+  uint8_t advance1;
+  uint8_t advance2;
+  uint8_t advance3;
+  uint8_t advance4;
 };
 
 typedef enum {
-	FMT_RPM,
-	FMT_ALT_RPM,
-	FMT_SPEED,
-	FMT_ODOMETER,
-	FMT_TRIP,
-	FMT_SYSTEMVOLTAGE,
-	FMT_BATTERYVOLTAGE,
-	FMT_OIL_TEMP,
-	FMT_OIL_PRES,
-	FMT_BLINK_LEFT,
-	FMT_BLINK_RIGHT,
-	FMT_LAMBDA,
-	FMT_MAP_KPA,
-	FMT_TPS_PERCENT,
-	FMT_ENGINERUNNING,
-	FMT_TIME,
-	FMT_ADVANCE1,
-	FMT_ADVANCE2,
-	FMT_ADVANCE3,
-	FMT_ADVANCE4
+  FMT_RPM,
+  FMT_ALT_RPM,
+  FMT_SPEED,
+  FMT_ODOMETER,
+  FMT_TRIP,
+  FMT_SYSTEMVOLTAGE,
+  FMT_BATTERYVOLTAGE,
+  FMT_OIL_TEMP,
+  FMT_OIL_PRES,
+  FMT_BLINK_LEFT,
+  FMT_BLINK_RIGHT,
+  FMT_LAMBDA,
+  FMT_MAP_KPA,
+  FMT_TPS_PERCENT,
+  FMT_ENGINERUNNING,
+  FMT_TIME,
+  FMT_ADVANCE1,
+  FMT_ADVANCE2,
+  FMT_ADVANCE3,
+  FMT_ADVANCE4
 } log_fmt_data;
 #endif

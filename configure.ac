@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([EngineDataLogger], [v0.1], [jacob@geigle.me])
-AC_CONFIG_SRCDIR([src/cb1100f-app_generated.h])
+AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE(1.9 subdir-objects)
@@ -15,6 +15,17 @@ AC_PROG_CC
 
 AX_CXX_COMPILE_STDCXX_11
 # Checks for libraries. Based on enabled features.
+AC_ARG_ENABLE([can],
+	[AS_HELP_STRING([--disable-can],
+		[Disable support for CAN Bus])],
+	[],
+	[enable_can=yes])
+AS_IF([test "x$enable_can" != xno],
+	[AC_DEFINE([FEAT_CAN],[1],[Support CAN bus])
+	canbus=true
+])
+AM_CONDITIONAL([CANBUS], [test "x$canbus" = xtrue])
+
 AC_ARG_ENABLE([frontcontrols],
 	[AS_HELP_STRING([--disable-frontcontrols],
 		[Disable support for Front Controls])],
@@ -43,7 +54,7 @@ AC_ARG_ENABLE([gpio],
 	[],
 	[enable_gpio=yes])
 AC_ARG_WITH([bcm2835],
-	[AS_HELP_STRING([--without-bcm3835],
+	[AS_HELP_STRING([--without-bcm2835],
 		[compile without bcm2835, which is needed for gpio such as O2 sensor power control.])],
 		[],
 		[with_bcm2835=yes])

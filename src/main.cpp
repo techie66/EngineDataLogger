@@ -1,6 +1,6 @@
 /*
     EngineDataLogger
-    Copyright (C) 2018-2020  Jacob Geigle
+    Copyright (C) 2018-2021  Jacob Geigle
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,10 +34,16 @@
 #include <sys/time.h>
 #include <getopt.h>
 #include <vector>
+#include <errno.h>
 #include "cmdline.h"
 #include "hexconvert.h"
 
 #include <isp2.h>
+
+//#define FEAT_CAN 1
+#ifdef FEAT_CAN
+#include "can.h"
+#endif /* FEAT_CAN */
 
 #ifdef FEAT_GPIO
 #include <bcm2835.h>
@@ -68,7 +74,7 @@ int fc_open(const char *filename) {
 	int fd;
 	fd = open (filename, O_RDWR | O_NOCTTY | O_SYNC);
 	if (fd < 0) {
-		error_message (WARN,"error %d opening %s: %s", errno, filename, strerror (errno));
+		error_message (WARN,"Warning:Front_Controls: error %d opening %s: %s", errno, filename, strerror (errno));
 		return -1;
 	}
 
@@ -82,7 +88,7 @@ int lc2_open(const char *filename) {
 	int fd;
 	fd = open (filename, O_RDWR | O_NOCTTY | O_SYNC);
 	if (fd < 0) {
-		error_message (WARN,"error %d opening %s: %s", errno, filename, strerror (errno));
+		error_message (WARN,"Warning:LC-2: error %d opening %s: %s", errno, filename, strerror (errno));
 		return -1;
 	}
 
@@ -103,12 +109,12 @@ int main(int argc, char *argv[])
 	char time_buf[TIME_BUF_LEN] = {0};
 	time_t rawtime = time(NULL);
 	if ( rawtime == -1 ) {
-		error_message(ERROR,"time() function failed");
+		error_message(ERROR,"ERROR: time() function failed");
 		return -1;
 	}
 	struct tm *ptm = localtime(&rawtime);
 	if ( ptm == NULL ) {
-		error_message(ERROR,"localtime() failed");
+		error_message(ERROR,"ERROR: localtime() failed");
 		return -1;
 	}
 	strftime(time_buf,TIME_BUF_LEN,"%Y%m%d%H%M%S",ptm);
@@ -160,7 +166,7 @@ int main(int argc, char *argv[])
 		}
 		if ( args_info.ignitech_sai_high_mv_given ) {
 			if ( ! args_info.ignitech_servo_as_iap_flag ) {
-				error_message (ERROR,"Option --ignitech-sai-high-mv depends on --ignitech-servo-as-iap");
+				error_message (ERROR,"ERROR:OPTIONS: Option --ignitech-sai-high-mv depends on --ignitech-servo-as-iap");
 				return -1;
 			}
 		}
@@ -173,6 +179,43 @@ int main(int argc, char *argv[])
 		}
 	}
 	#endif /* HAVE_LIBIGNITECH */
+
+	bool active_can = false;
+	#ifdef FEAT_CAN
+	bool can_sock_good;
+	unsigned int can_id_wb2;
+	unsigned char hexbuffer[4] = {0};
+	char const *can_if = NULL;
+	int can_s = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+	if (can_s < 0) {
+		error_message(ERROR,"Error:CAN: Socket creation failed.");
+		return -1;
+	}
+	struct can_frame frame;
+	frame.can_id = 0;
+	frame.can_dlc = 0;
+	if ( args_info.can_given ) {
+		active_can = true;
+		can_sock_good = can_sock_connect(can_s,args_info.can_arg);
+		if ( args_info.can_id_wb2_given ) {
+			if ( strlen(args_info.can_id_wb2_arg) == 5 ) {
+				try {
+					hex2bin(args_info.can_id_wb2_arg,hexbuffer);
+				}
+				catch (const std::invalid_argument& ia) {
+					error_message(ERROR,"ERROR:OPTIONS: Invalid can-id-wb2");
+					return -1;
+				}
+
+			}
+			else {
+				error_message(ERROR,"ERROR:OPTIONS: Invalid can-id-wb2");
+				return -1;
+			}
+			can_id_wb2 = hexbuffer[0] * 0x100 + hexbuffer[1];
+		}
+	}
+	#endif /* FEAT_CAN */
 
 	char const *log_file = NULL;
 	std::vector<log_fmt_data> log_format;
@@ -266,7 +309,7 @@ int main(int argc, char *argv[])
 			else if ( strcmp(pt,"time") == 0 ) 
 				log_format.push_back(FMT_TIME);
 			else {
-				error_message (ERROR,"Invalid output-file-format");
+				error_message (ERROR,"ERROR:OPTIONS: Invalid output-file-format");
 				return -1;
 			}
 
@@ -276,7 +319,7 @@ int main(int argc, char *argv[])
 
 		// Open log file
 		if ((fd_log = fopen(log_file,"a")) < 0) {
-			error_message (ERROR,"Failed to open the log file err:%d - %s",errno,strerror(errno));
+			error_message (ERROR,"ERROR:LOG: Failed to open the log file err:%d - %s",errno,strerror(errno));
 			//return -1;
 		}
 		// Put proper CSV header here
@@ -334,7 +377,7 @@ int main(int argc, char *argv[])
 		//----- OPEN THE I2C BUS -----
 		if ((fd_i2c = open(args_info.sleepy_arg, O_RDWR)) < 0) {
 			//ERROR HANDLING: you can check errno to see what went wrong
-			error_message (ERROR,"Failed to open the i2c bus. err:%d - %s",errno,strerror(errno));
+			error_message (ERROR,"ERROR:I2C: Failed to open the i2c bus. err:%d - %s",errno,strerror(errno));
 			return -1;
 		}
 		if ( args_info.sleepy_addr_given ) {
@@ -344,12 +387,12 @@ int main(int argc, char *argv[])
 					hex2bin(args_info.sleepy_addr_arg,&engine_data_addr);
 				}
 				catch (const std::invalid_argument& ia) {
-					error_message(ERROR,"Invalid I2C address for SleepyPi");
+					error_message(ERROR,"ERROR:SLEEPY: Invalid I2C address for SleepyPi");
 					return -1;
 				}
 			}
 			else {
-				error_message(ERROR,"Invalid I2C address for SleepyPi");
+				error_message(ERROR,"ERROR:SLEEPY: Invalid I2C address for SleepyPi");
 				return -1;
 			}
 		}
@@ -365,6 +408,7 @@ int main(int argc, char *argv[])
 	engine_data	enData;
 	bike_data	log_data;
 	isp2_t		lc2_data = isp2_t();
+	lc2_data.status = ISP2_WARMING;
 	fc_data		fcData;
 	System_CMD	db_from_cmd = NO_CMD;
 	char		en_to_cmd = 0;
@@ -387,7 +431,7 @@ int main(int argc, char *argv[])
 		if ( args_info.sleepy_given ) {
 			if (ioctl(fd_i2c, I2C_SLAVE, engine_data_addr) < 0) {
 				//ERROR HANDLING; you can check errno to see what went wrong
-				error_message (ERROR,"Failed to acquire bus access and/or talk to slave. err:%d - %s",errno,strerror(errno));
+				error_message (WARN,"Warning: Failed to acquire bus access and/or talk to slave. err:%d - %s",errno,strerror(errno));
 				//return -1;
 			}
 
@@ -399,10 +443,12 @@ int main(int argc, char *argv[])
 			unsigned char	*buffer_ptr = buffer;
 			if (read(fd_i2c, buffer, length) != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)KE
 				//ERROR HANDLING: i2c transaction failed
-				error_message (WARN,"Failed to read from the i2c bus.");
+				error_message (WARN,"WARN: Failed to read from the i2c bus.");
 			}
 			else {
 				// Good I2C read, Sort out the various packed variables
+				// TODO See really bad. memcpy, pointer math. yuck. at least shove it in a corner by
+				// itself with a pretty class interface
 				memcpy((void*)&enData.rpm,(void*)buffer_ptr,sizeof(enData.rpm));
 				buffer_ptr += sizeof(enData.rpm);
 				uint16_t tmp = 0;
@@ -421,7 +467,7 @@ int main(int argc, char *argv[])
 				memcpy((void*)&tmp,(void*)buffer_ptr,sizeof(tmp));
 				enData.pres_oil = tmp / 100.0;
 				buffer_ptr = buffer;
-				error_message (INFO,"ODO: %d RPM: %d Speed: %f Oil temp: %f pres: %f BatV: %f",enData.odometer,enData.rpm,enData.speed,enData.temp_oil, enData.pres_oil, enData.batteryVoltage);
+				error_message (INFO,"INFO: ODO: %d RPM: %d Speed: %f Oil temp: %f pres: %f BatV: %f",enData.odometer,enData.rpm,enData.speed,enData.temp_oil, enData.pres_oil, enData.batteryVoltage);
 			}
 		}
 		#endif /* FEAT_I2C */
@@ -433,7 +479,7 @@ int main(int argc, char *argv[])
 			ignition_read_status = ignition->read_async();
 			if (ignition_read_status == IGN_ERR ) {
 				//if (ignition_read_status < IGN_SUC )
-					error_message (ERROR,"Failed to Read Ignitech err:%d - %s",errno,strerror(errno));
+					error_message (ERROR,"ERROR:IGNITECH: Failed to Read Ignitech err:%d - %s",errno,strerror(errno));
 				//num_failures++;
 				//if ( num_failures > IGNITECH_MAX_RESETS ) {
 					num_failures = 0;
@@ -444,7 +490,7 @@ int main(int argc, char *argv[])
 			}
 			else if (ignition_read_status != IGN_ERR) {
 				//num_failures = 0;
-				error_message (DEBUG,"Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(),ignition->get_battery_mV());
+				error_message (DEBUG,"DEBUG:Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(),ignition->get_battery_mV());
 				log_data.ig_rpm = ignition->get_rpm();
 				log_data.advance1 = ignition->get_advance1();
 				log_data.advance2 = ignition->get_advance2();
@@ -458,7 +504,7 @@ int main(int argc, char *argv[])
 					log_data.tps_percent = ignition->get_sensor_value();
 				}
 				if ( args_info.ignitech_servo_as_iap_flag ) {
-					error_message (DEBUG,"Servo mV: %d, Slope: %f", ignition->get_servo_measured(),sai_slope);
+					error_message (DEBUG,"DEBUG:Servo mV: %d, Slope: %f", ignition->get_servo_measured(),sai_slope);
 					log_data.map_kpa = ((ignition->get_servo_measured() - args_info.ignitech_sai_low_mv_arg) *
 						sai_slope) + args_info.ignitech_sai_low_arg;
 				}
@@ -476,14 +522,14 @@ int main(int argc, char *argv[])
 		FD_SET(dashboard.getListener(),&readset);
 		max_fd = (max_fd>dashboard.getListener())?max_fd:dashboard.getListener();
 		if (dashboard.getClient() > 0) {
-			error_message(DEBUG,"Adding dashboard client to select");
+			error_message(DEBUG,"DEBUG:Adding dashboard client to select");
 			FD_SET(dashboard.getClient(),&readset);
 			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
 		}
 		#endif /* FEAT_DASHBOARD */
 		if ( args_info.front_controls_given ) {
 			if (fd_front_controls > 0) {
-				error_message(DEBUG,"Adding front controls to select");
+				error_message(DEBUG,"DEBUG:Adding front controls to select");
 				FD_SET(fd_front_controls,&readset);
 				max_fd = (max_fd>fd_front_controls)?max_fd:fd_front_controls;
 			}
@@ -491,10 +537,21 @@ int main(int argc, char *argv[])
 				fd_front_controls = fc_open(args_info.front_controls_arg);
 			}
 		}
-		// TODO LC-2 runtime and build-time optional (libISP)
+    #ifdef FEAT_CAN
+		if ( active_can ) {
+			if ( can_sock_good ) {
+				FD_SET(can_s,&readset);
+				max_fd = (max_fd>can_s)?max_fd:can_s;
+			}
+			else {
+				can_sock_good = can_sock_connect(can_s,args_info.can_arg);
+			}
+		}
+    #endif /* FEAT_CAN */
+		// TODO LC-2 build-time optional (libISP)
 		if ( args_info.lc2_given ) {
 			if (fd_lc2 > 0) {
-				error_message(DEBUG,"Adding LC-2 to select");
+				error_message(DEBUG,"DEBUG:Adding LC-2 to select");
 				FD_SET(fd_lc2,&readset);
 				max_fd = (max_fd>fd_lc2)?max_fd:fd_lc2;
 			}
@@ -510,36 +567,54 @@ int main(int argc, char *argv[])
 		// Do Select()
 		select_result = select(max_fd+1, &readset, &writeset, NULL, &timeout);
 		if (select_result < 0) {
-			error_message (WARN, "Select read error %d : %s", errno, strerror (errno));
+			error_message (WARN, "WARN:Select read error %d : %s", errno, strerror (errno));
 		}
 		else if (select_result == 0){
 			// Timeout
 			// #Dontcare
 		}
 		else if (select_result > 0) {
-			error_message(DEBUG,"Select something");
+			error_message(DEBUG,"DEBUG:Select something");
+
 
 			#ifdef FEAT_FRONTCONTROLS
 			if (FD_ISSET(fd_front_controls,&readset)) {
-				error_message (DEBUG,"Select read front controls");
+				error_message (DEBUG,"DEBUG:Select read front controls");
 				readFC(fd_front_controls,fcData);
 			}
 			#endif /* FEAT_FRONTCONTROLS */
 			#ifdef FEAT_DASHBOARD
 			if (FD_ISSET(dashboard.getListener(),&readset)) {
-				error_message(DEBUG,"Select new dashboard client");
+				error_message(DEBUG,"DEBUG:Select new dashboard client");
 				dashboard.Accept();
 			}
 			if (FD_ISSET(dashboard.getClient(),&readset)) {
-				error_message(DEBUG,"Select read dashboard");
+				error_message(DEBUG,"DEBUG:Select read dashboard");
 				db_from_cmd = dashboard.Read();
 			}
 			#endif /* FEAT_DASHBOARD */
-			if (FD_ISSET(fd_lc2,&readset)) {
-				error_message (DEBUG,"Select read LC-2");
-				ISP2::isp2_read(fd_lc2,lc2_data);
-				error_message(INFO,"Status: %d Lambda: %d\n",lc2_data.status,lc2_data.lambda);
+		  // TODO LC-2 build-time optional (libISP)
+			if ( args_info.lc2_given ) { // TODO possibly remove this check
+				if (FD_ISSET(fd_lc2,&readset)) {
+					error_message (DEBUG,"DEBUG:Select read LC-2");
+					ISP2::isp2_read(fd_lc2,lc2_data);
+					error_message(INFO,"INFO:Status: %d Lambda: %d",lc2_data.status,lc2_data.lambda);
+				}
 			}
+      #ifdef FEAT_CAN
+			if (FD_ISSET(can_s,&readset)) {
+				error_message (DEBUG,"Select read CAN");
+				int nbytes = read(can_s, &frame, sizeof(struct can_frame));
+				error_message(INFO,"INFO:CAN:Read %d bytes",nbytes);
+				if ( nbytes < 0 ) {
+					error_message(WARN,"WARNING:CAN: Read error: %s",strerror(errno));
+				}
+        else {
+				  can_parse(frame,log_data,can_s);
+        }
+
+			}
+      #endif /* FEAT_CAN */
 		}
 
 		#ifdef HAVE_LIBIGNITECH
@@ -634,6 +709,7 @@ int main(int argc, char *argv[])
 
 		bikeobj.alt_rpm = enData.rpm;
 		bikeobj.rpm = my_rpm;
+		log_data.rpm = my_rpm;
 		bikeobj.speed = enData.speed;
 		bikeobj.odometer = enData.odometer;
 		bikeobj.oil_temp = enData.temp_oil;
@@ -769,7 +845,7 @@ int main(int argc, char *argv[])
 							fprintf(fd_log,"%d,",log_data.blink_right);
 							break;
 						case FMT_LAMBDA:
-							fprintf(fd_log,"%.2f,",log_data.lambda/1000.0);
+							fprintf(fd_log,"%.2f,",log_data.lambda/100.0);
 							break;
 						case FMT_MAP_KPA:
 							fprintf(fd_log,"%d,",log_data.map_kpa);
@@ -804,7 +880,6 @@ int main(int argc, char *argv[])
 
 		//usleep(50000);
 	}
-
 	#ifdef FEAT_GPIO
 	if ( args_info.lc2_given ) {
 		bcm2835_gpio_write(o2_pin, LOW);

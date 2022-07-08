@@ -1,0 +1,818 @@
+.TH "obd2_obd2_t" 3 "Thu Jul 7 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+obd2_obd2_t
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <obd2\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "uint8_t \fBlength\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBresponse\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBservice\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBparameter_id_service01\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBparameter_id_service02\fP"
+.br
+.ti -1c
+.RI "uint32_t \fBs1_pid_00_pi_ds_supported_01_20\fP"
+.br
+.ti -1c
+.RI "uint32_t \fBs1_pid_01_monitor_status\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_02_freeze_dtc\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_03_fuel_system_status\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_04_calc_engine_load\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_05_engine_coolant_temp\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_06_short_fuel_trim_bank1\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_07_long_fuel_trim_bank1\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_08_short_fuel_trim_bank2\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_09_long_fuel_trim_bank2\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_0_a_fuel_pressure\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_0_b_intake_mani_abs_press\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_0_c_engine_rpm\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_0_d_vehicle_speed\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_0_e_timing_advance\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_0_f_intake_air_temperature\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_10_maf_air_flow_rate\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_11_throttle_position\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_12_cmd_sec_air_status\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_14_oxy_sensor1_volt\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_15_oxy_sensor2_volt\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_16_oxy_sensor3_volt\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_17_oxy_sensor4_volt\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_18_oxy_sensor5_volt\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_19_oxy_sensor6_volt\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_1_a_oxy_sensor7_volt\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_1_b_oxy_sensor8_volt\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_1_c_obd_standard\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_1_f_time_since_eng_start\fP"
+.br
+.ti -1c
+.RI "uint32_t \fBs1_pid_20_pi_ds_supported_21_40\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_21_distance_mil_on\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_22_fuel_rail_pres\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_23_fuel_rail_gaug\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_24_oxy_sensor1_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_25_oxy_sensor2_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_26_oxy_sensor3_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_27_oxy_sensor4_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_28_oxy_sensor5_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_29_oxy_sensor6_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_2_a_oxy_sensor7_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_2_b_oxy_sensor8_faer\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_2_c_cmd_egr\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_2_d_egr_error\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_2_e_cmd_evap_purge\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_2_f_fuel_tank_level\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_30_warm_ups_since_code_clear\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_31_distance_since_code_clear\fP"
+.br
+.ti -1c
+.RI "int16_t \fBs1_pid_32_evap_sys_vapor_pres\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_33_abs_baro_pres\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_34_oxy_sensor1_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_35_oxy_sensor2_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_36_oxy_sensor3_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_37_oxy_sensor4_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_38_oxy_sensor5_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_39_oxy_sensor6_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_3_a_oxy_sensor7_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_3_b_oxy_sensor8_faer\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_3_c_cat_temp_bank1_sens1\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_3_d_cat_temp_bank2_sens1\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_3_e_cat_temp_bank1_sens2\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_3_f_cat_temp_bank2_sens2\fP"
+.br
+.ti -1c
+.RI "uint32_t \fBs1_pid_40_pi_ds_supported_41_60\fP"
+.br
+.ti -1c
+.RI "uint32_t \fBs1_pid_41_mon_status_drive_cycle\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_42_control_module_volt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_43_abs_load_value\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_44_fuel_air_cmd_equiv\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_45_rel_throttle_pos\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_46_ambient_air_temp\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_47_abs_throttle_pos_b\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_48_abs_throttle_pos_c\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_49_abs_throttle_pos_d\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_4_a_abs_throttle_pos_e\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_4_b_abs_throttle_pos_f\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_4_c_cmd_throttle_act\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_4_d_time_run_mil_on\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_4_e_time_since_code_clear\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_4_f_max_faer\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_50_max_air_flow_maf\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_51_fuel_type\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_52_ethanol_fuel_pct\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_53_abs_evap_sys_vap_pres\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_54_evap_sys_vap_pres\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_55_short_sec_oxy_trim_bank1\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_56_long_sec_oxy_trim_bank1\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_57_short_sec_oxy_trim_bank2\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_58_long_sec_oxy_trim_bank2\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_59_fuel_rail_abs_pres\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_5_a_rel_accel_pedal_pos\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_5_b_hybr_bat_pack_rem_life\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_5_c_engine_oil_temp\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_5_d_fuel_injection_timing\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_5_e_engine_fuel_rate\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_5_f_emission_req\fP"
+.br
+.ti -1c
+.RI "uint32_t \fBs1_pid_60_pi_ds_supported_61_80\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_61_demand_eng_torq_pct\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_62_actual_eng_torq_pct\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_63_eng_ref_torq\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_64_eng_pct_torq_idle\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_65_aux_input_output\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_66_maf_sensor\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_67_engine_coolant_temp\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_68_intake_air_temp_sens\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_69_cmd_egr_egr_error\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_6_a_cmd_diesel_int_air\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_6_b_exhaust_gas_temp\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_6_c_cmd_throttle_act_rel\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_6_d_fuel_pres_contr_sys\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_6_e_inj_pres_contr_sys\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_6_f_turbo_compr_pres\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_70_boost_pres_cntrl\fP"
+.br
+.ti -1c
+.RI "uint32_t \fBs1_pid_80_pi_ds_supported_81_a0\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_8_e_eng_friction_pct_torq\fP"
+.br
+.ti -1c
+.RI "uint32_t \fBs1_pid_a0_pi_ds_supported_a1_c0\fP"
+.br
+.ti -1c
+.RI "uint32_t \fBs1_pid_c0_pi_ds_supported_c1_e0\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs2_pid_02_freeze_dtc\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_14_oxy_sensor1_stft\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_15_oxy_sensor2_stft\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_16_oxy_sensor3_stft\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_17_oxy_sensor4_stft\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_18_oxy_sensor5_stft\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_19_oxy_sensor6_stft\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_1_a_oxy_sensor7_stft\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_1_b_oxy_sensor8_stft\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_4_f_max_oxy_sens_vol\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_55_short_sec_oxy_trim_bank3\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_56_long_sec_oxy_trim_bank3\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_57_short_sec_oxy_trim_bank4\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_58_long_sec_oxy_trim_bank4\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_64_eng_pct_torq_ep1\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_24_oxy_sensor1_volt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_25_oxy_sensor2_volt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_26_oxy_sensor3_volt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_27_oxy_sensor4_volt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_28_oxy_sensor5_volt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_29_oxy_sensor6_volt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_2_a_oxy_sensor7_volt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_2_b_oxy_sensor8_volt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_34_oxy_sensor1_crnt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_35_oxy_sensor2_crnt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_36_oxy_sensor3_crnt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_37_oxy_sensor4_crnt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_38_oxy_sensor5_crnt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_39_oxy_sensor6_crnt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_3_a_oxy_sensor7_crnt\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBs1_pid_3_b_oxy_sensor8_crnt\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_4_f_max_oxy_sens_crnt\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_64_eng_pct_torq_ep2\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_4_f_max_int_mani_abs_pres\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_64_eng_pct_torq_ep3\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBs1_pid_64_eng_pct_torq_ep4\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Signals in message OBD2\&.
+.PP
+OBD2 DBC developed by canmatrix & CSS Electronics - for questions contact us at www\&.csselectronics\&.com
+.PP
+All signal values are as on the CAN bus\&. 
+.SH "Member Data Documentation"
+.PP 
+.SS "uint8_t obd2_obd2_t::length"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::parameter_id_service01"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::parameter_id_service02"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::response"
+Range: 0\&.\&.15 (0\&.\&.15 -) Scale: 1 Offset: 0 
+.SS "uint32_t obd2_obd2_t::s1_pid_00_pi_ds_supported_01_20"
+PIDs supported [01 - 20] - Bit encoded [A7\&.\&.D0] == [PID $01\&.\&.PID $20]\&. See OBD-II PIDs on Wikipedia
+.PP
+Range: 0\&.\&.4294967295 (0\&.\&.4294967295 -) Scale: 1 Offset: 0 
+.SS "uint32_t obd2_obd2_t::s1_pid_01_monitor_status"
+Monitor status since DTCs cleared (includes malfunction indicator lamp (MIL) status and number of DTCs)
+.PP
+Range: 0\&.\&.4294967295 (0\&.\&.4294967295 -) Scale: 1 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_02_freeze_dtc"
+Range: 0\&.\&.65535 (0\&.\&.65535 -) Scale: 1 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_03_fuel_system_status"
+Range: 0\&.\&.65535 (0\&.\&.65535 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_04_calc_engine_load"
+Range: 0\&.\&.254\&.9979600163198694410444716 (0\&.\&.100 %) Scale: 0\&.39216 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_05_engine_coolant_temp"
+Range: 0\&.\&.255 (-40\&.\&.215 degC) Scale: 1 Offset: -40 
+.SS "uint8_t obd2_obd2_t::s1_pid_06_short_fuel_trim_bank1"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_07_long_fuel_trim_bank1"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_08_short_fuel_trim_bank2"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_09_long_fuel_trim_bank2"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_0_a_fuel_pressure"
+Range: 0\&.\&.255 (0\&.\&.765 kPa) Scale: 3 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_0_b_intake_mani_abs_press"
+Range: 0\&.\&.255 (0\&.\&.255 kPa) Scale: 1 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_0_c_engine_rpm"
+Range: 0\&.\&.65535 (0\&.\&.16383\&.75 rpm) Scale: 0\&.25 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_0_d_vehicle_speed"
+Range: 0\&.\&.255 (0\&.\&.255 km/h) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_0_e_timing_advance"
+Range: 0\&.\&.255 (-64\&.\&.63\&.5 deg before TDC) Scale: 0\&.5 Offset: -64 
+.SS "uint8_t obd2_obd2_t::s1_pid_0_f_intake_air_temperature"
+Range: 0\&.\&.255 (-40\&.\&.215 degC) Scale: 1 Offset: -40 
+.SS "uint16_t obd2_obd2_t::s1_pid_10_maf_air_flow_rate"
+Range: 0\&.\&.65535 (0\&.\&.655\&.35 grams/sec) Scale: 0\&.01 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_11_throttle_position"
+Range: 0\&.\&.254\&.9979600163198694410444716 (0\&.\&.100 %) Scale: 0\&.39216 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_12_cmd_sec_air_status"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_14_oxy_sensor1_stft"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_14_oxy_sensor1_volt"
+Range: 0\&.\&.255 (0\&.\&.1\&.275 volts) Scale: 0\&.005 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_15_oxy_sensor2_stft"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_15_oxy_sensor2_volt"
+Range: 0\&.\&.255 (0\&.\&.1\&.275 volts) Scale: 0\&.005 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_16_oxy_sensor3_stft"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_16_oxy_sensor3_volt"
+Range: 0\&.\&.255 (0\&.\&.1\&.275 volts) Scale: 0\&.005 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_17_oxy_sensor4_stft"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_17_oxy_sensor4_volt"
+Range: 0\&.\&.255 (0\&.\&.1\&.275 volts) Scale: 0\&.005 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_18_oxy_sensor5_stft"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_18_oxy_sensor5_volt"
+Range: 0\&.\&.255 (0\&.\&.1\&.275 volts) Scale: 0\&.005 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_19_oxy_sensor6_stft"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_19_oxy_sensor6_volt"
+Range: 0\&.\&.255 (0\&.\&.1\&.275 volts) Scale: 0\&.005 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_1_a_oxy_sensor7_stft"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_1_a_oxy_sensor7_volt"
+Range: 0\&.\&.255 (0\&.\&.1\&.275 volts) Scale: 0\&.005 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_1_b_oxy_sensor8_stft"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_1_b_oxy_sensor8_volt"
+Range: 0\&.\&.255 (0\&.\&.1\&.275 volts) Scale: 0\&.005 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_1_c_obd_standard"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_1_f_time_since_eng_start"
+Range: 0\&.\&.65535 (0\&.\&.65535 seconds) Scale: 1 Offset: 0 
+.SS "uint32_t obd2_obd2_t::s1_pid_20_pi_ds_supported_21_40"
+PIDs supported [21 - 40] - Bit encoded [A7\&.\&.D0] == [PID $21\&.\&.PID $40]\&. See OBD-II PIDs on Wikipedia
+.PP
+Range: 0\&.\&.4294967295 (0\&.\&.4294967295 -) Scale: 1 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_21_distance_mil_on"
+Range: 0\&.\&.65535 (0\&.\&.65535 km) Scale: 1 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_22_fuel_rail_pres"
+Range: 0\&.\&.65535 (0\&.\&.5177\&.265 kPa) Scale: 0\&.079 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_23_fuel_rail_gaug"
+Range: 0\&.\&.65535 (0\&.\&.655350 kPa) Scale: 10 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_24_oxy_sensor1_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_24_oxy_sensor1_volt"
+Range: 0\&.\&.16384 (0\&.\&.2 volts) Scale: 0\&.0001220703125 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_25_oxy_sensor2_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_25_oxy_sensor2_volt"
+Range: 0\&.\&.65536 (0\&.\&.8 volts) Scale: 0\&.0001220703125 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_26_oxy_sensor3_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_26_oxy_sensor3_volt"
+Range: 0\&.\&.65536 (0\&.\&.8 volts) Scale: 0\&.0001220703125 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_27_oxy_sensor4_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_27_oxy_sensor4_volt"
+Range: 0\&.\&.65536 (0\&.\&.8 volts) Scale: 0\&.0001220703125 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_28_oxy_sensor5_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_28_oxy_sensor5_volt"
+Range: 0\&.\&.65536 (0\&.\&.8 volts) Scale: 0\&.0001220703125 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_29_oxy_sensor6_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_29_oxy_sensor6_volt"
+Range: 0\&.\&.65536 (0\&.\&.8 volts) Scale: 0\&.0001220703125 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_2_a_oxy_sensor7_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_2_a_oxy_sensor7_volt"
+Range: 0\&.\&.65536 (0\&.\&.8 volts) Scale: 0\&.0001220703125 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_2_b_oxy_sensor8_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_2_b_oxy_sensor8_volt"
+Range: 0\&.\&.65536 (0\&.\&.8 volts) Scale: 0\&.0001220703125 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_2_c_cmd_egr"
+Range: 0\&.\&.255\&.0000000000000255000000000 (0\&.\&.100 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_2_d_egr_error"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_2_e_cmd_evap_purge"
+Range: 0\&.\&.255\&.0000000000000255000000000 (0\&.\&.100 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_2_f_fuel_tank_level"
+Range: 0\&.\&.255\&.0000000000000255000000000 (0\&.\&.100 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_30_warm_ups_since_code_clear"
+Range: 0\&.\&.255 (0\&.\&.255 count) Scale: 1 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_31_distance_since_code_clear"
+Range: 0\&.\&.65535 (0\&.\&.65535 km) Scale: 1 Offset: 0 
+.SS "int16_t obd2_obd2_t::s1_pid_32_evap_sys_vapor_pres"
+Range: -32768\&.\&.32767 (-8192\&.\&.8191\&.75 Pa) Scale: 0\&.25 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_33_abs_baro_pres"
+Range: 0\&.\&.255 (0\&.\&.255 kPa) Scale: 1 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_34_oxy_sensor1_crnt"
+Range: 0\&.\&.65536 (-128\&.\&.128 mA) Scale: 0\&.00390625 Offset: -128 
+.SS "uint16_t obd2_obd2_t::s1_pid_34_oxy_sensor1_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_35_oxy_sensor2_crnt"
+Range: 0\&.\&.65536 (-128\&.\&.128 mA) Scale: 0\&.00390625 Offset: -128 
+.SS "uint16_t obd2_obd2_t::s1_pid_35_oxy_sensor2_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_36_oxy_sensor3_crnt"
+Range: 0\&.\&.65536 (-128\&.\&.128 mA) Scale: 0\&.00390625 Offset: -128 
+.SS "uint16_t obd2_obd2_t::s1_pid_36_oxy_sensor3_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_37_oxy_sensor4_crnt"
+Range: 0\&.\&.65536 (-128\&.\&.128 mA) Scale: 0\&.00390625 Offset: -128 
+.SS "uint16_t obd2_obd2_t::s1_pid_37_oxy_sensor4_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_38_oxy_sensor5_crnt"
+Range: 0\&.\&.65536 (-128\&.\&.128 mA) Scale: 0\&.00390625 Offset: -128 
+.SS "uint16_t obd2_obd2_t::s1_pid_38_oxy_sensor5_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_39_oxy_sensor6_crnt"
+Range: 0\&.\&.65536 (-128\&.\&.128 mA) Scale: 0\&.00390625 Offset: -128 
+.SS "uint16_t obd2_obd2_t::s1_pid_39_oxy_sensor6_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_3_a_oxy_sensor7_crnt"
+Range: 0\&.\&.65536 (-128\&.\&.128 mA) Scale: 0\&.00390625 Offset: -128 
+.SS "uint16_t obd2_obd2_t::s1_pid_3_a_oxy_sensor7_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_3_b_oxy_sensor8_crnt"
+Range: 0\&.\&.65536 (-128\&.\&.128 mA) Scale: 0\&.00390625 Offset: -128 
+.SS "uint16_t obd2_obd2_t::s1_pid_3_b_oxy_sensor8_faer"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_3_c_cat_temp_bank1_sens1"
+Range: 0\&.\&.65535 (-40\&.\&.6513\&.5 degC) Scale: 0\&.1 Offset: -40 
+.SS "uint16_t obd2_obd2_t::s1_pid_3_d_cat_temp_bank2_sens1"
+Range: 0\&.\&.65535 (-40\&.\&.6513\&.5 degC) Scale: 0\&.1 Offset: -40 
+.SS "uint16_t obd2_obd2_t::s1_pid_3_e_cat_temp_bank1_sens2"
+Range: 0\&.\&.65535 (-40\&.\&.6513\&.5 degC) Scale: 0\&.1 Offset: -40 
+.SS "uint16_t obd2_obd2_t::s1_pid_3_f_cat_temp_bank2_sens2"
+Range: 0\&.\&.65535 (-40\&.\&.6513\&.5 degC) Scale: 0\&.1 Offset: -40 
+.SS "uint32_t obd2_obd2_t::s1_pid_40_pi_ds_supported_41_60"
+PIDs supported [41 - 60] - Bit encoded [A7\&.\&.D0] == [PID $41\&.\&.PID $60]\&. See OBD-II PIDs on Wikipedia
+.PP
+Range: 0\&.\&.4294967295 (0\&.\&.4294967295 -) Scale: 1 Offset: 0 
+.SS "uint32_t obd2_obd2_t::s1_pid_41_mon_status_drive_cycle"
+Range: 0\&.\&.4294967295 (0\&.\&.4294967295 -) Scale: 1 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_42_control_module_volt"
+Range: 0\&.\&.65535 (0\&.\&.65\&.535 V) Scale: 0\&.001 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_43_abs_load_value"
+Range: 0\&.\&.65535\&.00000000000655350000000 (0\&.\&.25700 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_44_fuel_air_cmd_equiv"
+Range: 0\&.\&.65536 (0\&.\&.2 ratio) Scale: 3\&.0517578125e-05 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_45_rel_throttle_pos"
+Range: 0\&.\&.255\&.0000000000000255000000000 (0\&.\&.100 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_46_ambient_air_temp"
+Range: 0\&.\&.255 (-40\&.\&.215 degC) Scale: 1 Offset: -40 
+.SS "uint8_t obd2_obd2_t::s1_pid_47_abs_throttle_pos_b"
+Range: 0\&.\&.255\&.0000000000000255000000000 (0\&.\&.100 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_48_abs_throttle_pos_c"
+Range: 0\&.\&.255\&.0000000000000255000000000 (0\&.\&.100 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_49_abs_throttle_pos_d"
+Range: 0\&.\&.255\&.0000000000000255000000000 (0\&.\&.100 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_4_a_abs_throttle_pos_e"
+Range: 0\&.\&.255\&.0000000000000255000000000 (0\&.\&.100 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_4_b_abs_throttle_pos_f"
+Range: 0\&.\&.255\&.0000000000000255000000000 (0\&.\&.100 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_4_c_cmd_throttle_act"
+Range: 0\&.\&.255\&.0000000000000255000000000 (0\&.\&.100 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_4_d_time_run_mil_on"
+Range: 0\&.\&.65535 (0\&.\&.65535 minutes) Scale: 1 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_4_e_time_since_code_clear"
+Range: 0\&.\&.65535 (0\&.\&.65535 minutes) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_4_f_max_faer"
+Range: 0\&.\&.255 (0\&.\&.255 ratio) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_4_f_max_int_mani_abs_pres"
+Range: 0\&.\&.255 (0\&.\&.2550 kPa) Scale: 10 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_4_f_max_oxy_sens_crnt"
+Range: 0\&.\&.255 (0\&.\&.255 mA) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_4_f_max_oxy_sens_vol"
+Range: 0\&.\&.255 (0\&.\&.255 V) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_50_max_air_flow_maf"
+Range: 0\&.\&.255 (0\&.\&.2550 g/s) Scale: 10 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_51_fuel_type"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_52_ethanol_fuel_pct"
+Range: 0\&.\&.255\&.0000000000000255000000000 (0\&.\&.100 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_53_abs_evap_sys_vap_pres"
+Range: 0\&.\&.65535 (0\&.\&.327\&.675 kPa) Scale: 0\&.005 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s1_pid_54_evap_sys_vap_pres"
+Range: 0\&.\&.65535 (-32767\&.\&.32768 Pa) Scale: 1 Offset: -32767 
+.SS "uint8_t obd2_obd2_t::s1_pid_55_short_sec_oxy_trim_bank1"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_55_short_sec_oxy_trim_bank3"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_56_long_sec_oxy_trim_bank1"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_56_long_sec_oxy_trim_bank3"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_57_short_sec_oxy_trim_bank2"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_57_short_sec_oxy_trim_bank4"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_58_long_sec_oxy_trim_bank2"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint8_t obd2_obd2_t::s1_pid_58_long_sec_oxy_trim_bank4"
+Range: 0\&.\&.255 (-100\&.\&.99\&.21875 %) Scale: 0\&.78125 Offset: -100 
+.SS "uint16_t obd2_obd2_t::s1_pid_59_fuel_rail_abs_pres"
+Range: 0\&.\&.65535 (0\&.\&.655350 kPa) Scale: 10 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_5_a_rel_accel_pedal_pos"
+Range: 0\&.\&.255\&.0000000000000255000000000 (0\&.\&.100 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_5_b_hybr_bat_pack_rem_life"
+Range: 0\&.\&.255\&.0000000000000255000000000 (0\&.\&.100 %) Scale: 0\&.392156862745098 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_5_c_engine_oil_temp"
+Range: 0\&.\&.255 (-40\&.\&.215 degC) Scale: 1 Offset: -40 
+.SS "uint16_t obd2_obd2_t::s1_pid_5_d_fuel_injection_timing"
+Range: 0\&.\&.65535 (-210\&.\&.301\&.9921875 deg) Scale: 0\&.0078125 Offset: -210 
+.SS "uint16_t obd2_obd2_t::s1_pid_5_e_engine_fuel_rate"
+Range: 0\&.\&.65535 (0\&.\&.3276\&.75 L/h) Scale: 0\&.05 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_5_f_emission_req"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint32_t obd2_obd2_t::s1_pid_60_pi_ds_supported_61_80"
+PIDs supported [61 - 80] - Bit encoded [A7\&.\&.D0] == [PID $61\&.\&.PID $80]\&. See OBD-II PIDs on Wikipedia
+.PP
+Range: 0\&.\&.4294967295 (0\&.\&.4294967295 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_61_demand_eng_torq_pct"
+Range: 0\&.\&.255 (-125\&.\&.130 %) Scale: 1 Offset: -125 
+.SS "uint8_t obd2_obd2_t::s1_pid_62_actual_eng_torq_pct"
+Range: 0\&.\&.255 (-125\&.\&.130 %) Scale: 1 Offset: -125 
+.SS "uint16_t obd2_obd2_t::s1_pid_63_eng_ref_torq"
+Range: 0\&.\&.65535 (0\&.\&.65535 Nm) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_64_eng_pct_torq_ep1"
+Range: 0\&.\&.255 (-125\&.\&.130 %) Scale: 1 Offset: -125 
+.SS "uint8_t obd2_obd2_t::s1_pid_64_eng_pct_torq_ep2"
+Range: 0\&.\&.255 (-125\&.\&.130 %) Scale: 1 Offset: -125 
+.SS "uint8_t obd2_obd2_t::s1_pid_64_eng_pct_torq_ep3"
+Range: 0\&.\&.255 (-125\&.\&.130 %) Scale: 1 Offset: -125 
+.SS "uint8_t obd2_obd2_t::s1_pid_64_eng_pct_torq_ep4"
+Range: 0\&.\&.255 (-125\&.\&.130 %) Scale: 1 Offset: -125 
+.SS "uint8_t obd2_obd2_t::s1_pid_64_eng_pct_torq_idle"
+Range: 0\&.\&.255 (-125\&.\&.130 %) Scale: 1 Offset: -125 
+.SS "uint8_t obd2_obd2_t::s1_pid_65_aux_input_output"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_66_maf_sensor"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_67_engine_coolant_temp"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_68_intake_air_temp_sens"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_69_cmd_egr_egr_error"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_6_a_cmd_diesel_int_air"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_6_b_exhaust_gas_temp"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_6_c_cmd_throttle_act_rel"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_6_d_fuel_pres_contr_sys"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_6_e_inj_pres_contr_sys"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_6_f_turbo_compr_pres"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_70_boost_pres_cntrl"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint32_t obd2_obd2_t::s1_pid_80_pi_ds_supported_81_a0"
+PIDs supported [81 - A0] - Bit encoded [A7\&.\&.D0] == [PID $81\&.\&.PID $A0]\&. See OBD-II PIDs on Wikipedia
+.PP
+Range: 0\&.\&.4294967295 (0\&.\&.4294967295 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::s1_pid_8_e_eng_friction_pct_torq"
+Range: 0\&.\&.255 (-125\&.\&.130 %) Scale: 1 Offset: -125 
+.SS "uint32_t obd2_obd2_t::s1_pid_a0_pi_ds_supported_a1_c0"
+PIDs supported [A1 - C0] - Bit encoded [A7\&.\&.D0] == [PID $A1\&.\&.PID $C0]\&. See OBD-II PIDs on Wikipedia
+.PP
+Range: 0\&.\&.4294967295 (0\&.\&.4294967295 -) Scale: 1 Offset: 0 
+.SS "uint32_t obd2_obd2_t::s1_pid_c0_pi_ds_supported_c1_e0"
+PIDs supported [C1 - E0] - Bit encoded [A7\&.\&.D0] == [PID $C1\&.\&.PID $E0]\&. See OBD-II PIDs on Wikipedia
+.PP
+Range: 0\&.\&.4294967295 (0\&.\&.4294967295 -) Scale: 1 Offset: 0 
+.SS "uint16_t obd2_obd2_t::s2_pid_02_freeze_dtc"
+Range: 0\&.\&.65535 (0\&.\&.65535 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_t::service"
+Range: 0\&.\&.15 (0\&.\&.15 -) Scale: 1 Offset: 0 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Engine Data Logger (EDL) from the source code\&.

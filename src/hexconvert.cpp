@@ -27,7 +27,7 @@ void hex2bin(const char* src, unsigned char* target) {
 		}
 		else {
 			input++;
-			input[0] = 0;
+			input[0] = '0';
 		}
 		while(input[0] && input[1]) {
 			*(target++) = char2int(input[0])*0x10 + char2int(input[1]);

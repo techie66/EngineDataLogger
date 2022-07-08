@@ -1,0 +1,247 @@
+.TH "I2Cdev" 3 "Thu Jul 7 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+I2Cdev
+.SH SYNOPSIS
+.br
+.PP
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static void \fBinitialize\fP ()"
+.br
+.ti -1c
+.RI "static void \fBenable\fP (bool isEnabled)"
+.br
+.ti -1c
+.RI "static int8_t \fBreadBit\fP (uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data)"
+.br
+.ti -1c
+.RI "static int8_t \fBreadBits\fP (uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data)"
+.br
+.ti -1c
+.RI "static int8_t \fBreadByte\fP (uint8_t devAddr, uint8_t regAddr, uint8_t *data)"
+.br
+.ti -1c
+.RI "static int8_t \fBreadWord\fP (uint8_t devAddr, uint8_t regAddr, uint16_t *data)"
+.br
+.ti -1c
+.RI "static int8_t \fBreadBytes\fP (uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data)"
+.br
+.ti -1c
+.RI "static int8_t \fBreadWords\fP (uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data)"
+.br
+.ti -1c
+.RI "static bool \fBwriteBit\fP (uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t data)"
+.br
+.ti -1c
+.RI "static bool \fBwriteBits\fP (uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data)"
+.br
+.ti -1c
+.RI "static bool \fBwriteByte\fP (uint8_t devAddr, uint8_t regAddr, uint8_t data)"
+.br
+.ti -1c
+.RI "static bool \fBwriteWord\fP (uint8_t devAddr, uint8_t regAddr, uint16_t data)"
+.br
+.ti -1c
+.RI "static bool \fBwriteBytes\fP (uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data)"
+.br
+.ti -1c
+.RI "static bool \fBwriteWords\fP (uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data)"
+.br
+.in -1c
+.SH "Member Function Documentation"
+.PP 
+.SS "void I2Cdev::enable (bool isEnabled)\fC [static]\fP"
+Enable or disable I2C, 
+.PP
+\fBParameters\fP
+.RS 4
+\fIisEnabled\fP true = enable, false = disable 
+.RE
+.PP
+
+.SS "int8_t I2Cdev::readBit (uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t * data)\fC [static]\fP"
+Read a single bit from an 8-bit device register\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to read from 
+.br
+\fIbitNum\fP Bit position to read (0-7) 
+.br
+\fIdata\fP Container for single bit value 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Status of read operation (true = success) 
+.RE
+.PP
+
+.SS "int8_t I2Cdev::readBits (uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t * data)\fC [static]\fP"
+Read multiple bits from an 8-bit device register\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to read from 
+.br
+\fIbitStart\fP First bit position to read (0-7) 
+.br
+\fIlength\fP Number of bits to read (not more than 8) 
+.br
+\fIdata\fP Container for right-aligned value (i\&.e\&. '101' read from any bitStart position will equal 0x05) 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Status of read operation (true = success) 
+.RE
+.PP
+
+.SS "int8_t I2Cdev::readByte (uint8_t devAddr, uint8_t regAddr, uint8_t * data)\fC [static]\fP"
+Read single byte from an 8-bit device register\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to read from 
+.br
+\fIdata\fP Container for byte value read from device 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Status of read operation (true = success) 
+.RE
+.PP
+
+.SS "int8_t I2Cdev::readBytes (uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t * data)\fC [static]\fP"
+Read multiple bytes from an 8-bit device register\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP First register regAddr to read from 
+.br
+\fIlength\fP Number of bytes to read 
+.br
+\fIdata\fP Buffer to store read data in 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+I2C_TransferReturn_TypeDef http://downloads.energymicro.com/documentation/doxygen/group__I2C.html 
+.RE
+.PP
+
+.SS "int8_t I2Cdev::readWord (uint8_t devAddr, uint8_t regAddr, uint16_t * data)\fC [static]\fP"
+Read single word from a 16-bit device register\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to read from 
+.br
+\fIdata\fP Container for word value read from device 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Status of read operation (true = success) 
+.RE
+.PP
+
+.SS "int8_t I2Cdev::readWords (uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t * data)\fC [static]\fP"
+Read multiple words from a 16-bit device register\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP First register regAddr to read from 
+.br
+\fIlength\fP Number of words to read 
+.br
+\fIdata\fP Buffer to store read data in 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Number of words read (-1 indicates failure) 
+.RE
+.PP
+
+.SS "bool I2Cdev::writeBit (uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t data)\fC [static]\fP"
+write a single bit in an 8-bit device register\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to write to 
+.br
+\fIbitNum\fP Bit position to write (0-7) 
+.br
+\fIvalue\fP New bit value to write 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Status of operation (true = success) 
+.RE
+.PP
+
+.SS "bool I2Cdev::writeBits (uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data)\fC [static]\fP"
+Write multiple bits in an 8-bit device register\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to write to 
+.br
+\fIbitStart\fP First bit position to write (0-7) 
+.br
+\fIlength\fP Number of bits to write (not more than 8) 
+.br
+\fIdata\fP Right-aligned value to write 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Status of operation (true = success) 
+.RE
+.PP
+
+.SS "bool I2Cdev::writeByte (uint8_t devAddr, uint8_t regAddr, uint8_t data)\fC [static]\fP"
+Write single byte to an 8-bit device register\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register address to write to 
+.br
+\fIdata\fP New byte value to write 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Status of operation (true = success) 
+.RE
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Engine Data Logger (EDL) from the source code\&.
