@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([EngineDataLogger], [v0.1], [jacob@geigle.me])
-AC_CONFIG_SRCDIR([src/cb1100f-app_generated.h])
+AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE(1.9 subdir-objects)
