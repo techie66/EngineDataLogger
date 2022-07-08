@@ -377,6 +377,9 @@ enginedatalogger_SOURCES = src/main.cpp src/hexconvert.cpp \
 	src/error_handling.h src/cmdline.c src/cmdline.h \
 	src/definitions.h $(am__append_1) $(am__append_2) \
 	$(am__append_3)
+BUILT_SOURCES = \
+		    src/cb1100f-app_generated.h
+
 etcdir = $(srcdir)/etc
 myconfdir = $(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
@@ -397,7 +400,7 @@ AM_DISTCHECK_CONFIGURE_FLAGS = \
 @HAVE_SYSTEMD_TRUE@			 $(etcdir)/shutdowncheck.service
 
 @HAVE_SYSTEMD_TRUE@MOSTLYCLEANFILES = $(dist_systemdsystemunit_DATA)
-all: config.h
+all: $(BUILT_SOURCES) config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
@@ -888,14 +891,17 @@ distcleancheck: distclean
 	       $(distcleancheck_listfiles) ; \
 	       exit 1; } >&2
 check-am: all-am
-check: check-am
+check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(PROGRAMS) $(SCRIPTS) $(DATA) config.h
 installdirs:
 	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(myconfdir)" "$(DESTDIR)$(systemdsystemunitdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-am
-install-exec: install-exec-am
+install: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) install-am
+install-exec: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
 
@@ -927,6 +933,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 @HAVE_SYSTEMD_FALSE@install-data-hook:
 clean: clean-am
 
@@ -1023,7 +1030,8 @@ ps-am:
 uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 	uninstall-dist_myconfDATA uninstall-dist_systemdsystemunitDATA
 
-.MAKE: all install-am install-data-am install-strip
+.MAKE: all check install install-am install-data-am install-exec \
+	install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--depfiles am--refresh check \
 	check-am clean clean-binPROGRAMS clean-cscope clean-generic \

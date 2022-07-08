@@ -35,6 +35,8 @@ enginedatalogger_SOURCES += \
 		    src/front_controls.cpp \
 		    src/front_controls.h
 endif
+BUILT_SOURCES= \
+		    src/cb1100f-app_generated.h
 
 datadir=$(srcdir)/data
 
