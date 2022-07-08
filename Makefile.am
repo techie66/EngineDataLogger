@@ -1,4 +1,3 @@
-etcdir=$(srcdir)/etc
 bin_PROGRAMS = enginedatalogger
 bin_SCRIPTS = bin/shutdowncheck.py
 enginedatalogger_SOURCES= \
@@ -6,13 +5,23 @@ enginedatalogger_SOURCES= \
 		    src/hexconvert.cpp \
 		    src/serial.cpp \
 		    src/serial.h \
-		    src/can.cpp \
-		    src/can.h \
 		    src/error_handling.cpp \
 		    src/error_handling.h \
 		    src/cmdline.c \
 		    src/cmdline.h \
 		    src/definitions.h
+
+if CANBUS
+enginedatalogger_SOURCES += \
+		    src/can.cpp \
+		    src/can.h \
+		    src/imu_can.c \
+		    src/imu_can.h \
+		    src/ignitech_can.c \
+		    src/ignitech_can.h \
+		    src/obd2.c \
+		    src/obd2.h
+endif
 
 if DASHBOARD
 enginedatalogger_SOURCES += \
@@ -27,6 +36,8 @@ enginedatalogger_SOURCES += \
 		    src/front_controls.h
 endif
 
+etcdir=$(srcdir)/etc
+datadir=$(srcdir)/data
 myconfdir=$(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
 		    $(etcdir)/enginedatalogger.conf.dist

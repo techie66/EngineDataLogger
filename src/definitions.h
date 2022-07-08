@@ -87,6 +87,7 @@ enum System_CMD {
 
 // TODO make members Build-time optional
 struct	bike_data {
+  int rpm;
   int ig_rpm;
   int32_t alt_rpm;
   float speed;

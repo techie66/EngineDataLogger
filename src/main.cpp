@@ -40,10 +40,10 @@
 
 #include <isp2.h>
 
-#define FEAT_CAN 1
+//#define FEAT_CAN 1
 #ifdef FEAT_CAN
 #include "can.h"
-#endif
+#endif /* FEAT_CAN */
 
 #ifdef FEAT_GPIO
 #include <bcm2835.h>
@@ -447,6 +447,8 @@ int main(int argc, char *argv[])
 			}
 			else {
 				// Good I2C read, Sort out the various packed variables
+				// TODO See really bad. memcpy, pointer math. yuck. at least shove it in a corner by
+				// itself with a pretty class interface
 				memcpy((void*)&enData.rpm,(void*)buffer_ptr,sizeof(enData.rpm));
 				buffer_ptr += sizeof(enData.rpm);
 				uint16_t tmp = 0;
@@ -535,6 +537,7 @@ int main(int argc, char *argv[])
 				fd_front_controls = fc_open(args_info.front_controls_arg);
 			}
 		}
+    #ifdef FEAT_CAN
 		if ( active_can ) {
 			if ( can_sock_good ) {
 				FD_SET(can_s,&readset);
@@ -544,7 +547,8 @@ int main(int argc, char *argv[])
 				can_sock_good = can_sock_connect(can_s,args_info.can_arg);
 			}
 		}
-		// TODO LC-2 runtime and build-time optional (libISP)
+    #endif /* FEAT_CAN */
+		// TODO LC-2 build-time optional (libISP)
 		if ( args_info.lc2_given ) {
 			if (fd_lc2 > 0) {
 				error_message(DEBUG,"DEBUG:Adding LC-2 to select");
@@ -589,33 +593,28 @@ int main(int argc, char *argv[])
 				db_from_cmd = dashboard.Read();
 			}
 			#endif /* FEAT_DASHBOARD */
-			if ( args_info.lc2_given ) {
+		  // TODO LC-2 build-time optional (libISP)
+			if ( args_info.lc2_given ) { // TODO possibly remove this check
 				if (FD_ISSET(fd_lc2,&readset)) {
 					error_message (DEBUG,"DEBUG:Select read LC-2");
 					ISP2::isp2_read(fd_lc2,lc2_data);
 					error_message(INFO,"INFO:Status: %d Lambda: %d",lc2_data.status,lc2_data.lambda);
 				}
 			}
+      #ifdef FEAT_CAN
 			if (FD_ISSET(can_s,&readset)) {
 				error_message (DEBUG,"Select read CAN");
 				int nbytes = read(can_s, &frame, sizeof(struct can_frame));
+				error_message(INFO,"INFO:CAN:Read %d bytes",nbytes);
 				if ( nbytes < 0 ) {
 					error_message(WARN,"WARNING:CAN: Read error: %s",strerror(errno));
 				}
-				error_message(INFO,"INFO:CAN:Read %d bytes",nbytes);
-			}
-		}
+        else {
+				  can_parse(frame,log_data,can_s);
+        }
 
-		if ( active_can ) {
-			if ( can_sock_good ) {
-				if ( frame.can_id == can_id_wb2 ) {
-					log_data.lambda = (frame.data[2] + frame.data[3] * 0x100u);
-					error_message(INFO,"INFO:Ignitech WB-2: %d",log_data.lambda);
-				}
 			}
-			else {
-				can_sock_good = can_sock_connect(can_s,args_info.can_arg);
-			}
+      #endif /* FEAT_CAN */
 		}
 
 		#ifdef HAVE_LIBIGNITECH
@@ -710,6 +709,7 @@ int main(int argc, char *argv[])
 
 		bikeobj.alt_rpm = enData.rpm;
 		bikeobj.rpm = my_rpm;
+		log_data.rpm = my_rpm;
 		bikeobj.speed = enData.speed;
 		bikeobj.odometer = enData.odometer;
 		bikeobj.oil_temp = enData.temp_oil;
@@ -880,7 +880,6 @@ int main(int argc, char *argv[])
 
 		//usleep(50000);
 	}
-
 	#ifdef FEAT_GPIO
 	if ( args_info.lc2_given ) {
 		bcm2835_gpio_write(o2_pin, LOW);

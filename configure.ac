@@ -15,6 +15,17 @@ AC_PROG_CC
 
 AX_CXX_COMPILE_STDCXX_11
 # Checks for libraries. Based on enabled features.
+AC_ARG_ENABLE([can],
+	[AS_HELP_STRING([--disable-can],
+		[Disable support for CAN Bus])],
+	[],
+	[enable_can=yes])
+AS_IF([test "x$enable_can" != xno],
+	[AC_DEFINE([FEAT_CAN],[1],[Support CAN bus])
+	canbus=true
+])
+AM_CONDITIONAL([CANBUS], [test "x$canbus" = xtrue])
+
 AC_ARG_ENABLE([frontcontrols],
 	[AS_HELP_STRING([--disable-frontcontrols],
 		[Disable support for Front Controls])],
