@@ -84,7 +84,7 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
 {
   int _status = EXIT_FAILURE;
   struct obd2_obd2_request_t obd2Request;
-  obd2_obd2_request_unpack(&obd2Request,frame.data,frame.len);
+  obd2_obd2_request_unpack(&obd2Request,frame.data,frame.can_dlc);
   // Check Valid Mode and PIDs
   if ( !obd2_obd2_request_mode_is_in_range(obd2Request.mode) )
     return EXIT_FAILURE;
