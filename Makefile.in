@@ -1047,6 +1047,10 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 .PRECIOUS: Makefile
 
 
+src/cb1100f-app_generated.h: $(datadir)/cb1100f-app.fbs
+	flatc -c --gen-object-api -o $(srcdir)/src $(datadir)/cb1100f-app.fbs
+	touch $(datadir)/cb1100f-app.fbs
+
 $(bin_SCRIPTS):
 
 $(dist_myconf_DATA):

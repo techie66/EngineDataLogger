@@ -36,8 +36,13 @@ enginedatalogger_SOURCES += \
 		    src/front_controls.h
 endif
 
-etcdir=$(srcdir)/etc
 datadir=$(srcdir)/data
+
+src/cb1100f-app_generated.h: $(datadir)/cb1100f-app.fbs
+	flatc -c --gen-object-api -o $(srcdir)/src $(datadir)/cb1100f-app.fbs
+	touch $(datadir)/cb1100f-app.fbs
+
+etcdir=$(srcdir)/etc
 myconfdir=$(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
 		    $(etcdir)/enginedatalogger.conf.dist

@@ -4,6 +4,9 @@ output.txt
 system_log.csv
 example_serial.txt
 
+# Generated code that needs to be regened every build
+src/cb1100f-app_generated.h
+
 # Vim swap files
 .*.swp
 *~
