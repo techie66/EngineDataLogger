@@ -23,13 +23,10 @@
  */
 
 #include "config.h"
-#include <unistd.h>			//Needed for I2C port
-#include <fcntl.h>			//Needed for I2C port
-#include <sys/ioctl.h>			//Needed for I2C port
-#include <linux/i2c-dev.h>		//Needed for I2C port
 #include <time.h>
 #include <string.h>
 #include <float.h>
+#include <math.h>
 #include <libgen.h>
 #include <sys/time.h>
 #include <getopt.h>
@@ -38,16 +35,24 @@
 #include "cmdline.h"
 #include "hexconvert.h"
 
-#include <isp2.h>
+#ifdef FEAT_I2C
+#include <unistd.h>			//Needed for I2C port
+#include <fcntl.h>			//Needed for I2C port
+#include <sys/ioctl.h>			//Needed for I2C port
+#include <linux/i2c-dev.h>		//Needed for I2C port
+#endif /* FEAT_I2C */
 
-//#define FEAT_CAN 1
+#ifdef HAVE_LIBISP2
+#include <isp2.h>
+#endif /* HAVE_LIBISP2 */
+
 #ifdef FEAT_CAN
 #include "can.h"
 #endif /* FEAT_CAN */
 
-#ifdef FEAT_GPIO
+#ifdef HAVE_LIBBCM2835
 #include <bcm2835.h>
-#endif /* FEAT_GPIO */
+#endif /* HAVE_LIBBCM2835 */
 
 #ifdef HAVE_LIBIGNITECH
 #include <ignitech.h>
@@ -101,9 +106,10 @@ int lc2_open(const char *filename) {
 int main(int argc, char *argv[])
 {
 	// register signal handlers
-	signal(SIGINT, signalHandler);  
-	signal(SIGTERM, signalHandler);  
-	signal(SIGHUP, signalHandler);  
+	signal(SIGINT, signalHandler);
+	signal(SIGTERM, signalHandler);
+  // TODO SIGHUP start new output file?
+	signal(SIGHUP, signalHandler);
 	
 	// Get string for current time
 	char time_buf[TIME_BUF_LEN] = {0};
@@ -183,7 +189,6 @@ int main(int argc, char *argv[])
 	bool active_can = false;
 	#ifdef FEAT_CAN
 	bool can_sock_good;
-	unsigned int can_id_wb2;
 	unsigned char hexbuffer[4] = {0};
 	char const *can_if = NULL;
 	int can_s = socket(PF_CAN, SOCK_RAW, CAN_RAW);
@@ -197,23 +202,6 @@ int main(int argc, char *argv[])
 	if ( args_info.can_given ) {
 		active_can = true;
 		can_sock_good = can_sock_connect(can_s,args_info.can_arg);
-		if ( args_info.can_id_wb2_given ) {
-			if ( strlen(args_info.can_id_wb2_arg) == 5 ) {
-				try {
-					hex2bin(args_info.can_id_wb2_arg,hexbuffer);
-				}
-				catch (const std::invalid_argument& ia) {
-					error_message(ERROR,"ERROR:OPTIONS: Invalid can-id-wb2");
-					return -1;
-				}
-
-			}
-			else {
-				error_message(ERROR,"ERROR:OPTIONS: Invalid can-id-wb2");
-				return -1;
-			}
-			can_id_wb2 = hexbuffer[0] * 0x100 + hexbuffer[1];
-		}
 	}
 	#endif /* FEAT_CAN */
 
@@ -339,12 +327,15 @@ int main(int argc, char *argv[])
 			i++;
 		}
 	}
-	char const *fc_file = NULL;
+	// TODO Un-needed char const *fc_file = NULL;
+  #ifdef FEAT_FRONTCONTROLS
 	if ( args_info.front_controls_given ) {
 		// Open Front controls
 		fd_front_controls = fc_open(args_info.front_controls_arg);
-	}
+  }
+  #endif /* FEAT_FRONTCONTROLS */
 
+  #ifdef HAVE_LIBISP2
 	int fd_lc2 = -1;
 	int o2_pin = O2_PIN;
 	int lc2_power_delay = LC2_POWER_DELAY;
@@ -357,7 +348,7 @@ int main(int argc, char *argv[])
 			lc2_power_delay = args_info.lc2_delay_arg;
 		}
 		
-		#ifdef FEAT_GPIO
+		#ifdef HAVE_LIBBCM2835
 		if ( args_info.lc2_pin_given ) {
 			o2_pin = args_info.lc2_pin_arg;
 		}
@@ -366,8 +357,9 @@ int main(int argc, char *argv[])
 			return 1;
 		// Set pin mode
 		bcm2835_gpio_fsel(o2_pin, BCM2835_GPIO_FSEL_OUTP);
-		#endif /* FEAT_GPIO */
+		#endif /* HAVE_LIBBCM2835 */
 	}
+  #endif /* HAVE_LIBISP2 */
 
 	#ifdef FEAT_I2C
 	int	fd_i2c;
@@ -407,11 +399,24 @@ int main(int argc, char *argv[])
 	// Main Loop
 	engine_data	enData;
 	bike_data	log_data;
+
+  #ifdef HAVE_LIBISP2
 	isp2_t		lc2_data = isp2_t();
-	lc2_data.status = ISP2_WARMING;
+  lc2_data.status = ISP2_WARMING;
+  #endif /* HAVE_LIBISP2 */
+
+  #ifdef FEAT_FRONTCONTROLS
 	fc_data		fcData;
-	System_CMD	db_from_cmd = NO_CMD;
-	char		en_to_cmd = 0;
+  #endif /* FEAT_FRONTCONTROLS */
+
+  #ifdef FEAT_I2C
+  char		en_to_cmd = 0;
+  #endif /* FEAT_I2C */
+
+  #ifdef FEAT_DASHBOARD
+  System_CMD	db_from_cmd = NO_CMD;
+  #endif /* FEAT_DASHBOARD */
+
 	bool		engineRunning = false;
 	bool		o2_manual = false;
 	struct		timeval log_time_last;
@@ -527,6 +532,8 @@ int main(int argc, char *argv[])
 			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
 		}
 		#endif /* FEAT_DASHBOARD */
+
+    #ifdef FEAT_FRONTCONTROLS
 		if ( args_info.front_controls_given ) {
 			if (fd_front_controls > 0) {
 				error_message(DEBUG,"DEBUG:Adding front controls to select");
@@ -537,6 +544,8 @@ int main(int argc, char *argv[])
 				fd_front_controls = fc_open(args_info.front_controls_arg);
 			}
 		}
+    #endif /* FEAT_FRONTCONTROLS */
+
     #ifdef FEAT_CAN
 		if ( active_can ) {
 			if ( can_sock_good ) {
@@ -548,7 +557,7 @@ int main(int argc, char *argv[])
 			}
 		}
     #endif /* FEAT_CAN */
-		// TODO LC-2 build-time optional (libISP)
+		#ifdef HAVE_LIBISP2
 		if ( args_info.lc2_given ) {
 			if (fd_lc2 > 0) {
 				error_message(DEBUG,"DEBUG:Adding LC-2 to select");
@@ -559,6 +568,7 @@ int main(int argc, char *argv[])
 				fd_lc2 = lc2_open(args_info.lc2_arg);
 			}
 		}
+    #endif /* HAVE_LIBISP2 */
 
 		struct timeval	timeout;
 		timeout.tv_sec = 0;
@@ -593,7 +603,8 @@ int main(int argc, char *argv[])
 				db_from_cmd = dashboard.Read();
 			}
 			#endif /* FEAT_DASHBOARD */
-		  // TODO LC-2 build-time optional (libISP)
+
+		  #ifdef HAVE_LIBISP2
 			if ( args_info.lc2_given ) { // TODO possibly remove this check
 				if (FD_ISSET(fd_lc2,&readset)) {
 					error_message (DEBUG,"DEBUG:Select read LC-2");
@@ -601,6 +612,8 @@ int main(int argc, char *argv[])
 					error_message(INFO,"INFO:Status: %d Lambda: %d",lc2_data.status,lc2_data.lambda);
 				}
 			}
+      #endif /* HAVE_LIBISP2 */
+
       #ifdef FEAT_CAN
 			if (FD_ISSET(can_s,&readset)) {
 				error_message (DEBUG,"Select read CAN");
@@ -636,24 +649,30 @@ int main(int argc, char *argv[])
 			}
 		}
 		#endif /* HAVE_LIBIGNITECH */
+
+    #ifdef FEAT_FRONTCONTROLS
 		if (!fcData.kill_on) {
 			my_rpm = 0;
 		}
+    #endif /* FEAT_FRONT_CONTROLS */
+
 		if (my_rpm > RUNNING_RPM) {
 			engineRunning = true;
+      #ifdef FEAT_FRONTCONTROLS
 			fcData.serialCmdA |= ENGINE_RUNNING;
+      #endif /* FEAT_FRONT_CONTROLS */
 			gettimeofday(&currtime, NULL);
 			my_time = currtime.tv_sec;
 			if (start_running_time == 0 ) {
 				start_running_time = currtime.tv_sec;
 			}
-			#ifdef FEAT_GPIO
+			#if defined(HAVE_LIBBCM2835) && defined(HAVE_LIBISP2)
 			if ( args_info.lc2_given ) {
 				if (my_time - start_running_time > LC2_POWER_DELAY) {
 					bcm2835_gpio_write(o2_pin, HIGH);
 				}
 			}
-			#endif /* FEAT_GPIO */
+			#endif /* HAVE_LIBBCM2835 HAVE_LIBISP2*/
 
 			#ifdef FEAT_FRONTCONTROLS
 			error_message (DEBUG,"Running. %s",exCmd_bin(fcData.serialCmdA));
@@ -661,27 +680,33 @@ int main(int argc, char *argv[])
 		}
 		else if ( my_rpm <= STOPPED_RPM ) {
 			engineRunning = false;
+      #ifdef FEAT_FRONTCONTROLS
 			fcData.serialCmdA &= ~ENGINE_RUNNING;
+      #endif /* FEAT_FRONT_CONTROLS */
 			start_running_time = 0;
-			#ifdef FEAT_GPIO
+			#if defined(HAVE_LIBBCM2835) && defined(HAVE_LIBISP2)
 			if ( args_info.lc2_given ) {
 				if (!o2_manual) {
 					bcm2835_gpio_write(o2_pin, LOW);
 				}
 			}
-			#endif /* FEAT_GPIO */
-			#ifdef FEAT_FRONTCONTROLS
+			#endif /* HAVE_LIBBCM2835 HAVE_LIBISP2*/
+			
+      #ifdef FEAT_FRONTCONTROLS
 			error_message (DEBUG,"Not Running. %s",exCmd_bin(fcData.serialCmdA));
 			#endif /* FEAT_FRONTCONTROLS */
 		}
 
+		#ifdef FEAT_DASHBOARD
+     #ifdef FEAT_I2C
 		if(db_from_cmd == TRPRST) {
 			error_message(WARN,"Resetting Trip");
 			en_to_cmd = 'T';
 			db_from_cmd = NO_CMD;
 		}
+     #endif /* FEAT_I2C */
 
-		#ifdef FEAT_GPIO
+	  #if defined(HAVE_LIBBCM2835) && defined(HAVE_LIBISP2)
 		if ( args_info.lc2_given ) {
 			if(db_from_cmd == O2MANON) {
 				error_message(INFO,"Manually turning on O2 sensor");
@@ -697,7 +722,8 @@ int main(int argc, char *argv[])
 				db_from_cmd = NO_CMD;
 			}
 		}
-		#endif /* FEAT_GPIO */
+		#endif /* HAVE_LIBBCM2835 HAVE_LIBISP2*/
+		#endif /* FEAT_DASHBOARD */
 
 		// Create Flatbuffer
 		// Sent to dashboard and 
@@ -720,12 +746,16 @@ int main(int argc, char *argv[])
 		bikeobj.blink_right = fcData.right_on;
 		bikeobj.trip = enData.trip;
 		#endif /* FEAT_DASHBOARD */
+
+    #ifdef HAVE_LIBISP2
 		if (lc2_data.status == ISP2_NORMAL || o2_manual) {
 			#ifdef FEAT_DASHBOARD
 			bikeobj.lambda = lc2_data.lambda;
 			#endif /* FEAT_DASHBOARD */
 			log_data.lambda = lc2_data.lambda;
 		}
+    #endif /* HAVE_LIBISP2 */
+
 		#ifdef FEAT_DASHBOARD
 		bikeobj.gear = "?";
 		if ( args_info.gear_ratios_given ) {
@@ -743,9 +773,12 @@ int main(int argc, char *argv[])
 				}
 			}
 		}
+    #ifdef FEAT_FRONTCONTROLS
 		if (fcData.in_neutral) {
 			bikeobj.gear = "N";
 		}
+    #endif /* FEAT_FRONTCONTROLS */
+
 		// Serialize into new flatbuffer.
 		fbb.Finish(EDL::AppBuffer::Bike::Pack(fbb, &bikeobj));
 		#endif /* FEAT_DASHBOARD */
@@ -758,15 +791,22 @@ int main(int argc, char *argv[])
 			max_fd = (max_fd>dashboard.getClient())?max_fd:dashboard.getClient();
 		}
 		#endif /* FEAT_DASHBOARD */
+
+    #ifdef FEAT_FRONTCONTROLS
 		if (fd_front_controls > 0) {
 			FD_SET(fd_front_controls,&writeset);
 			max_fd = (max_fd>fd_front_controls)?max_fd:fd_front_controls;
 		}
+    #endif /* FEAT_FRONTCONTROLS */
+
+    #ifdef FEAT_I2C
 		if (en_to_cmd != 0) {
 			// write to en
 			write(fd_i2c,(const void*)&en_to_cmd,sizeof(en_to_cmd));
 			en_to_cmd = 0;
 		}
+    #endif /* FEAT_I2C */
+
 		// Do Select()
 		timeout.tv_sec = 0;
 		timeout.tv_usec = 0;
@@ -880,12 +920,13 @@ int main(int argc, char *argv[])
 
 		//usleep(50000);
 	}
-	#ifdef FEAT_GPIO
+  // TODO also check ignitech
+	#if defined(HAVE_LIBBCM2835) && defined(HAVE_LIBISP2)
 	if ( args_info.lc2_given ) {
 		bcm2835_gpio_write(o2_pin, LOW);
 		bcm2835_close();
 	}
-	#endif /* FEAT_GPIO */
+	#endif /* HAVE_LIBBCM2835  HAVE_LIBISP2 */
 	// Return 0 for clean exit
 	return 0;
 }

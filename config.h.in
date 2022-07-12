@@ -9,9 +9,6 @@
 /* Support Front Controls */
 #undef FEAT_FRONTCONTROLS
 
-/* Support direct GPIO */
-#undef FEAT_GPIO
-
 /* Support I2C */
 #undef FEAT_I2C
 
@@ -30,6 +27,9 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* Define to 1 if you have the `bcm2835' library (-lbcm2835). */
+#undef HAVE_LIBBCM2835
+
 /* Define to 1 if you have the `bluetooth' library (-lbluetooth). */
 #undef HAVE_LIBBLUETOOTH
 
@@ -41,6 +41,9 @@
 
 /* Define to 1 if you have the `isp2' library (-lisp2). */
 #undef HAVE_LIBISP2
+
+/* Define to 1 if you have the <math.h> header file. */
+#undef HAVE_MATH_H
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
@@ -146,6 +149,9 @@
 /* Define to the type of a signed integer type of width exactly 8 bits if such
    a type exists and the standard includes do not define it. */
 #undef int8_t
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#undef size_t
 
 /* Define to the type of an unsigned integer type of width exactly 16 bits if
    such a type exists and the standard includes do not define it. */

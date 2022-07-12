@@ -108,6 +108,13 @@ bin_PROGRAMS = enginedatalogger$(EXEEXT)
 @FRONTCONTROLS_TRUE@		    src/front_controls.cpp \
 @FRONTCONTROLS_TRUE@		    src/front_controls.h
 
+@DASHBOARD_TRUE@am__append_4 = \
+@DASHBOARD_TRUE@		    src/cb1100f-app_generated.h
+
+@HAVE_GENGETOPT_TRUE@am__append_5 = \
+@HAVE_GENGETOPT_TRUE@				src/cmdline.h \
+@HAVE_GENGETOPT_TRUE@				src/cmdline.c
+
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -120,7 +127,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = config.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = data/cmdline.ggo
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(myconfdir)" "$(DESTDIR)$(systemdsystemunitdir)"
@@ -251,9 +258,10 @@ ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
 AM_RECURSIVE_TARGETS = cscope
-am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in AUTHORS \
-	COPYING ChangeLog INSTALL NEWS README compile config.guess \
-	config.sub depcomp install-sh ltmain.sh missing
+am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
+	$(top_srcdir)/data/cmdline.ggo.in AUTHORS COPYING ChangeLog \
+	INSTALL NEWS README compile config.guess config.sub depcomp \
+	install-sh ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -298,6 +306,7 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 GREP = @GREP@
 HAVE_CXX11 = @HAVE_CXX11@
+HAVE_GENGETOPT = @HAVE_GENGETOPT@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -340,7 +349,7 @@ am__untar = @am__untar@
 bindir = @bindir@
 build_alias = @build_alias@
 builddir = @builddir@
-datadir = $(srcdir)/data
+datadir = $(builddir)/data
 datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
@@ -377,10 +386,8 @@ enginedatalogger_SOURCES = src/main.cpp src/hexconvert.cpp \
 	src/error_handling.h src/cmdline.c src/cmdline.h \
 	src/definitions.h $(am__append_1) $(am__append_2) \
 	$(am__append_3)
-BUILT_SOURCES = \
-		    src/cb1100f-app_generated.h
-
-etcdir = $(srcdir)/etc
+BUILT_SOURCES = $(am__append_4) $(am__append_5)
+etcdir = $(builddir)/etc
 myconfdir = $(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
 		    $(etcdir)/enginedatalogger.conf.dist
@@ -453,6 +460,8 @@ $(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
+data/cmdline.ggo: $(top_builddir)/config.status $(top_srcdir)/data/cmdline.ggo.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
@@ -1056,9 +1065,12 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 .PRECIOUS: Makefile
 
 
-src/cb1100f-app_generated.h: $(datadir)/cb1100f-app.fbs
-	flatc -c --gen-object-api -o $(srcdir)/src $(datadir)/cb1100f-app.fbs
-	touch $(datadir)/cb1100f-app.fbs
+@DASHBOARD_TRUE@$(builddir)/src/cb1100f-app_generated.h: $(datadir)/cb1100f-app.fbs
+@DASHBOARD_TRUE@	flatc -c --gen-object-api -o $(srcdir)/src $(datadir)/cb1100f-app.fbs
+@DASHBOARD_TRUE@	touch $(datadir)/cb1100f-app.fbs
+
+@HAVE_GENGETOPT_TRUE@$(builddir)/src/cmdline.c: $(datadir)/cmdline.ggo
+@HAVE_GENGETOPT_TRUE@	gengetopt -C --output-dir=$(builddir)/src/ -i $(datadir)/cmdline.ggo 
 
 $(bin_SCRIPTS):
 

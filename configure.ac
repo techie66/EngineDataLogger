@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([EngineDataLogger], [v0.1], [jacob@geigle.me])
+AC_INIT([EngineDataLogger], [v0.2.0], [jacob@geigle.me])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -20,6 +20,7 @@ AC_ARG_ENABLE([can],
 		[Disable support for CAN Bus])],
 	[],
 	[enable_can=yes])
+# TODO Check for can headers
 AS_IF([test "x$enable_can" != xno],
 	[AC_DEFINE([FEAT_CAN],[1],[Support CAN bus])
 	canbus=true
@@ -42,6 +43,7 @@ AC_ARG_ENABLE([i2c],
 		[Disable support for I2C])],
 	[],
 	[enable_i2c=yes])
+# TODO check for i2c headers?
 AS_IF([test "x$enable_i2c" != xno],
 	[AC_DEFINE([FEAT_I2C],[1],[Support I2C])
 	feat_i2c=true
@@ -59,16 +61,11 @@ AC_ARG_WITH([bcm2835],
 		[],
 		[with_bcm2835=yes])
 AS_IF([test "x$with_bcm2835" != xno -a "x$enable_gpio" != xno],
-	[AC_CHECK_LIB([bcm2835], [bcm2835_i2c_write_read_rs],[
-		LIBS="$LIBS -lbcm2835"
-		AC_DEFINE([FEAT_GPIO],[1],[Support direct GPIO])
-		feat_gpio=true
-		#AC_DEFINE([HAVE_LIBBCM2835],[1],[Library bcm2835 found])
-		],[
+	[AC_CHECK_LIB([bcm2835], [bcm2835_i2c_write_read_rs],,[
 		AC_MSG_ERROR([libbcm2835 NOT FOUND! You can try automatic installation with: `./install-deps.sh bcm2835`])
-		      ])
 	])
-AM_CONDITIONAL([GPIO], [test "x$feat_gpio" = xtrue])
+])
+AM_CONDITIONAL([GPIO], [test "$ac_cv_lib_bcm2835_bcm2835_i2c_write_read_rs" = "yes"])
 
 AC_ARG_WITH([ignitech],
 	[AS_HELP_STRING([--without-ignitech],
@@ -85,6 +82,7 @@ AS_IF([test "x$with_ignitech" != xno -a "x$enable_ignitech" != xno],
 		AC_MSG_ERROR([libIgnitech NOT FOUND! You can try automatic installation with: `./install-deps.sh ignitech`])
 	])
 ])
+AM_CONDITIONAL([IGNITECH], [test "$ac_cv_lib_ignitech_main" = "yes"])
 
 AC_ARG_WITH([isp2],
 	[AS_HELP_STRING([--without-isp2],
@@ -101,6 +99,7 @@ AS_IF([test "x$with_isp2" != xno -a "x$enable_isp2" != xno],
 		[AC_MSG_ERROR([libISP NOT FOUND! You can try automatic installation with: ./install-deps.sh isp])
 	])
 ])
+AM_CONDITIONAL([ISP2],[test "$ac_cv_lib_isp2_main" = "yes"])
 
 AC_ARG_WITH([bluetooth],
 	[AS_HELP_STRING([--without-bluetooth],
@@ -117,6 +116,7 @@ AC_ARG_ENABLE([dashboard],
 		[Disable support for the Android dashboard.])],
 	[],
 	[enable_dashboard=yes])
+
 AS_IF([test "x$with_bluetooth" != xno -a "x$with_flatbuffers" != xno -a "x$enable_dashboard" != xno],
 	[AC_CHECK_LIB([bluetooth], [ba2str],,[
 		AC_MSG_ERROR([bluetooth support NOT FOUND! You can try automatic installation with: ./install-deps.sh bluetooth])
@@ -124,13 +124,13 @@ AS_IF([test "x$with_bluetooth" != xno -a "x$with_flatbuffers" != xno -a "x$enabl
 	AC_CHECK_LIB([flatbuffers], [main],,[
 		AC_MSG_ERROR([flatbuffers NOT FOUND! You can try automatic installation with: ./install-deps.sh flatbuffers])
 	])
-	AC_DEFINE([FEAT_DASHBOARD],[1],[Support Android dashboard])
-	feat_dashboard=true
+  AC_DEFINE([FEAT_DASHBOARD],[1],[Support Android dashboard])
+ 	feat_dashboard=true
 ])
 AM_CONDITIONAL([DASHBOARD], [test "x$feat_dashboard" = xtrue])
 
 # Checks for header files.
-AC_CHECK_HEADERS([fcntl.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h termios.h unistd.h float.h])
+AC_CHECK_HEADERS([fcntl.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h termios.h unistd.h float.h math.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
@@ -140,6 +140,7 @@ AC_TYPE_INT8_T
 AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT8_T
+AC_TYPE_SIZE_T
 
 # Checks for library functions.
 AC_CHECK_FUNCS([gettimeofday memset select socket strdup strerror])
@@ -160,6 +161,8 @@ AS_IF([test "x$with_systemdsystemunitdir" != "xno"],
       [AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir])])
 AM_CONDITIONAL([HAVE_SYSTEMD], [test "x$with_systemdsystemunitdir" != "xno"])
 
+AC_CHECK_PROG([HAVE_GENGETOPT],[gengetopt],[yes])
+AM_CONDITIONAL([HAVE_GENGETOPT], [test "x$HAVE_GENGETOPT" = xyes])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile data/cmdline.ggo])
 AC_OUTPUT

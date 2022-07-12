@@ -21,17 +21,21 @@ extern "C" {
 
 #ifndef CMDLINE_PARSER_PACKAGE
 /** @brief the program name (used for printing errors) */
-#define CMDLINE_PARSER_PACKAGE "EngineDataLogger"
+#define CMDLINE_PARSER_PACKAGE PACKAGE
 #endif
 
 #ifndef CMDLINE_PARSER_PACKAGE_NAME
 /** @brief the complete program name (used for help and version) */
-#define CMDLINE_PARSER_PACKAGE_NAME "EngineDataLogger"
+#ifdef PACKAGE_NAME
+#define CMDLINE_PARSER_PACKAGE_NAME PACKAGE_NAME
+#else
+#define CMDLINE_PARSER_PACKAGE_NAME PACKAGE
+#endif
 #endif
 
 #ifndef CMDLINE_PARSER_VERSION
 /** @brief the program version */
-#define CMDLINE_PARSER_VERSION "v0.1.0"
+#define CMDLINE_PARSER_VERSION VERSION
 #endif
 
 enum enum_verbose { verbose__NULL = -1, verbose_arg_NONE = 0, verbose_arg_ERROR, verbose_arg_WARN, verbose_arg_INFO, verbose_arg_DEBUG };
@@ -109,9 +113,6 @@ struct gengetopt_args_info
   int ignitech_sai_high_mv_arg;	/**< @brief High mv value. Eg: 4252.  */
   char * ignitech_sai_high_mv_orig;	/**< @brief High mv value. Eg: 4252 original value given at command line.  */
   const char *ignitech_sai_high_mv_help; /**< @brief High mv value. Eg: 4252 help description.  */
-  char * can_id_wb2_arg;	/**< @brief CAN id of Ignitech WB-2 packets. WB-2 packets disabled if not set.  */
-  char * can_id_wb2_orig;	/**< @brief CAN id of Ignitech WB-2 packets. WB-2 packets disabled if not set original value given at command line.  */
-  const char *can_id_wb2_help; /**< @brief CAN id of Ignitech WB-2 packets. WB-2 packets disabled if not set help description.  */
   
   unsigned int help_given ;	/**< @brief Whether help was given.  */
   unsigned int detailed_help_given ;	/**< @brief Whether detailed-help was given.  */
@@ -138,7 +139,6 @@ struct gengetopt_args_info
   unsigned int ignitech_sai_low_mv_given ;	/**< @brief Whether ignitech-sai-low-mv was given.  */
   unsigned int ignitech_sai_high_given ;	/**< @brief Whether ignitech-sai-high was given.  */
   unsigned int ignitech_sai_high_mv_given ;	/**< @brief Whether ignitech-sai-high-mv was given.  */
-  unsigned int can_id_wb2_given ;	/**< @brief Whether can-id-wb2 was given.  */
 
 } ;
 

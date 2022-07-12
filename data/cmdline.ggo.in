@@ -1,5 +1,3 @@
-package "EngineDataLogger"
-version "v0.1.0"
 args "--func-name=cmdline_parser --conf-parser"
 
 
@@ -17,23 +15,20 @@ option "quiet"		q "Suppress output. Same as --verbose=NONE (Overrides both -v an
 
 section "Device Interfaces"
 
-option "front-controls"	f "Front controls device" string typestr="device" optional
-option "ignitech"	i "Ignitech ignition device" string typestr="device" optional 
-option "lc2"		l "Innovate LC-2 device" string typestr="device" optional
-option "lc2-delay"	- "Delay before powering up LC-2." int typestr="seconds" default="15" dependon="lc2" optional
-option "lc2-pin"	- "GPIO pin that controls power for LC-2" int default="26" dependon="lc2" optional
+@FRONTCONTROLS_TRUE@option "front-controls"	f "Front controls device" string typestr="device" optional
+@IGNITECH_TRUE@option "ignitech"	i "Ignitech ignition device" string typestr="device" optional 
+@ISP2_TRUE@option "lc2"		l "Innovate LC-2 device" string typestr="device" optional
+@ISP2_TRUE@option "lc2-delay"	- "Delay before powering up LC-2." int typestr="seconds" default="15" dependon="lc2" optional
+@ISP2_TRUE@option "lc2-pin"	- "GPIO pin that controls power for LC-2" int default="26" dependon="lc2" optional
 option "sleepy"		s "I2C device to communicate with Sleepy Pi." string typestr="device" optional
 option "sleepy-addr"	- "Address for Sleepy Pi." string default="0x04" typestr="0xXX" dependon="sleepy" optional
-option "can"		- "CAN device to bind to. CAN disabled if not set." string typestr="device" optional
+@CANBUS_TRUE@option "can"		- "CAN device to bind to. CAN disabled if not set." string typestr="device" optional
 
-section "Ignitech specific options"
+@IGNITECH_TRUE@section "Ignitech specific options"
 
-option "ignitech-dump-file"	- "File to dump raw responses from Ignitech" string typestr="filename" dependon="ignitech" optional
-option "ignitech-servo-as-iap" - "Treat servo reading as IAP. Requires calibration options." flag off dependon="ignitech" dependon="ignitech-sai-low"
-option "ignitech-sai-low" - "Low kpa reading. Eg: 21" int optional dependon="ignitech-sai-low-mv"
-option "ignitech-sai-low-mv" - "Low mv value. Eg: 708" int optional dependon="ignitech-sai-high"
-option "ignitech-sai-high" - "High kpa reading. Eg: 102" int optional dependon="ignitech-sai-high-mv"
-option "ignitech-sai-high-mv" - "High mv value. Eg: 4252" int optional dependon="ignitech"
-
-section "CAN Options"
-option "can-id-wb2"	- "CAN id of Ignitech WB-2 packets. WB-2 packets disabled if not set" string typestr="0xXXX" dependon="can" optional 
+@IGNITECH_TRUE@option "ignitech-dump-file"	- "File to dump raw responses from Ignitech" string typestr="filename" dependon="ignitech" optional
+@IGNITECH_TRUE@option "ignitech-servo-as-iap" - "Treat servo reading as IAP. Requires calibration options." flag off dependon="ignitech" dependon="ignitech-sai-low"
+@IGNITECH_TRUE@option "ignitech-sai-low" - "Low kpa reading. Eg: 21" int optional dependon="ignitech-sai-low-mv"
+@IGNITECH_TRUE@option "ignitech-sai-low-mv" - "Low mv value. Eg: 708" int optional dependon="ignitech-sai-high"
+@IGNITECH_TRUE@option "ignitech-sai-high" - "High kpa reading. Eg: 102" int optional dependon="ignitech-sai-high-mv"
+@IGNITECH_TRUE@option "ignitech-sai-high-mv" - "High mv value. Eg: 4252" int optional dependon="ignitech"

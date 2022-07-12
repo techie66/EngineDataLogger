@@ -35,16 +35,33 @@ enginedatalogger_SOURCES += \
 		    src/front_controls.cpp \
 		    src/front_controls.h
 endif
-BUILT_SOURCES= \
+BUILT_SOURCES = 
+
+if DASHBOARD
+BUILT_SOURCES += \
 		    src/cb1100f-app_generated.h
+endif
 
-datadir=$(srcdir)/data
+if HAVE_GENGETOPT
+BUILT_SOURCES += \
+				src/cmdline.h \
+				src/cmdline.c
+endif
 
-src/cb1100f-app_generated.h: $(datadir)/cb1100f-app.fbs
+datadir=$(builddir)/data
+
+if DASHBOARD
+$(builddir)/src/cb1100f-app_generated.h: $(datadir)/cb1100f-app.fbs
 	flatc -c --gen-object-api -o $(srcdir)/src $(datadir)/cb1100f-app.fbs
 	touch $(datadir)/cb1100f-app.fbs
+endif
 
-etcdir=$(srcdir)/etc
+if HAVE_GENGETOPT
+$(builddir)/src/cmdline.c: $(datadir)/cmdline.ggo
+	gengetopt -C --output-dir=$(builddir)/src/ -i $(datadir)/cmdline.ggo 
+endif
+
+etcdir=$(builddir)/etc
 myconfdir=$(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
 		    $(etcdir)/enginedatalogger.conf.dist
