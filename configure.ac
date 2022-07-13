@@ -20,11 +20,17 @@ AC_ARG_ENABLE([can],
 		[Disable support for CAN Bus])],
 	[],
 	[enable_can=yes])
-# TODO Check for can headers
+
 AS_IF([test "x$enable_can" != xno],
-	[AC_DEFINE([FEAT_CAN],[1],[Support CAN bus])
-	canbus=true
+	[
+   canbus=true
+   AC_CHECK_HEADERS([net/if.h linux/can.h linux/can/raw.h ],,[canbus=false])
 ])
+AS_IF([test "x$canbus" = "xtrue"],
+  [
+    AC_DEFINE([FEAT_CAN],[1],[Support CAN bus])
+  ])
+
 AM_CONDITIONAL([CANBUS], [test "x$canbus" = xtrue])
 
 AC_ARG_ENABLE([frontcontrols],
@@ -130,7 +136,9 @@ AS_IF([test "x$with_bluetooth" != xno -a "x$with_flatbuffers" != xno -a "x$enabl
 AM_CONDITIONAL([DASHBOARD], [test "x$feat_dashboard" = xtrue])
 
 # Checks for header files.
-AC_CHECK_HEADERS([fcntl.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h termios.h unistd.h float.h math.h])
+AC_CHECK_HEADERS([fcntl.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h termios.h unistd.h float.h math.h errno.h stddef.h],,[
+  AC_MSG_ERROR([needed headers not found])                
+  ])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
@@ -141,9 +149,16 @@ AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT8_T
 AC_TYPE_SIZE_T
+AC_TYPE_INT16_T
 
 # Checks for library functions.
-AC_CHECK_FUNCS([gettimeofday memset select socket strdup strerror])
+AC_FUNC_MALLOC
+AC_CHECK_FUNCS([gettimeofday memset select socket strdup strerror strchr strcspn strspn strtol strndup],,
+  AC_MSG_ERROR([library functions not found]))
+
+# Check for utility progs
+AC_PROG_LN_S
+AC_PROG_RANLIB
 
 PKG_PROG_PKG_CONFIG
 AC_ARG_WITH([systemdsystemunitdir],
