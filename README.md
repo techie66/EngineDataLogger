@@ -18,15 +18,15 @@ It is written to run on a raspberry pi zero W and communicate with arduinos and 
 	make
 	sudo make install
 ```
+### Detailed Install
+Please have a look at [The Wiki](https://github.com/techie66/EngineDataLogger/wiki)
+
 After installation it will be necessary to setup a config file. An example is distrubuted as `/usr/local/etc/enginedatalogger/enginedatalogger.conf.dist` (on most systems, other systems may be in a different directory, see output from `sudo make install`)
 Copy this file to `/usr/local/etc/enginedatalogger/enginedatalogger.conf` and edit as necessary.
  
 ### Dependencies
-#### Included:<br>
-- I2C dev Lib - https://github.com/jrowberg/i2cdevlib  
 
-#### Not Included
-The configure script will install these for you under Raspberry Pi OS
+The install-deps.sh script will install these for you under Raspberry Pi OS
 - bluetooth.h - BLuetooth Headers
 - bcm2835 library - http://www.airspayce.com/mikem/bcm2835/index.html  
 - FlatBuffers - https://github.com/google/flatbuffers  
@@ -34,9 +34,10 @@ The configure script will install these for you under Raspberry Pi OS
 	- Build header with  "flatc -c --gen-object-api cb1100f-app.fbs"  
 - libISP2 - Library for reading the Innovate ISP V2
 	- https://github.com/techie66/libISP2
+- libIgnitech - Library for reading from Ignitech TCIP-4
+	- https://github.com/techie66/libIgnitech
+
 ### Development
-	- Build flatbuffers header with  `flatc -c --gen-object-api ../data/cb1100f-app.fbs` Do this from within `src/` directory.
-	- Build cmdline header with `gengetopt -C -i ../data/cmdline.ggo` Do this from within `src/` directory.
   - Generate code from modified DBC files `python3 -m cantools generate_c_source ../data/xxxx.dbc` Do this from within `src/` directory.
   - Adhere to coding style. Source files formatted with astyle accourding to _astylerc in root directory. Eg. `astyle --project src/main.cpp`
 ## License
