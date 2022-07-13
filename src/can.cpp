@@ -65,8 +65,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
     break;
 
     case OBD2_OBD2_REQUEST_FRAME_ID: {
-      _status = EXIT_SUCCESS;
-      obd2_process(frame,log_data,can_s);
+      _status = obd2_process(frame, log_data, can_s);
       error_message(DEBUG, "CAN:OBD2 Request");
     }
     break;
@@ -84,7 +83,7 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
 {
   int _status = EXIT_FAILURE;
   struct obd2_obd2_request_t obd2Request;
-  obd2_obd2_request_unpack(&obd2Request,frame.data,frame.can_dlc);
+  obd2_obd2_request_unpack(&obd2Request, frame.data, frame.can_dlc);
   // Check Valid Mode and PIDs
   if ( !obd2_obd2_request_mode_is_in_range(obd2Request.mode) )
     return EXIT_FAILURE;
@@ -108,7 +107,7 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         _obd2_response.response = 4u;  // Every response packet is 4
         _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
         _obd2_response.parameter_id_service01 = OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_0_C_ENGINE_RPM_CHOICE;
-        obd2_obd2_pack(_response.data,&_obd2_response,8);
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
         _response.can_dlc = 8;
         _response.can_id = OBD2_OBD2_FRAME_ID;
         if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
@@ -119,70 +118,70 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
       break;
 
       default:
-        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X",obd2Request.mode,obd2Request.pid);
+        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X", obd2Request.mode, obd2Request.pid);
     }
   }
 
   else if ( obd2Request.mode == OBD2_OBD2_SERVICE_SHOW_FREEZE_FRAME_DATA__CHOICE ) {
     switch (obd2Request.pid) {
       default:
-        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X",obd2Request.mode,obd2Request.pid);
+        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X", obd2Request.mode, obd2Request.pid);
     }
   }
 
   else if ( obd2Request.mode == OBD2_OBD2_SERVICE_SHOW_STORED_DT_CS__CHOICE ) {
     switch (obd2Request.pid) {
       default:
-        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X",obd2Request.mode,obd2Request.pid);
+        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X", obd2Request.mode, obd2Request.pid);
     }
   }
 
   else if ( obd2Request.mode == OBD2_OBD2_SERVICE_CLEAR_DT_CS_AND_STORED_VALUES_CHOICE ) {
     switch (obd2Request.pid) {
       default:
-        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X",obd2Request.mode,obd2Request.pid);
+        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X", obd2Request.mode, obd2Request.pid);
     }
   }
 
   else if ( obd2Request.mode == OBD2_OBD2_SERVICE_OXYGEN_SENSOR_MONITORING__CHOICE ) {
     switch (obd2Request.pid) {
       default:
-        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X",obd2Request.mode,obd2Request.pid);
+        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X", obd2Request.mode, obd2Request.pid);
     }
   }
 
   else if ( obd2Request.mode == OBD2_OBD2_SERVICE_OTHER_SYSTEM_MONITORING__CHOICE ) {
     switch (obd2Request.pid) {
       default:
-        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X",obd2Request.mode,obd2Request.pid);
+        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X", obd2Request.mode, obd2Request.pid);
     }
   }
 
   else if ( obd2Request.mode == OBD2_OBD2_SERVICE_SHOW_PENDING_DT_CS__CHOICE ) {
     switch (obd2Request.pid) {
       default:
-        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X",obd2Request.mode,obd2Request.pid);
+        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X", obd2Request.mode, obd2Request.pid);
     }
   }
 
   else if ( obd2Request.mode == OBD2_OBD2_SERVICE_CONTROL_ON_BOARD_SYSTEM__CHOICE ) {
     switch (obd2Request.pid) {
       default:
-        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X",obd2Request.mode,obd2Request.pid);
+        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X", obd2Request.mode, obd2Request.pid);
     }
   }
 
   else if ( obd2Request.mode == OBD2_OBD2_SERVICE_REQUEST_VEHICLE_INFORMATION__CHOICE ) {
     switch (obd2Request.pid) {
       default:
-        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X",obd2Request.mode,obd2Request.pid);
+        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X", obd2Request.mode, obd2Request.pid);
     }
   }
 
   else if ( obd2Request.mode == OBD2_OBD2_SERVICE_PERMANENT_DT_CS___CLEARED_DT_CS___CHOICE ) {
     switch (obd2Request.pid) {
       default:
-        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X",obd2Request.mode,obd2Request.pid);
+        error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X", obd2Request.mode, obd2Request.pid);
     }
   }
   return _status;

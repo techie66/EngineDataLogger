@@ -21,7 +21,7 @@
 #define SERIAL_H
 
 #include <errno.h>
-#include <fcntl.h> 
+#include <fcntl.h>
 #include <string.h>
 #include <termios.h>
 #include <unistd.h>

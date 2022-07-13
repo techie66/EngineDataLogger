@@ -53,7 +53,7 @@
  *
  * \return   True if successful, or FALSE if error.
  */
-bool can_sock_connect( int can_s, char const * can_arg);
+bool can_sock_connect( int can_s, char const *can_arg);
 
 /**
  * \brief   Function to extract data from CAN frames

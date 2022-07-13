@@ -64,12 +64,12 @@ extern "C" {
  * All signal values are as on the CAN bus.
  */
 struct ignitech_can_ignitech_wb_2_t {
-    /**
-     * Range: 0..10000 (0..100.00 -)
-     * Scale: 0.01
-     * Offset: 0
-     */
-    uint16_t lambda;
+  /**
+   * Range: 0..10000 (0..100.00 -)
+   * Scale: 0.01
+   * Offset: 0
+   */
+  uint16_t lambda;
 };
 
 /**
@@ -82,9 +82,9 @@ struct ignitech_can_ignitech_wb_2_t {
  * @return Size of packed data, or negative error code.
  */
 int ignitech_can_ignitech_wb_2_pack(
-    uint8_t *dst_p,
-    const struct ignitech_can_ignitech_wb_2_t *src_p,
-    size_t size);
+  uint8_t *dst_p,
+  const struct ignitech_can_ignitech_wb_2_t *src_p,
+  size_t size);
 
 /**
  * Unpack message Ignitech_WB_2.
@@ -96,9 +96,9 @@ int ignitech_can_ignitech_wb_2_pack(
  * @return zero(0) or negative error code.
  */
 int ignitech_can_ignitech_wb_2_unpack(
-    struct ignitech_can_ignitech_wb_2_t *dst_p,
-    const uint8_t *src_p,
-    size_t size);
+  struct ignitech_can_ignitech_wb_2_t *dst_p,
+  const uint8_t *src_p,
+  size_t size);
 
 /**
  * Encode given signal by applying scaling and offset.

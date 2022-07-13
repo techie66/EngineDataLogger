@@ -64,19 +64,19 @@ extern "C" {
  * All signal values are as on the CAN bus.
  */
 struct imu_can_body_position_t {
-    /**
-     * Range: 0..3600 (-180..180 deg)
-     * Scale: 0.1
-     * Offset: -180
-     */
-    uint16_t roll_angle;
+  /**
+   * Range: 0..3600 (-180..180 deg)
+   * Scale: 0.1
+   * Offset: -180
+   */
+  uint16_t roll_angle;
 
-    /**
-     * Range: 0..3600 (-180..180 deg)
-     * Scale: 0.1
-     * Offset: -180
-     */
-    uint16_t pitch_angle;
+  /**
+   * Range: 0..3600 (-180..180 deg)
+   * Scale: 0.1
+   * Offset: -180
+   */
+  uint16_t pitch_angle;
 };
 
 /**
@@ -89,9 +89,9 @@ struct imu_can_body_position_t {
  * @return Size of packed data, or negative error code.
  */
 int imu_can_body_position_pack(
-    uint8_t *dst_p,
-    const struct imu_can_body_position_t *src_p,
-    size_t size);
+  uint8_t *dst_p,
+  const struct imu_can_body_position_t *src_p,
+  size_t size);
 
 /**
  * Unpack message BODY_POSITION.
@@ -103,9 +103,9 @@ int imu_can_body_position_pack(
  * @return zero(0) or negative error code.
  */
 int imu_can_body_position_unpack(
-    struct imu_can_body_position_t *dst_p,
-    const uint8_t *src_p,
-    size_t size);
+  struct imu_can_body_position_t *dst_p,
+  const uint8_t *src_p,
+  size_t size);
 
 /**
  * Encode given signal by applying scaling and offset.

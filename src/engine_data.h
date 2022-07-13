@@ -25,7 +25,7 @@
 #include "serial.h"
 #include "I2Cdev.h"
 
-int readED(int fd_front_controls, en_data& enData);
+int readED(int fd_front_controls, en_data &enData);
 
 #endif
 

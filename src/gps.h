@@ -76,47 +76,47 @@ extern "C" {
  * All signal values are as on the CAN bus.
  */
 struct gps_gps_time_t {
-    /**
-     * Range: 1..31 (1..31 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t day;
+  /**
+   * Range: 1..31 (1..31 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t day;
 
-    /**
-     * Range: 1..12 (1..12 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t month;
+  /**
+   * Range: 1..12 (1..12 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t month;
 
-    /**
-     * Range: 1..65535 (1..65535 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint16_t year;
+  /**
+   * Range: 1..65535 (1..65535 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint16_t year;
 
-    /**
-     * Range: 0..23 (0..23 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t hour;
+  /**
+   * Range: 0..23 (0..23 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t hour;
 
-    /**
-     * Range: 0..59 (0..59 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t minute;
+  /**
+   * Range: 0..59 (0..59 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t minute;
 
-    /**
-     * Range: 0..59 (0..59 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t second;
+  /**
+   * Range: 0..59 (0..59 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t second;
 };
 
 /**
@@ -125,19 +125,19 @@ struct gps_gps_time_t {
  * All signal values are as on the CAN bus.
  */
 struct gps_gps_loc_t {
-    /**
-     * Range: 0..180000000 (-90..90 Deg)
-     * Scale: 1e-06
-     * Offset: -90
-     */
-    uint32_t lat_decimal_degrees;
+  /**
+   * Range: 0..180000000 (-90..90 Deg)
+   * Scale: 1e-06
+   * Offset: -90
+   */
+  uint32_t lat_decimal_degrees;
 
-    /**
-     * Range: 0..360000000 (-180..180 Deg)
-     * Scale: 1e-06
-     * Offset: -180
-     */
-    uint32_t long_decimal_degrees;
+  /**
+   * Range: 0..360000000 (-180..180 Deg)
+   * Scale: 1e-06
+   * Offset: -180
+   */
+  uint32_t long_decimal_degrees;
 };
 
 /**
@@ -146,26 +146,26 @@ struct gps_gps_loc_t {
  * All signal values are as on the CAN bus.
  */
 struct gps_gps_nav_t {
-    /**
-     * Range: 0..655350 (0..65535 km/h)
-     * Scale: 0.1
-     * Offset: 0
-     */
-    uint16_t speed;
+  /**
+   * Range: 0..655350 (0..65535 km/h)
+   * Scale: 0.1
+   * Offset: 0
+   */
+  uint16_t speed;
 
-    /**
-     * Range: 0..35990 (0..3599 Deg)
-     * Scale: 0.1
-     * Offset: 0
-     */
-    uint16_t heading;
+  /**
+   * Range: 0..35990 (0..3599 Deg)
+   * Scale: 0.1
+   * Offset: 0
+   */
+  uint16_t heading;
 
-    /**
-     * Range: 0..65535 (0..65535 m)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint16_t altitude;
+  /**
+   * Range: 0..65535 (0..65535 m)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint16_t altitude;
 };
 
 /**
@@ -174,47 +174,47 @@ struct gps_gps_nav_t {
  * All signal values are as on the CAN bus.
  */
 struct gps_gps_stat_t {
-    /**
-     * Range: 0..63 (0..63 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t active_satellites;
+  /**
+   * Range: 0..63 (0..63 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t active_satellites;
 
-    /**
-     * Range: 0..15 (0..15 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t type;
+  /**
+   * Range: 0..15 (0..15 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t type;
 
-    /**
-     * Range: 0..63 (0..63 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t visible_satellites;
+  /**
+   * Range: 0..63 (0..63 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t visible_satellites;
 
-    /**
-     * Range: 0..99990 (0..9999 m)
-     * Scale: 0.1
-     * Offset: 0
-     */
-    uint16_t pdop;
+  /**
+   * Range: 0..99990 (0..9999 m)
+   * Scale: 0.1
+   * Offset: 0
+   */
+  uint16_t pdop;
 
-    /**
-     * Range: 0..99990 (0..9999 m)
-     * Scale: 0.1
-     * Offset: 0
-     */
-    uint16_t hdop;
+  /**
+   * Range: 0..99990 (0..9999 m)
+   * Scale: 0.1
+   * Offset: 0
+   */
+  uint16_t hdop;
 
-    /**
-     * Range: 0..99990 (0..9999 m)
-     * Scale: 0.1
-     * Offset: 0
-     */
-    uint16_t vdop;
+  /**
+   * Range: 0..99990 (0..9999 m)
+   * Scale: 0.1
+   * Offset: 0
+   */
+  uint16_t vdop;
 };
 
 /**
@@ -227,9 +227,9 @@ struct gps_gps_stat_t {
  * @return Size of packed data, or negative error code.
  */
 int gps_gps_time_pack(
-    uint8_t *dst_p,
-    const struct gps_gps_time_t *src_p,
-    size_t size);
+  uint8_t *dst_p,
+  const struct gps_gps_time_t *src_p,
+  size_t size);
 
 /**
  * Unpack message GPS_Time.
@@ -241,9 +241,9 @@ int gps_gps_time_pack(
  * @return zero(0) or negative error code.
  */
 int gps_gps_time_unpack(
-    struct gps_gps_time_t *dst_p,
-    const uint8_t *src_p,
-    size_t size);
+  struct gps_gps_time_t *dst_p,
+  const uint8_t *src_p,
+  size_t size);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -417,9 +417,9 @@ bool gps_gps_time_second_is_in_range(uint8_t value);
  * @return Size of packed data, or negative error code.
  */
 int gps_gps_loc_pack(
-    uint8_t *dst_p,
-    const struct gps_gps_loc_t *src_p,
-    size_t size);
+  uint8_t *dst_p,
+  const struct gps_gps_loc_t *src_p,
+  size_t size);
 
 /**
  * Unpack message GPS_Loc.
@@ -431,9 +431,9 @@ int gps_gps_loc_pack(
  * @return zero(0) or negative error code.
  */
 int gps_gps_loc_unpack(
-    struct gps_gps_loc_t *dst_p,
-    const uint8_t *src_p,
-    size_t size);
+  struct gps_gps_loc_t *dst_p,
+  const uint8_t *src_p,
+  size_t size);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -499,9 +499,9 @@ bool gps_gps_loc_long_decimal_degrees_is_in_range(uint32_t value);
  * @return Size of packed data, or negative error code.
  */
 int gps_gps_nav_pack(
-    uint8_t *dst_p,
-    const struct gps_gps_nav_t *src_p,
-    size_t size);
+  uint8_t *dst_p,
+  const struct gps_gps_nav_t *src_p,
+  size_t size);
 
 /**
  * Unpack message GPS_Nav.
@@ -513,9 +513,9 @@ int gps_gps_nav_pack(
  * @return zero(0) or negative error code.
  */
 int gps_gps_nav_unpack(
-    struct gps_gps_nav_t *dst_p,
-    const uint8_t *src_p,
-    size_t size);
+  struct gps_gps_nav_t *dst_p,
+  const uint8_t *src_p,
+  size_t size);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -608,9 +608,9 @@ bool gps_gps_nav_altitude_is_in_range(uint16_t value);
  * @return Size of packed data, or negative error code.
  */
 int gps_gps_stat_pack(
-    uint8_t *dst_p,
-    const struct gps_gps_stat_t *src_p,
-    size_t size);
+  uint8_t *dst_p,
+  const struct gps_gps_stat_t *src_p,
+  size_t size);
 
 /**
  * Unpack message GPS_Stat.
@@ -622,9 +622,9 @@ int gps_gps_stat_pack(
  * @return zero(0) or negative error code.
  */
 int gps_gps_stat_unpack(
-    struct gps_gps_stat_t *dst_p,
-    const uint8_t *src_p,
-    size_t size);
+  struct gps_gps_stat_t *dst_p,
+  const uint8_t *src_p,
+  size_t size);
 
 /**
  * Encode given signal by applying scaling and offset.

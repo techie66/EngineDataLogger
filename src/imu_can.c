@@ -33,99 +33,99 @@
 #include "imu_can.h"
 
 static inline uint8_t pack_left_shift_u16(
-    uint16_t value,
-    uint8_t shift,
-    uint8_t mask)
+  uint16_t value,
+  uint8_t shift,
+  uint8_t mask)
 {
-    return (uint8_t)((uint8_t)(value << shift) & mask);
+  return (uint8_t)((uint8_t)(value << shift) & mask);
 }
 
 static inline uint8_t pack_right_shift_u16(
-    uint16_t value,
-    uint8_t shift,
-    uint8_t mask)
+  uint16_t value,
+  uint8_t shift,
+  uint8_t mask)
 {
-    return (uint8_t)((uint8_t)(value >> shift) & mask);
+  return (uint8_t)((uint8_t)(value >> shift) & mask);
 }
 
 static inline uint16_t unpack_left_shift_u16(
-    uint8_t value,
-    uint8_t shift,
-    uint8_t mask)
+  uint8_t value,
+  uint8_t shift,
+  uint8_t mask)
 {
-    return (uint16_t)((uint16_t)(value & mask) << shift);
+  return (uint16_t)((uint16_t)(value & mask) << shift);
 }
 
 static inline uint16_t unpack_right_shift_u16(
-    uint8_t value,
-    uint8_t shift,
-    uint8_t mask)
+  uint8_t value,
+  uint8_t shift,
+  uint8_t mask)
 {
-    return (uint16_t)((uint16_t)(value & mask) >> shift);
+  return (uint16_t)((uint16_t)(value & mask) >> shift);
 }
 
 int imu_can_body_position_pack(
-    uint8_t *dst_p,
-    const struct imu_can_body_position_t *src_p,
-    size_t size)
+  uint8_t *dst_p,
+  const struct imu_can_body_position_t *src_p,
+  size_t size)
 {
-    if (size < 8u) {
-        return (-EINVAL);
-    }
+  if (size < 8u) {
+    return (-EINVAL);
+  }
 
-    memset(&dst_p[0], 0, 8);
+  memset(&dst_p[0], 0, 8);
 
-    dst_p[0] |= pack_left_shift_u16(src_p->roll_angle, 0u, 0xffu);
-    dst_p[1] |= pack_right_shift_u16(src_p->roll_angle, 8u, 0x0fu);
-    dst_p[1] |= pack_left_shift_u16(src_p->pitch_angle, 4u, 0xf0u);
-    dst_p[2] |= pack_right_shift_u16(src_p->pitch_angle, 4u, 0xffu);
+  dst_p[0] |= pack_left_shift_u16(src_p->roll_angle, 0u, 0xffu);
+  dst_p[1] |= pack_right_shift_u16(src_p->roll_angle, 8u, 0x0fu);
+  dst_p[1] |= pack_left_shift_u16(src_p->pitch_angle, 4u, 0xf0u);
+  dst_p[2] |= pack_right_shift_u16(src_p->pitch_angle, 4u, 0xffu);
 
-    return (8);
+  return (8);
 }
 
 int imu_can_body_position_unpack(
-    struct imu_can_body_position_t *dst_p,
-    const uint8_t *src_p,
-    size_t size)
+  struct imu_can_body_position_t *dst_p,
+  const uint8_t *src_p,
+  size_t size)
 {
-    if (size < 8u) {
-        return (-EINVAL);
-    }
+  if (size < 8u) {
+    return (-EINVAL);
+  }
 
-    dst_p->roll_angle = unpack_right_shift_u16(src_p[0], 0u, 0xffu);
-    dst_p->roll_angle |= unpack_left_shift_u16(src_p[1], 8u, 0x0fu);
-    dst_p->pitch_angle = unpack_right_shift_u16(src_p[1], 4u, 0xf0u);
-    dst_p->pitch_angle |= unpack_left_shift_u16(src_p[2], 4u, 0xffu);
+  dst_p->roll_angle = unpack_right_shift_u16(src_p[0], 0u, 0xffu);
+  dst_p->roll_angle |= unpack_left_shift_u16(src_p[1], 8u, 0x0fu);
+  dst_p->pitch_angle = unpack_right_shift_u16(src_p[1], 4u, 0xf0u);
+  dst_p->pitch_angle |= unpack_left_shift_u16(src_p[2], 4u, 0xffu);
 
-    return (0);
+  return (0);
 }
 
 uint16_t imu_can_body_position_roll_angle_encode(double value)
 {
-    return (uint16_t)((value - -180.0) / 0.1);
+  return (uint16_t)((value - -180.0) / 0.1);
 }
 
 double imu_can_body_position_roll_angle_decode(uint16_t value)
 {
-    return (((double)value * 0.1) + -180.0);
+  return (((double)value * 0.1) + -180.0);
 }
 
 bool imu_can_body_position_roll_angle_is_in_range(uint16_t value)
 {
-    return (value <= 3600u);
+  return (value <= 3600u);
 }
 
 uint16_t imu_can_body_position_pitch_angle_encode(double value)
 {
-    return (uint16_t)((value - -180.0) / 0.1);
+  return (uint16_t)((value - -180.0) / 0.1);
 }
 
 double imu_can_body_position_pitch_angle_decode(uint16_t value)
 {
-    return (((double)value * 0.1) + -180.0);
+  return (((double)value * 0.1) + -180.0);
 }
 
 bool imu_can_body_position_pitch_angle_is_in_range(uint16_t value)
 {
-    return (value <= 3600u);
+  return (value <= 3600u);
 }

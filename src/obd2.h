@@ -268,19 +268,19 @@ extern "C" {
  * All signal values are as on the CAN bus.
  */
 struct obd2_obd2_request_t {
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t mode;
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t mode;
 
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t pid;
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t pid;
 };
 
 /**
@@ -289,75 +289,75 @@ struct obd2_obd2_request_t {
  * All signal values are as on the CAN bus.
  */
 struct obd2_obd2_iso_tp_t {
-    /**
-     * Range: 0..3 (0..3 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t type;
+  /**
+   * Range: 0..3 (0..3 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t type;
 
-    /**
-     * Range: 0..7 (0..7 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t sf_size;
+  /**
+   * Range: 0..7 (0..7 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t sf_size;
 
-    /**
-     * Range: 8..4095 (8..4095 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint16_t ff_size;
+  /**
+   * Range: 8..4095 (8..4095 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint16_t ff_size;
 
-    /**
-     * Range: 0..15 (0..15 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t cf_index;
+  /**
+   * Range: 0..15 (0..15 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t cf_index;
 
-    /**
-     * Range: 0..2 (0..2 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t fc_flag;
+  /**
+   * Range: 0..2 (0..2 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t fc_flag;
 
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t fc_block_size;
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t fc_block_size;
 
-    /**
-     * Range: 0..1 (0..1 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t fc_st;
+  /**
+   * Range: 0..1 (0..1 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t fc_st;
 
-    /**
-     * Range: 0..127 (0..127 ms)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t fc_st_ms;
+  /**
+   * Range: 0..127 (0..127 ms)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t fc_st_ms;
 
-    /**
-     * Range: 7..7 (7..7 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t fc_st_us_mux;
+  /**
+   * Range: 7..7 (7..7 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t fc_st_us_mux;
 
-    /**
-     * Range: 1..9 (100..900 us)
-     * Scale: 100
-     * Offset: 0
-     */
-    uint8_t fc_st_us;
+  /**
+   * Range: 1..9 (100..900 us)
+   * Scale: 100
+   * Offset: 0
+   */
+  uint8_t fc_st_us;
 };
 
 /**
@@ -368,1106 +368,1106 @@ struct obd2_obd2_iso_tp_t {
  * All signal values are as on the CAN bus.
  */
 struct obd2_obd2_t {
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t length;
-
-    /**
-     * Range: 0..15 (0..15 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t response;
-
-    /**
-     * Range: 0..15 (0..15 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t service;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t parameter_id_service01;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t parameter_id_service02;
-
-    /**
-     * PIDs supported [01 - 20] - Bit encoded [A7..D0] == [PID $01..PID $20]. See OBD-II PIDs on Wikipedia
-     *
-     * Range: 0..4294967295 (0..4294967295 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint32_t s1_pid_00_pi_ds_supported_01_20;
-
-    /**
-     * Monitor status since DTCs cleared (includes malfunction indicator lamp (MIL) status and number of DTCs)
-     *
-     * Range: 0..4294967295 (0..4294967295 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint32_t s1_pid_01_monitor_status;
-
-    /**
-     * Range: 0..65535 (0..65535 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint16_t s1_pid_02_freeze_dtc;
-
-    /**
-     * Range: 0..65535 (0..65535 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint16_t s1_pid_03_fuel_system_status;
-
-    /**
-     * Range: 0..254.9979600163198694410444716 (0..100 %)
-     * Scale: 0.39216
-     * Offset: 0
-     */
-    uint8_t s1_pid_04_calc_engine_load;
-
-    /**
-     * Range: 0..255 (-40..215 degC)
-     * Scale: 1
-     * Offset: -40
-     */
-    uint8_t s1_pid_05_engine_coolant_temp;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_06_short_fuel_trim_bank1;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_07_long_fuel_trim_bank1;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_08_short_fuel_trim_bank2;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_09_long_fuel_trim_bank2;
-
-    /**
-     * Range: 0..255 (0..765 kPa)
-     * Scale: 3
-     * Offset: 0
-     */
-    uint8_t s1_pid_0_a_fuel_pressure;
-
-    /**
-     * Range: 0..255 (0..255 kPa)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_0_b_intake_mani_abs_press;
-
-    /**
-     * Range: 0..65535 (0..16383.75 rpm)
-     * Scale: 0.25
-     * Offset: 0
-     */
-    uint16_t s1_pid_0_c_engine_rpm;
-
-    /**
-     * Range: 0..255 (0..255 km/h)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_0_d_vehicle_speed;
-
-    /**
-     * Range: 0..255 (-64..63.5 deg before TDC)
-     * Scale: 0.5
-     * Offset: -64
-     */
-    uint8_t s1_pid_0_e_timing_advance;
-
-    /**
-     * Range: 0..255 (-40..215 degC)
-     * Scale: 1
-     * Offset: -40
-     */
-    uint8_t s1_pid_0_f_intake_air_temperature;
-
-    /**
-     * Range: 0..65535 (0..655.35 grams/sec)
-     * Scale: 0.01
-     * Offset: 0
-     */
-    uint16_t s1_pid_10_maf_air_flow_rate;
-
-    /**
-     * Range: 0..254.9979600163198694410444716 (0..100 %)
-     * Scale: 0.39216
-     * Offset: 0
-     */
-    uint8_t s1_pid_11_throttle_position;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_12_cmd_sec_air_status;
-
-    /**
-     * Range: 0..255 (0..1.275 volts)
-     * Scale: 0.005
-     * Offset: 0
-     */
-    uint8_t s1_pid_14_oxy_sensor1_volt;
-
-    /**
-     * Range: 0..255 (0..1.275 volts)
-     * Scale: 0.005
-     * Offset: 0
-     */
-    uint8_t s1_pid_15_oxy_sensor2_volt;
-
-    /**
-     * Range: 0..255 (0..1.275 volts)
-     * Scale: 0.005
-     * Offset: 0
-     */
-    uint8_t s1_pid_16_oxy_sensor3_volt;
-
-    /**
-     * Range: 0..255 (0..1.275 volts)
-     * Scale: 0.005
-     * Offset: 0
-     */
-    uint8_t s1_pid_17_oxy_sensor4_volt;
-
-    /**
-     * Range: 0..255 (0..1.275 volts)
-     * Scale: 0.005
-     * Offset: 0
-     */
-    uint8_t s1_pid_18_oxy_sensor5_volt;
-
-    /**
-     * Range: 0..255 (0..1.275 volts)
-     * Scale: 0.005
-     * Offset: 0
-     */
-    uint8_t s1_pid_19_oxy_sensor6_volt;
-
-    /**
-     * Range: 0..255 (0..1.275 volts)
-     * Scale: 0.005
-     * Offset: 0
-     */
-    uint8_t s1_pid_1_a_oxy_sensor7_volt;
-
-    /**
-     * Range: 0..255 (0..1.275 volts)
-     * Scale: 0.005
-     * Offset: 0
-     */
-    uint8_t s1_pid_1_b_oxy_sensor8_volt;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_1_c_obd_standard;
-
-    /**
-     * Range: 0..65535 (0..65535 seconds)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint16_t s1_pid_1_f_time_since_eng_start;
-
-    /**
-     * PIDs supported [21 - 40] - Bit encoded [A7..D0] == [PID $21..PID $40]. See OBD-II PIDs on Wikipedia
-     *
-     * Range: 0..4294967295 (0..4294967295 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint32_t s1_pid_20_pi_ds_supported_21_40;
-
-    /**
-     * Range: 0..65535 (0..65535 km)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint16_t s1_pid_21_distance_mil_on;
-
-    /**
-     * Range: 0..65535 (0..5177.265 kPa)
-     * Scale: 0.079
-     * Offset: 0
-     */
-    uint16_t s1_pid_22_fuel_rail_pres;
-
-    /**
-     * Range: 0..65535 (0..655350 kPa)
-     * Scale: 10
-     * Offset: 0
-     */
-    uint16_t s1_pid_23_fuel_rail_gaug;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_24_oxy_sensor1_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_25_oxy_sensor2_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_26_oxy_sensor3_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_27_oxy_sensor4_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_28_oxy_sensor5_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_29_oxy_sensor6_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_2_a_oxy_sensor7_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_2_b_oxy_sensor8_faer;
-
-    /**
-     * Range: 0..255.0000000000000255000000000 (0..100 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint8_t s1_pid_2_c_cmd_egr;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_2_d_egr_error;
-
-    /**
-     * Range: 0..255.0000000000000255000000000 (0..100 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint8_t s1_pid_2_e_cmd_evap_purge;
-
-    /**
-     * Range: 0..255.0000000000000255000000000 (0..100 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint8_t s1_pid_2_f_fuel_tank_level;
-
-    /**
-     * Range: 0..255 (0..255 count)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_30_warm_ups_since_code_clear;
-
-    /**
-     * Range: 0..65535 (0..65535 km)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint16_t s1_pid_31_distance_since_code_clear;
-
-    /**
-     * Range: -32768..32767 (-8192..8191.75 Pa)
-     * Scale: 0.25
-     * Offset: 0
-     */
-    int16_t s1_pid_32_evap_sys_vapor_pres;
-
-    /**
-     * Range: 0..255 (0..255 kPa)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_33_abs_baro_pres;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_34_oxy_sensor1_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_35_oxy_sensor2_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_36_oxy_sensor3_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_37_oxy_sensor4_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_38_oxy_sensor5_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_39_oxy_sensor6_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_3_a_oxy_sensor7_faer;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_3_b_oxy_sensor8_faer;
-
-    /**
-     * Range: 0..65535 (-40..6513.5 degC)
-     * Scale: 0.1
-     * Offset: -40
-     */
-    uint16_t s1_pid_3_c_cat_temp_bank1_sens1;
-
-    /**
-     * Range: 0..65535 (-40..6513.5 degC)
-     * Scale: 0.1
-     * Offset: -40
-     */
-    uint16_t s1_pid_3_d_cat_temp_bank2_sens1;
-
-    /**
-     * Range: 0..65535 (-40..6513.5 degC)
-     * Scale: 0.1
-     * Offset: -40
-     */
-    uint16_t s1_pid_3_e_cat_temp_bank1_sens2;
-
-    /**
-     * Range: 0..65535 (-40..6513.5 degC)
-     * Scale: 0.1
-     * Offset: -40
-     */
-    uint16_t s1_pid_3_f_cat_temp_bank2_sens2;
-
-    /**
-     * PIDs supported [41 - 60] - Bit encoded [A7..D0] == [PID $41..PID $60]. See OBD-II PIDs on Wikipedia
-     *
-     * Range: 0..4294967295 (0..4294967295 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint32_t s1_pid_40_pi_ds_supported_41_60;
-
-    /**
-     * Range: 0..4294967295 (0..4294967295 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint32_t s1_pid_41_mon_status_drive_cycle;
-
-    /**
-     * Range: 0..65535 (0..65.535 V)
-     * Scale: 0.001
-     * Offset: 0
-     */
-    uint16_t s1_pid_42_control_module_volt;
-
-    /**
-     * Range: 0..65535.00000000000655350000000 (0..25700 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint16_t s1_pid_43_abs_load_value;
-
-    /**
-     * Range: 0..65536 (0..2 ratio)
-     * Scale: 3.0517578125e-05
-     * Offset: 0
-     */
-    uint16_t s1_pid_44_fuel_air_cmd_equiv;
-
-    /**
-     * Range: 0..255.0000000000000255000000000 (0..100 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint8_t s1_pid_45_rel_throttle_pos;
-
-    /**
-     * Range: 0..255 (-40..215 degC)
-     * Scale: 1
-     * Offset: -40
-     */
-    uint8_t s1_pid_46_ambient_air_temp;
-
-    /**
-     * Range: 0..255.0000000000000255000000000 (0..100 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint8_t s1_pid_47_abs_throttle_pos_b;
-
-    /**
-     * Range: 0..255.0000000000000255000000000 (0..100 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint8_t s1_pid_48_abs_throttle_pos_c;
-
-    /**
-     * Range: 0..255.0000000000000255000000000 (0..100 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint8_t s1_pid_49_abs_throttle_pos_d;
-
-    /**
-     * Range: 0..255.0000000000000255000000000 (0..100 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint8_t s1_pid_4_a_abs_throttle_pos_e;
-
-    /**
-     * Range: 0..255.0000000000000255000000000 (0..100 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint8_t s1_pid_4_b_abs_throttle_pos_f;
-
-    /**
-     * Range: 0..255.0000000000000255000000000 (0..100 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint8_t s1_pid_4_c_cmd_throttle_act;
-
-    /**
-     * Range: 0..65535 (0..65535 minutes)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint16_t s1_pid_4_d_time_run_mil_on;
-
-    /**
-     * Range: 0..65535 (0..65535 minutes)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint16_t s1_pid_4_e_time_since_code_clear;
-
-    /**
-     * Range: 0..255 (0..255 ratio)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_4_f_max_faer;
-
-    /**
-     * Range: 0..255 (0..2550 g/s)
-     * Scale: 10
-     * Offset: 0
-     */
-    uint8_t s1_pid_50_max_air_flow_maf;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_51_fuel_type;
-
-    /**
-     * Range: 0..255.0000000000000255000000000 (0..100 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint8_t s1_pid_52_ethanol_fuel_pct;
-
-    /**
-     * Range: 0..65535 (0..327.675 kPa)
-     * Scale: 0.005
-     * Offset: 0
-     */
-    uint16_t s1_pid_53_abs_evap_sys_vap_pres;
-
-    /**
-     * Range: 0..65535 (-32767..32768 Pa)
-     * Scale: 1
-     * Offset: -32767
-     */
-    uint16_t s1_pid_54_evap_sys_vap_pres;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_55_short_sec_oxy_trim_bank1;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_56_long_sec_oxy_trim_bank1;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_57_short_sec_oxy_trim_bank2;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_58_long_sec_oxy_trim_bank2;
-
-    /**
-     * Range: 0..65535 (0..655350 kPa)
-     * Scale: 10
-     * Offset: 0
-     */
-    uint16_t s1_pid_59_fuel_rail_abs_pres;
-
-    /**
-     * Range: 0..255.0000000000000255000000000 (0..100 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint8_t s1_pid_5_a_rel_accel_pedal_pos;
-
-    /**
-     * Range: 0..255.0000000000000255000000000 (0..100 %)
-     * Scale: 0.392156862745098
-     * Offset: 0
-     */
-    uint8_t s1_pid_5_b_hybr_bat_pack_rem_life;
-
-    /**
-     * Range: 0..255 (-40..215 degC)
-     * Scale: 1
-     * Offset: -40
-     */
-    uint8_t s1_pid_5_c_engine_oil_temp;
-
-    /**
-     * Range: 0..65535 (-210..301.9921875 deg)
-     * Scale: 0.0078125
-     * Offset: -210
-     */
-    uint16_t s1_pid_5_d_fuel_injection_timing;
-
-    /**
-     * Range: 0..65535 (0..3276.75 L/h)
-     * Scale: 0.05
-     * Offset: 0
-     */
-    uint16_t s1_pid_5_e_engine_fuel_rate;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_5_f_emission_req;
-
-    /**
-     * PIDs supported [61 - 80] - Bit encoded [A7..D0] == [PID $61..PID $80]. See OBD-II PIDs on Wikipedia
-     *
-     * Range: 0..4294967295 (0..4294967295 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint32_t s1_pid_60_pi_ds_supported_61_80;
-
-    /**
-     * Range: 0..255 (-125..130 %)
-     * Scale: 1
-     * Offset: -125
-     */
-    uint8_t s1_pid_61_demand_eng_torq_pct;
-
-    /**
-     * Range: 0..255 (-125..130 %)
-     * Scale: 1
-     * Offset: -125
-     */
-    uint8_t s1_pid_62_actual_eng_torq_pct;
-
-    /**
-     * Range: 0..65535 (0..65535 Nm)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint16_t s1_pid_63_eng_ref_torq;
-
-    /**
-     * Range: 0..255 (-125..130 %)
-     * Scale: 1
-     * Offset: -125
-     */
-    uint8_t s1_pid_64_eng_pct_torq_idle;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_65_aux_input_output;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_66_maf_sensor;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_67_engine_coolant_temp;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_68_intake_air_temp_sens;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_69_cmd_egr_egr_error;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_6_a_cmd_diesel_int_air;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_6_b_exhaust_gas_temp;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_6_c_cmd_throttle_act_rel;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_6_d_fuel_pres_contr_sys;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_6_e_inj_pres_contr_sys;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_6_f_turbo_compr_pres;
-
-    /**
-     * Range: 0..255 (0..255 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_70_boost_pres_cntrl;
-
-    /**
-     * PIDs supported [81 - A0] - Bit encoded [A7..D0] == [PID $81..PID $A0]. See OBD-II PIDs on Wikipedia
-     *
-     * Range: 0..4294967295 (0..4294967295 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint32_t s1_pid_80_pi_ds_supported_81_a0;
-
-    /**
-     * Range: 0..255 (-125..130 %)
-     * Scale: 1
-     * Offset: -125
-     */
-    uint8_t s1_pid_8_e_eng_friction_pct_torq;
-
-    /**
-     * PIDs supported [A1 - C0] - Bit encoded [A7..D0] == [PID $A1..PID $C0]. See OBD-II PIDs on Wikipedia
-     *
-     * Range: 0..4294967295 (0..4294967295 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint32_t s1_pid_a0_pi_ds_supported_a1_c0;
-
-    /**
-     * PIDs supported [C1 - E0] - Bit encoded [A7..D0] == [PID $C1..PID $E0]. See OBD-II PIDs on Wikipedia
-     *
-     * Range: 0..4294967295 (0..4294967295 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint32_t s1_pid_c0_pi_ds_supported_c1_e0;
-
-    /**
-     * Range: 0..65535 (0..65535 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint16_t s2_pid_02_freeze_dtc;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_14_oxy_sensor1_stft;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_15_oxy_sensor2_stft;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_16_oxy_sensor3_stft;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_17_oxy_sensor4_stft;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_18_oxy_sensor5_stft;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_19_oxy_sensor6_stft;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_1_a_oxy_sensor7_stft;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_1_b_oxy_sensor8_stft;
-
-    /**
-     * Range: 0..255 (0..255 V)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_4_f_max_oxy_sens_vol;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_55_short_sec_oxy_trim_bank3;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_56_long_sec_oxy_trim_bank3;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_57_short_sec_oxy_trim_bank4;
-
-    /**
-     * Range: 0..255 (-100..99.21875 %)
-     * Scale: 0.78125
-     * Offset: -100
-     */
-    uint8_t s1_pid_58_long_sec_oxy_trim_bank4;
-
-    /**
-     * Range: 0..255 (-125..130 %)
-     * Scale: 1
-     * Offset: -125
-     */
-    uint8_t s1_pid_64_eng_pct_torq_ep1;
-
-    /**
-     * Range: 0..16384 (0..2 volts)
-     * Scale: 0.0001220703125
-     * Offset: 0
-     */
-    uint16_t s1_pid_24_oxy_sensor1_volt;
-
-    /**
-     * Range: 0..65536 (0..8 volts)
-     * Scale: 0.0001220703125
-     * Offset: 0
-     */
-    uint16_t s1_pid_25_oxy_sensor2_volt;
-
-    /**
-     * Range: 0..65536 (0..8 volts)
-     * Scale: 0.0001220703125
-     * Offset: 0
-     */
-    uint16_t s1_pid_26_oxy_sensor3_volt;
-
-    /**
-     * Range: 0..65536 (0..8 volts)
-     * Scale: 0.0001220703125
-     * Offset: 0
-     */
-    uint16_t s1_pid_27_oxy_sensor4_volt;
-
-    /**
-     * Range: 0..65536 (0..8 volts)
-     * Scale: 0.0001220703125
-     * Offset: 0
-     */
-    uint16_t s1_pid_28_oxy_sensor5_volt;
-
-    /**
-     * Range: 0..65536 (0..8 volts)
-     * Scale: 0.0001220703125
-     * Offset: 0
-     */
-    uint16_t s1_pid_29_oxy_sensor6_volt;
-
-    /**
-     * Range: 0..65536 (0..8 volts)
-     * Scale: 0.0001220703125
-     * Offset: 0
-     */
-    uint16_t s1_pid_2_a_oxy_sensor7_volt;
-
-    /**
-     * Range: 0..65536 (0..8 volts)
-     * Scale: 0.0001220703125
-     * Offset: 0
-     */
-    uint16_t s1_pid_2_b_oxy_sensor8_volt;
-
-    /**
-     * Range: 0..65536 (-128..128 mA)
-     * Scale: 0.00390625
-     * Offset: -128
-     */
-    uint16_t s1_pid_34_oxy_sensor1_crnt;
-
-    /**
-     * Range: 0..65536 (-128..128 mA)
-     * Scale: 0.00390625
-     * Offset: -128
-     */
-    uint16_t s1_pid_35_oxy_sensor2_crnt;
-
-    /**
-     * Range: 0..65536 (-128..128 mA)
-     * Scale: 0.00390625
-     * Offset: -128
-     */
-    uint16_t s1_pid_36_oxy_sensor3_crnt;
-
-    /**
-     * Range: 0..65536 (-128..128 mA)
-     * Scale: 0.00390625
-     * Offset: -128
-     */
-    uint16_t s1_pid_37_oxy_sensor4_crnt;
-
-    /**
-     * Range: 0..65536 (-128..128 mA)
-     * Scale: 0.00390625
-     * Offset: -128
-     */
-    uint16_t s1_pid_38_oxy_sensor5_crnt;
-
-    /**
-     * Range: 0..65536 (-128..128 mA)
-     * Scale: 0.00390625
-     * Offset: -128
-     */
-    uint16_t s1_pid_39_oxy_sensor6_crnt;
-
-    /**
-     * Range: 0..65536 (-128..128 mA)
-     * Scale: 0.00390625
-     * Offset: -128
-     */
-    uint16_t s1_pid_3_a_oxy_sensor7_crnt;
-
-    /**
-     * Range: 0..65536 (-128..128 mA)
-     * Scale: 0.00390625
-     * Offset: -128
-     */
-    uint16_t s1_pid_3_b_oxy_sensor8_crnt;
-
-    /**
-     * Range: 0..255 (0..255 mA)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t s1_pid_4_f_max_oxy_sens_crnt;
-
-    /**
-     * Range: 0..255 (-125..130 %)
-     * Scale: 1
-     * Offset: -125
-     */
-    uint8_t s1_pid_64_eng_pct_torq_ep2;
-
-    /**
-     * Range: 0..255 (0..2550 kPa)
-     * Scale: 10
-     * Offset: 0
-     */
-    uint8_t s1_pid_4_f_max_int_mani_abs_pres;
-
-    /**
-     * Range: 0..255 (-125..130 %)
-     * Scale: 1
-     * Offset: -125
-     */
-    uint8_t s1_pid_64_eng_pct_torq_ep3;
-
-    /**
-     * Range: 0..255 (-125..130 %)
-     * Scale: 1
-     * Offset: -125
-     */
-    uint8_t s1_pid_64_eng_pct_torq_ep4;
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t length;
+
+  /**
+   * Range: 0..15 (0..15 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t response;
+
+  /**
+   * Range: 0..15 (0..15 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t service;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t parameter_id_service01;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t parameter_id_service02;
+
+  /**
+   * PIDs supported [01 - 20] - Bit encoded [A7..D0] == [PID $01..PID $20]. See OBD-II PIDs on Wikipedia
+   *
+   * Range: 0..4294967295 (0..4294967295 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint32_t s1_pid_00_pi_ds_supported_01_20;
+
+  /**
+   * Monitor status since DTCs cleared (includes malfunction indicator lamp (MIL) status and number of DTCs)
+   *
+   * Range: 0..4294967295 (0..4294967295 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint32_t s1_pid_01_monitor_status;
+
+  /**
+   * Range: 0..65535 (0..65535 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint16_t s1_pid_02_freeze_dtc;
+
+  /**
+   * Range: 0..65535 (0..65535 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint16_t s1_pid_03_fuel_system_status;
+
+  /**
+   * Range: 0..254.9979600163198694410444716 (0..100 %)
+   * Scale: 0.39216
+   * Offset: 0
+   */
+  uint8_t s1_pid_04_calc_engine_load;
+
+  /**
+   * Range: 0..255 (-40..215 degC)
+   * Scale: 1
+   * Offset: -40
+   */
+  uint8_t s1_pid_05_engine_coolant_temp;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_06_short_fuel_trim_bank1;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_07_long_fuel_trim_bank1;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_08_short_fuel_trim_bank2;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_09_long_fuel_trim_bank2;
+
+  /**
+   * Range: 0..255 (0..765 kPa)
+   * Scale: 3
+   * Offset: 0
+   */
+  uint8_t s1_pid_0_a_fuel_pressure;
+
+  /**
+   * Range: 0..255 (0..255 kPa)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_0_b_intake_mani_abs_press;
+
+  /**
+   * Range: 0..65535 (0..16383.75 rpm)
+   * Scale: 0.25
+   * Offset: 0
+   */
+  uint16_t s1_pid_0_c_engine_rpm;
+
+  /**
+   * Range: 0..255 (0..255 km/h)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_0_d_vehicle_speed;
+
+  /**
+   * Range: 0..255 (-64..63.5 deg before TDC)
+   * Scale: 0.5
+   * Offset: -64
+   */
+  uint8_t s1_pid_0_e_timing_advance;
+
+  /**
+   * Range: 0..255 (-40..215 degC)
+   * Scale: 1
+   * Offset: -40
+   */
+  uint8_t s1_pid_0_f_intake_air_temperature;
+
+  /**
+   * Range: 0..65535 (0..655.35 grams/sec)
+   * Scale: 0.01
+   * Offset: 0
+   */
+  uint16_t s1_pid_10_maf_air_flow_rate;
+
+  /**
+   * Range: 0..254.9979600163198694410444716 (0..100 %)
+   * Scale: 0.39216
+   * Offset: 0
+   */
+  uint8_t s1_pid_11_throttle_position;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_12_cmd_sec_air_status;
+
+  /**
+   * Range: 0..255 (0..1.275 volts)
+   * Scale: 0.005
+   * Offset: 0
+   */
+  uint8_t s1_pid_14_oxy_sensor1_volt;
+
+  /**
+   * Range: 0..255 (0..1.275 volts)
+   * Scale: 0.005
+   * Offset: 0
+   */
+  uint8_t s1_pid_15_oxy_sensor2_volt;
+
+  /**
+   * Range: 0..255 (0..1.275 volts)
+   * Scale: 0.005
+   * Offset: 0
+   */
+  uint8_t s1_pid_16_oxy_sensor3_volt;
+
+  /**
+   * Range: 0..255 (0..1.275 volts)
+   * Scale: 0.005
+   * Offset: 0
+   */
+  uint8_t s1_pid_17_oxy_sensor4_volt;
+
+  /**
+   * Range: 0..255 (0..1.275 volts)
+   * Scale: 0.005
+   * Offset: 0
+   */
+  uint8_t s1_pid_18_oxy_sensor5_volt;
+
+  /**
+   * Range: 0..255 (0..1.275 volts)
+   * Scale: 0.005
+   * Offset: 0
+   */
+  uint8_t s1_pid_19_oxy_sensor6_volt;
+
+  /**
+   * Range: 0..255 (0..1.275 volts)
+   * Scale: 0.005
+   * Offset: 0
+   */
+  uint8_t s1_pid_1_a_oxy_sensor7_volt;
+
+  /**
+   * Range: 0..255 (0..1.275 volts)
+   * Scale: 0.005
+   * Offset: 0
+   */
+  uint8_t s1_pid_1_b_oxy_sensor8_volt;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_1_c_obd_standard;
+
+  /**
+   * Range: 0..65535 (0..65535 seconds)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint16_t s1_pid_1_f_time_since_eng_start;
+
+  /**
+   * PIDs supported [21 - 40] - Bit encoded [A7..D0] == [PID $21..PID $40]. See OBD-II PIDs on Wikipedia
+   *
+   * Range: 0..4294967295 (0..4294967295 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint32_t s1_pid_20_pi_ds_supported_21_40;
+
+  /**
+   * Range: 0..65535 (0..65535 km)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint16_t s1_pid_21_distance_mil_on;
+
+  /**
+   * Range: 0..65535 (0..5177.265 kPa)
+   * Scale: 0.079
+   * Offset: 0
+   */
+  uint16_t s1_pid_22_fuel_rail_pres;
+
+  /**
+   * Range: 0..65535 (0..655350 kPa)
+   * Scale: 10
+   * Offset: 0
+   */
+  uint16_t s1_pid_23_fuel_rail_gaug;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_24_oxy_sensor1_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_25_oxy_sensor2_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_26_oxy_sensor3_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_27_oxy_sensor4_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_28_oxy_sensor5_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_29_oxy_sensor6_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_2_a_oxy_sensor7_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_2_b_oxy_sensor8_faer;
+
+  /**
+   * Range: 0..255.0000000000000255000000000 (0..100 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint8_t s1_pid_2_c_cmd_egr;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_2_d_egr_error;
+
+  /**
+   * Range: 0..255.0000000000000255000000000 (0..100 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint8_t s1_pid_2_e_cmd_evap_purge;
+
+  /**
+   * Range: 0..255.0000000000000255000000000 (0..100 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint8_t s1_pid_2_f_fuel_tank_level;
+
+  /**
+   * Range: 0..255 (0..255 count)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_30_warm_ups_since_code_clear;
+
+  /**
+   * Range: 0..65535 (0..65535 km)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint16_t s1_pid_31_distance_since_code_clear;
+
+  /**
+   * Range: -32768..32767 (-8192..8191.75 Pa)
+   * Scale: 0.25
+   * Offset: 0
+   */
+  int16_t s1_pid_32_evap_sys_vapor_pres;
+
+  /**
+   * Range: 0..255 (0..255 kPa)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_33_abs_baro_pres;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_34_oxy_sensor1_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_35_oxy_sensor2_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_36_oxy_sensor3_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_37_oxy_sensor4_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_38_oxy_sensor5_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_39_oxy_sensor6_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_3_a_oxy_sensor7_faer;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_3_b_oxy_sensor8_faer;
+
+  /**
+   * Range: 0..65535 (-40..6513.5 degC)
+   * Scale: 0.1
+   * Offset: -40
+   */
+  uint16_t s1_pid_3_c_cat_temp_bank1_sens1;
+
+  /**
+   * Range: 0..65535 (-40..6513.5 degC)
+   * Scale: 0.1
+   * Offset: -40
+   */
+  uint16_t s1_pid_3_d_cat_temp_bank2_sens1;
+
+  /**
+   * Range: 0..65535 (-40..6513.5 degC)
+   * Scale: 0.1
+   * Offset: -40
+   */
+  uint16_t s1_pid_3_e_cat_temp_bank1_sens2;
+
+  /**
+   * Range: 0..65535 (-40..6513.5 degC)
+   * Scale: 0.1
+   * Offset: -40
+   */
+  uint16_t s1_pid_3_f_cat_temp_bank2_sens2;
+
+  /**
+   * PIDs supported [41 - 60] - Bit encoded [A7..D0] == [PID $41..PID $60]. See OBD-II PIDs on Wikipedia
+   *
+   * Range: 0..4294967295 (0..4294967295 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint32_t s1_pid_40_pi_ds_supported_41_60;
+
+  /**
+   * Range: 0..4294967295 (0..4294967295 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint32_t s1_pid_41_mon_status_drive_cycle;
+
+  /**
+   * Range: 0..65535 (0..65.535 V)
+   * Scale: 0.001
+   * Offset: 0
+   */
+  uint16_t s1_pid_42_control_module_volt;
+
+  /**
+   * Range: 0..65535.00000000000655350000000 (0..25700 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint16_t s1_pid_43_abs_load_value;
+
+  /**
+   * Range: 0..65536 (0..2 ratio)
+   * Scale: 3.0517578125e-05
+   * Offset: 0
+   */
+  uint16_t s1_pid_44_fuel_air_cmd_equiv;
+
+  /**
+   * Range: 0..255.0000000000000255000000000 (0..100 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint8_t s1_pid_45_rel_throttle_pos;
+
+  /**
+   * Range: 0..255 (-40..215 degC)
+   * Scale: 1
+   * Offset: -40
+   */
+  uint8_t s1_pid_46_ambient_air_temp;
+
+  /**
+   * Range: 0..255.0000000000000255000000000 (0..100 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint8_t s1_pid_47_abs_throttle_pos_b;
+
+  /**
+   * Range: 0..255.0000000000000255000000000 (0..100 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint8_t s1_pid_48_abs_throttle_pos_c;
+
+  /**
+   * Range: 0..255.0000000000000255000000000 (0..100 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint8_t s1_pid_49_abs_throttle_pos_d;
+
+  /**
+   * Range: 0..255.0000000000000255000000000 (0..100 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint8_t s1_pid_4_a_abs_throttle_pos_e;
+
+  /**
+   * Range: 0..255.0000000000000255000000000 (0..100 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint8_t s1_pid_4_b_abs_throttle_pos_f;
+
+  /**
+   * Range: 0..255.0000000000000255000000000 (0..100 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint8_t s1_pid_4_c_cmd_throttle_act;
+
+  /**
+   * Range: 0..65535 (0..65535 minutes)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint16_t s1_pid_4_d_time_run_mil_on;
+
+  /**
+   * Range: 0..65535 (0..65535 minutes)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint16_t s1_pid_4_e_time_since_code_clear;
+
+  /**
+   * Range: 0..255 (0..255 ratio)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_4_f_max_faer;
+
+  /**
+   * Range: 0..255 (0..2550 g/s)
+   * Scale: 10
+   * Offset: 0
+   */
+  uint8_t s1_pid_50_max_air_flow_maf;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_51_fuel_type;
+
+  /**
+   * Range: 0..255.0000000000000255000000000 (0..100 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint8_t s1_pid_52_ethanol_fuel_pct;
+
+  /**
+   * Range: 0..65535 (0..327.675 kPa)
+   * Scale: 0.005
+   * Offset: 0
+   */
+  uint16_t s1_pid_53_abs_evap_sys_vap_pres;
+
+  /**
+   * Range: 0..65535 (-32767..32768 Pa)
+   * Scale: 1
+   * Offset: -32767
+   */
+  uint16_t s1_pid_54_evap_sys_vap_pres;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_55_short_sec_oxy_trim_bank1;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_56_long_sec_oxy_trim_bank1;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_57_short_sec_oxy_trim_bank2;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_58_long_sec_oxy_trim_bank2;
+
+  /**
+   * Range: 0..65535 (0..655350 kPa)
+   * Scale: 10
+   * Offset: 0
+   */
+  uint16_t s1_pid_59_fuel_rail_abs_pres;
+
+  /**
+   * Range: 0..255.0000000000000255000000000 (0..100 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint8_t s1_pid_5_a_rel_accel_pedal_pos;
+
+  /**
+   * Range: 0..255.0000000000000255000000000 (0..100 %)
+   * Scale: 0.392156862745098
+   * Offset: 0
+   */
+  uint8_t s1_pid_5_b_hybr_bat_pack_rem_life;
+
+  /**
+   * Range: 0..255 (-40..215 degC)
+   * Scale: 1
+   * Offset: -40
+   */
+  uint8_t s1_pid_5_c_engine_oil_temp;
+
+  /**
+   * Range: 0..65535 (-210..301.9921875 deg)
+   * Scale: 0.0078125
+   * Offset: -210
+   */
+  uint16_t s1_pid_5_d_fuel_injection_timing;
+
+  /**
+   * Range: 0..65535 (0..3276.75 L/h)
+   * Scale: 0.05
+   * Offset: 0
+   */
+  uint16_t s1_pid_5_e_engine_fuel_rate;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_5_f_emission_req;
+
+  /**
+   * PIDs supported [61 - 80] - Bit encoded [A7..D0] == [PID $61..PID $80]. See OBD-II PIDs on Wikipedia
+   *
+   * Range: 0..4294967295 (0..4294967295 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint32_t s1_pid_60_pi_ds_supported_61_80;
+
+  /**
+   * Range: 0..255 (-125..130 %)
+   * Scale: 1
+   * Offset: -125
+   */
+  uint8_t s1_pid_61_demand_eng_torq_pct;
+
+  /**
+   * Range: 0..255 (-125..130 %)
+   * Scale: 1
+   * Offset: -125
+   */
+  uint8_t s1_pid_62_actual_eng_torq_pct;
+
+  /**
+   * Range: 0..65535 (0..65535 Nm)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint16_t s1_pid_63_eng_ref_torq;
+
+  /**
+   * Range: 0..255 (-125..130 %)
+   * Scale: 1
+   * Offset: -125
+   */
+  uint8_t s1_pid_64_eng_pct_torq_idle;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_65_aux_input_output;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_66_maf_sensor;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_67_engine_coolant_temp;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_68_intake_air_temp_sens;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_69_cmd_egr_egr_error;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_6_a_cmd_diesel_int_air;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_6_b_exhaust_gas_temp;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_6_c_cmd_throttle_act_rel;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_6_d_fuel_pres_contr_sys;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_6_e_inj_pres_contr_sys;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_6_f_turbo_compr_pres;
+
+  /**
+   * Range: 0..255 (0..255 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_70_boost_pres_cntrl;
+
+  /**
+   * PIDs supported [81 - A0] - Bit encoded [A7..D0] == [PID $81..PID $A0]. See OBD-II PIDs on Wikipedia
+   *
+   * Range: 0..4294967295 (0..4294967295 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint32_t s1_pid_80_pi_ds_supported_81_a0;
+
+  /**
+   * Range: 0..255 (-125..130 %)
+   * Scale: 1
+   * Offset: -125
+   */
+  uint8_t s1_pid_8_e_eng_friction_pct_torq;
+
+  /**
+   * PIDs supported [A1 - C0] - Bit encoded [A7..D0] == [PID $A1..PID $C0]. See OBD-II PIDs on Wikipedia
+   *
+   * Range: 0..4294967295 (0..4294967295 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint32_t s1_pid_a0_pi_ds_supported_a1_c0;
+
+  /**
+   * PIDs supported [C1 - E0] - Bit encoded [A7..D0] == [PID $C1..PID $E0]. See OBD-II PIDs on Wikipedia
+   *
+   * Range: 0..4294967295 (0..4294967295 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint32_t s1_pid_c0_pi_ds_supported_c1_e0;
+
+  /**
+   * Range: 0..65535 (0..65535 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint16_t s2_pid_02_freeze_dtc;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_14_oxy_sensor1_stft;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_15_oxy_sensor2_stft;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_16_oxy_sensor3_stft;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_17_oxy_sensor4_stft;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_18_oxy_sensor5_stft;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_19_oxy_sensor6_stft;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_1_a_oxy_sensor7_stft;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_1_b_oxy_sensor8_stft;
+
+  /**
+   * Range: 0..255 (0..255 V)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_4_f_max_oxy_sens_vol;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_55_short_sec_oxy_trim_bank3;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_56_long_sec_oxy_trim_bank3;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_57_short_sec_oxy_trim_bank4;
+
+  /**
+   * Range: 0..255 (-100..99.21875 %)
+   * Scale: 0.78125
+   * Offset: -100
+   */
+  uint8_t s1_pid_58_long_sec_oxy_trim_bank4;
+
+  /**
+   * Range: 0..255 (-125..130 %)
+   * Scale: 1
+   * Offset: -125
+   */
+  uint8_t s1_pid_64_eng_pct_torq_ep1;
+
+  /**
+   * Range: 0..16384 (0..2 volts)
+   * Scale: 0.0001220703125
+   * Offset: 0
+   */
+  uint16_t s1_pid_24_oxy_sensor1_volt;
+
+  /**
+   * Range: 0..65536 (0..8 volts)
+   * Scale: 0.0001220703125
+   * Offset: 0
+   */
+  uint16_t s1_pid_25_oxy_sensor2_volt;
+
+  /**
+   * Range: 0..65536 (0..8 volts)
+   * Scale: 0.0001220703125
+   * Offset: 0
+   */
+  uint16_t s1_pid_26_oxy_sensor3_volt;
+
+  /**
+   * Range: 0..65536 (0..8 volts)
+   * Scale: 0.0001220703125
+   * Offset: 0
+   */
+  uint16_t s1_pid_27_oxy_sensor4_volt;
+
+  /**
+   * Range: 0..65536 (0..8 volts)
+   * Scale: 0.0001220703125
+   * Offset: 0
+   */
+  uint16_t s1_pid_28_oxy_sensor5_volt;
+
+  /**
+   * Range: 0..65536 (0..8 volts)
+   * Scale: 0.0001220703125
+   * Offset: 0
+   */
+  uint16_t s1_pid_29_oxy_sensor6_volt;
+
+  /**
+   * Range: 0..65536 (0..8 volts)
+   * Scale: 0.0001220703125
+   * Offset: 0
+   */
+  uint16_t s1_pid_2_a_oxy_sensor7_volt;
+
+  /**
+   * Range: 0..65536 (0..8 volts)
+   * Scale: 0.0001220703125
+   * Offset: 0
+   */
+  uint16_t s1_pid_2_b_oxy_sensor8_volt;
+
+  /**
+   * Range: 0..65536 (-128..128 mA)
+   * Scale: 0.00390625
+   * Offset: -128
+   */
+  uint16_t s1_pid_34_oxy_sensor1_crnt;
+
+  /**
+   * Range: 0..65536 (-128..128 mA)
+   * Scale: 0.00390625
+   * Offset: -128
+   */
+  uint16_t s1_pid_35_oxy_sensor2_crnt;
+
+  /**
+   * Range: 0..65536 (-128..128 mA)
+   * Scale: 0.00390625
+   * Offset: -128
+   */
+  uint16_t s1_pid_36_oxy_sensor3_crnt;
+
+  /**
+   * Range: 0..65536 (-128..128 mA)
+   * Scale: 0.00390625
+   * Offset: -128
+   */
+  uint16_t s1_pid_37_oxy_sensor4_crnt;
+
+  /**
+   * Range: 0..65536 (-128..128 mA)
+   * Scale: 0.00390625
+   * Offset: -128
+   */
+  uint16_t s1_pid_38_oxy_sensor5_crnt;
+
+  /**
+   * Range: 0..65536 (-128..128 mA)
+   * Scale: 0.00390625
+   * Offset: -128
+   */
+  uint16_t s1_pid_39_oxy_sensor6_crnt;
+
+  /**
+   * Range: 0..65536 (-128..128 mA)
+   * Scale: 0.00390625
+   * Offset: -128
+   */
+  uint16_t s1_pid_3_a_oxy_sensor7_crnt;
+
+  /**
+   * Range: 0..65536 (-128..128 mA)
+   * Scale: 0.00390625
+   * Offset: -128
+   */
+  uint16_t s1_pid_3_b_oxy_sensor8_crnt;
+
+  /**
+   * Range: 0..255 (0..255 mA)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t s1_pid_4_f_max_oxy_sens_crnt;
+
+  /**
+   * Range: 0..255 (-125..130 %)
+   * Scale: 1
+   * Offset: -125
+   */
+  uint8_t s1_pid_64_eng_pct_torq_ep2;
+
+  /**
+   * Range: 0..255 (0..2550 kPa)
+   * Scale: 10
+   * Offset: 0
+   */
+  uint8_t s1_pid_4_f_max_int_mani_abs_pres;
+
+  /**
+   * Range: 0..255 (-125..130 %)
+   * Scale: 1
+   * Offset: -125
+   */
+  uint8_t s1_pid_64_eng_pct_torq_ep3;
+
+  /**
+   * Range: 0..255 (-125..130 %)
+   * Scale: 1
+   * Offset: -125
+   */
+  uint8_t s1_pid_64_eng_pct_torq_ep4;
 };
 
 /**
@@ -1480,9 +1480,9 @@ struct obd2_obd2_t {
  * @return Size of packed data, or negative error code.
  */
 int obd2_obd2_request_pack(
-    uint8_t *dst_p,
-    const struct obd2_obd2_request_t *src_p,
-    size_t size);
+  uint8_t *dst_p,
+  const struct obd2_obd2_request_t *src_p,
+  size_t size);
 
 /**
  * Unpack message OBD2_Request.
@@ -1494,9 +1494,9 @@ int obd2_obd2_request_pack(
  * @return zero(0) or negative error code.
  */
 int obd2_obd2_request_unpack(
-    struct obd2_obd2_request_t *dst_p,
-    const uint8_t *src_p,
-    size_t size);
+  struct obd2_obd2_request_t *dst_p,
+  const uint8_t *src_p,
+  size_t size);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -1562,9 +1562,9 @@ bool obd2_obd2_request_pid_is_in_range(uint8_t value);
  * @return Size of packed data, or negative error code.
  */
 int obd2_obd2_iso_tp_pack(
-    uint8_t *dst_p,
-    const struct obd2_obd2_iso_tp_t *src_p,
-    size_t size);
+  uint8_t *dst_p,
+  const struct obd2_obd2_iso_tp_t *src_p,
+  size_t size);
 
 /**
  * Unpack message OBD2_ISO_TP.
@@ -1576,9 +1576,9 @@ int obd2_obd2_iso_tp_pack(
  * @return zero(0) or negative error code.
  */
 int obd2_obd2_iso_tp_unpack(
-    struct obd2_obd2_iso_tp_t *dst_p,
-    const uint8_t *src_p,
-    size_t size);
+  struct obd2_obd2_iso_tp_t *dst_p,
+  const uint8_t *src_p,
+  size_t size);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -1860,9 +1860,9 @@ bool obd2_obd2_iso_tp_fc_st_us_is_in_range(uint8_t value);
  * @return Size of packed data, or negative error code.
  */
 int obd2_obd2_pack(
-    uint8_t *dst_p,
-    const struct obd2_obd2_t *src_p,
-    size_t size);
+  uint8_t *dst_p,
+  const struct obd2_obd2_t *src_p,
+  size_t size);
 
 /**
  * Unpack message OBD2.
@@ -1874,9 +1874,9 @@ int obd2_obd2_pack(
  * @return zero(0) or negative error code.
  */
 int obd2_obd2_unpack(
-    struct obd2_obd2_t *dst_p,
-    const uint8_t *src_p,
-    size_t size);
+  struct obd2_obd2_t *dst_p,
+  const uint8_t *src_p,
+  size_t size);
 
 /**
  * Encode given signal by applying scaling and offset.
