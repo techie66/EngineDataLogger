@@ -250,6 +250,8 @@ int main(int argc, char *argv[])
       log_file = log_file_tmp;
     } else {
       log_file = args_info.output_file_arg;
+      if (strcmp(args_info.output_file_arg, "-") == 0 )
+        log_file = "/dev/stdout";
     }
 
     // Parse format string
@@ -258,6 +260,8 @@ int main(int argc, char *argv[])
     while (pt != NULL) {
       if ( strcmp(pt, "rpm") == 0 )
         log_format.push_back(FMT_RPM);
+      else if ( strcmp(pt, "ig_rpm") == 0 )
+        log_format.push_back(FMT_IG_RPM);
       else if ( strcmp(pt, "alt_rpm") == 0 )
         log_format.push_back(FMT_ALT_RPM);
       else if ( strcmp(pt, "speed") == 0 )
@@ -296,6 +300,18 @@ int main(int argc, char *argv[])
         log_format.push_back(FMT_ADVANCE4);
       else if ( strcmp(pt, "time") == 0 )
         log_format.push_back(FMT_TIME);
+      else if ( strcmp(pt, "yaw") == 0 )
+        log_format.push_back(FMT_YAW);
+      else if ( strcmp(pt, "pitch") == 0 )
+        log_format.push_back(FMT_PITCH);
+      else if ( strcmp(pt, "roll") == 0 )
+        log_format.push_back(FMT_ROLL);
+      else if ( strcmp(pt, "acc_forward") == 0 )
+        log_format.push_back(FMT_ACC_FORWARD);
+      else if ( strcmp(pt, "acc_side") == 0 )
+        log_format.push_back(FMT_ACC_SIDE);
+      else if ( strcmp(pt, "acc_vert") == 0 )
+        log_format.push_back(FMT_ACC_VERT);
       else {
         error_message (ERROR, "ERROR:OPTIONS: Invalid output-file-format");
         return -1;
@@ -415,9 +431,10 @@ int main(int argc, char *argv[])
   System_CMD	db_from_cmd = NO_CMD;
   #endif /* FEAT_DASHBOARD */
 
-  bool		engineRunning = false;
-  bool		o2_manual = false;
-  struct		timeval log_time_last;
+  bool    engineRunning = false;
+  bool    o2_manual = false;
+  struct  timeval log_time_last;
+  gettimeofday(&log_time_last, NULL);
   while (!time_to_quit) {
     int	length;
     // Read all inputs
@@ -830,7 +847,8 @@ int main(int argc, char *argv[])
     log_data.oil_pres = enData.pres_oil;
     log_data.alt_rpm = enData.rpm;
     log_data.speed = enData.speed;
-    log_data.systemvoltage = enData.batteryVoltage;
+    log_data.systemvoltage = fcData.systemVoltage;
+    log_data.batteryvoltage = enData.batteryVoltage;
     if ( args_info.output_file_given ) {
       if ( ( (currtime.tv_sec - log_time_last.tv_sec) * 1000000 + currtime.tv_usec - log_time_last.tv_usec ) > LOG_INTERVAL ) {
         log_time_last.tv_sec = currtime.tv_sec;
@@ -838,13 +856,13 @@ int main(int argc, char *argv[])
         for (std::vector<log_fmt_data>::iterator it = log_format.begin() ; it != log_format.end(); ++it) {
           switch (*it) {
             case FMT_RPM:
-              fprintf(fd_log, "%d,", log_data.ig_rpm);
+              fprintf(fd_log, "%4d,", log_data.ig_rpm);
               break;
             case FMT_ALT_RPM:
-              fprintf(fd_log, "%d,", log_data.alt_rpm);
+              fprintf(fd_log, "%4d,", log_data.alt_rpm);
               break;
             case FMT_SPEED:
-              fprintf(fd_log, "%.2f,", log_data.speed);
+              fprintf(fd_log, "%6.2f,", log_data.speed);
               break;
             case FMT_ODOMETER:
               fprintf(fd_log, "%d,", log_data.odometer);
@@ -853,16 +871,16 @@ int main(int argc, char *argv[])
               fprintf(fd_log, "%d,", log_data.trip);
               break;
             case FMT_SYSTEMVOLTAGE:
-              fprintf(fd_log, "%.2f,", log_data.systemvoltage);
+              fprintf(fd_log, "%5.2f,", log_data.systemvoltage);
               break;
             case FMT_BATTERYVOLTAGE:
-              fprintf(fd_log, "%.2f,", log_data.systemvoltage);
+              fprintf(fd_log, "%5.2f,", log_data.batteryvoltage);
               break;
             case FMT_OIL_TEMP:
-              fprintf(fd_log, "%.2f,", log_data.oil_temp);
+              fprintf(fd_log, "%5.2f,", log_data.oil_temp);
               break;
             case FMT_OIL_PRES:
-              fprintf(fd_log, "%.2f,", log_data.oil_pres);
+              fprintf(fd_log, "%5.2f,", log_data.oil_pres);
               break;
             case FMT_BLINK_LEFT:
               fprintf(fd_log, "%d,", log_data.blink_left);
@@ -871,28 +889,46 @@ int main(int argc, char *argv[])
               fprintf(fd_log, "%d,", log_data.blink_right);
               break;
             case FMT_LAMBDA:
-              fprintf(fd_log, "%.2f,", log_data.lambda / 100.0);
+              fprintf(fd_log, "%5.2f,", log_data.lambda / 100.0);
               break;
             case FMT_MAP_KPA:
-              fprintf(fd_log, "%d,", log_data.map_kpa);
+              fprintf(fd_log, "%3d,", log_data.map_kpa);
               break;
             case FMT_TPS_PERCENT:
-              fprintf(fd_log, "%d,", log_data.tps_percent);
+              fprintf(fd_log, "%3d,", log_data.tps_percent);
               break;
             case FMT_ENGINERUNNING:
               fprintf(fd_log, "%d,", log_data.engineRunning);
               break;
             case FMT_ADVANCE1:
-              fprintf(fd_log, "%d,", log_data.advance1);
+              fprintf(fd_log, "%2d,", log_data.advance1);
               break;
             case FMT_ADVANCE2:
-              fprintf(fd_log, "%d,", log_data.advance2);
+              fprintf(fd_log, "%2d,", log_data.advance2);
               break;
             case FMT_ADVANCE3:
-              fprintf(fd_log, "%d,", log_data.advance3);
+              fprintf(fd_log, "%2d,", log_data.advance3);
               break;
             case FMT_ADVANCE4:
-              fprintf(fd_log, "%d,", log_data.advance4);
+              fprintf(fd_log, "%2d,", log_data.advance4);
+              break;
+            case FMT_YAW:
+              fprintf(fd_log, "%7.2f,", log_data.yaw);
+              break;
+            case FMT_PITCH:
+              fprintf(fd_log, "%7.2f,", log_data.pitch);
+              break;
+            case FMT_ROLL:
+              fprintf(fd_log, "%7.2f,", log_data.roll);
+              break;
+            case FMT_ACC_FORWARD:
+              fprintf(fd_log, "%6.3f,", log_data.acc_forward);
+              break;
+            case FMT_ACC_SIDE:
+              fprintf(fd_log, "%6.3f,", log_data.acc_side);
+              break;
+            case FMT_ACC_VERT:
+              fprintf(fd_log, "%6.3f,", log_data.acc_vert);
               break;
             case FMT_TIME:
               fprintf(fd_log, "%s.%06ld,", time_buf, currtime.tv_usec);

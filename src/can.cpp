@@ -50,8 +50,23 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
       _status = EXIT_SUCCESS;
       struct imu_can_body_position_t st_body_pos;
       int status_unpack = imu_can_body_position_unpack(&st_body_pos, frame.data, sizeof(frame.data));
-      //log_data.body_roll = t_body_pos.roll_angle // Both scaled by 0.01, no conversion necessary
-      error_message(DEBUG, "CAN:Body Roll: %f", imu_can_body_position_roll_angle_decode(st_body_pos.roll_angle));
+      // Physical mounting may require changing up pitch and roll.
+      log_data.yaw = imu_can_body_position_yaw_angle_decode(st_body_pos.yaw_angle);
+      log_data.pitch = imu_can_body_position_pitch_angle_decode(st_body_pos.pitch_angle);
+      log_data.roll = imu_can_body_position_roll_angle_decode(st_body_pos.roll_angle);
+      error_message(INFO, "CAN:Body Roll: %f", log_data.roll);
+    }
+    break;
+
+    case IMU_CAN_BODY_ACCEL_FRAME_ID: {
+      _status = EXIT_SUCCESS;
+      struct imu_can_body_accel_t st_body_acc;
+      int status_unpack = imu_can_body_accel_unpack(&st_body_acc, frame.data, sizeof(frame.data));
+      // Physical mounting may require changing up x and y
+      log_data.acc_forward = imu_can_body_accel_acc_x_decode(st_body_acc.acc_x);
+      log_data.acc_side = imu_can_body_accel_acc_y_decode(st_body_acc.acc_y);
+      log_data.acc_vert = imu_can_body_accel_acc_z_decode(st_body_acc.acc_z);
+      error_message(INFO, "CAN:IMU X Accel: %f", log_data.acc_forward);
     }
     break;
 

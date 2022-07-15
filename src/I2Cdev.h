@@ -32,7 +32,7 @@ THE SOFTWARE.
 
 #ifndef __cplusplus
 #error A C++ compiler is required!
-#endif 
+#endif
 
 #include <bcm2835.h>
 #include <math.h> // required for BMP180
@@ -40,37 +40,38 @@ THE SOFTWARE.
 #include <string.h> // required for MPU6060
 
 
-#define set_I2C_pins  false  
-/* used to boolean for setting RPi I2C pins P1-03 (SDA) and P1-05 (SCL) to alternate function ALT0, which enables those pins for I2C interface. 
+#define set_I2C_pins  false
+/* used to boolean for setting RPi I2C pins P1-03 (SDA) and P1-05 (SCL) to alternate function ALT0, which enables those pins for I2C interface.
    setI2Cpin should be false, if the I2C are already configured in alt mode ... */
 
 #define i2c_baudrate 400000
-//uint32_t i2c_baudrate = 400000 ; //400 kHz, 
+//uint32_t i2c_baudrate = 400000 ; //400 kHz,
 
-class I2Cdev {
+class I2Cdev
+{
  public:
-        I2Cdev();
+  I2Cdev();
 
-        static void initialize();
-        static void enable(bool isEnabled);
+  static void initialize();
+  static void enable(bool isEnabled);
 
-        static int8_t readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data);
-        //TODO static int8_t readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data);
-        static int8_t readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data);
-        //TODO static int8_t readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t *data);
-        static int8_t readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data);
-        static int8_t readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data);
-        static int8_t readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
-        static int8_t readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data);
+  static int8_t readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data);
+  //TODO static int8_t readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data);
+  static int8_t readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data);
+  //TODO static int8_t readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t *data);
+  static int8_t readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data);
+  static int8_t readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data);
+  static int8_t readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
+  static int8_t readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data);
 
-        static bool writeBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t data);
-        //TODO static bool writeBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t data);
-        static bool writeBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
-        //TODO static bool writeBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t data);
-        static bool writeByte(uint8_t devAddr, uint8_t regAddr, uint8_t data);
-        static bool writeWord(uint8_t devAddr, uint8_t regAddr, uint16_t data);
-        static bool writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
-        static bool writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data);
+  static bool writeBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t data);
+  //TODO static bool writeBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t data);
+  static bool writeBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
+  //TODO static bool writeBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t data);
+  static bool writeByte(uint8_t devAddr, uint8_t regAddr, uint8_t data);
+  static bool writeWord(uint8_t devAddr, uint8_t regAddr, uint16_t data);
+  static bool writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
+  static bool writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data);
 };
 
 #endif /* _I2CDEV_H_ */

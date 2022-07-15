@@ -36,7 +36,13 @@ BS_:
 BU_:
 
 
-BO_ 2632777600 BODY_POSITION: 8 IMU
+BO_ 2632777600 BODY_POSITION: 5 IMU
  SG_ Roll_angle : 0|12@1+ (0.1,-180) [-180|180] "deg" GYRO
  SG_ Pitch_angle : 12|12@1+ (0.1,-180) [-180|180] "deg" GYRO
+ SG_ Yaw_angle : 24|13@1+ (0.1,-360) [-360|360] "deg" GYRO
+
+BO_ 2632777601 BODY_ACCEL: 6 IMU
+ SG_ ACC_X : 0|16@1+ (0.001,-20) [-20|20] "m/s2" ACC
+ SG_ ACC_Y : 16|16@1+ (0.001,-20) [-20|20] "m/s2" ACC
+ SG_ ACC_Z : 32|16@1+ (0.001,-20) [-20|20] "m/s2" ACC
 

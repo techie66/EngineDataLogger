@@ -50,7 +50,7 @@ const uint8_t		CLUTCH_DISENGAGED = 1 << 2,
 // CmdA flags
 const uint8_t		ENGINE_RUNNING = 1 << 7;
 
-struct			fc_data {
+struct fc_data {
   uint8_t serialCmdD = 0,
           serialCmdB = 0,
           serialCmdC = 0,
@@ -85,33 +85,70 @@ enum System_CMD {
   O2MANOFF
 };
 
-// TODO make members Build-time optional
+/*
+ * @brief Loggable data
+ */
 struct	bike_data {
+  /// RPM. Best of available sources.
   int rpm;
+  /// RPM. From Ignitech TCIP-4
   int ig_rpm;
+  /// RPM. From EngineData device.
   int32_t alt_rpm;
+  /// Vehicle Speed
   float speed;
+  /// Odometer. Fixed point 0.01 scale (divide by 100 for real value)
   uint32_t odometer;
+  /// Resettable Trip Distance. Fixed point 0.01 scale (divide by 100 for real value)
   uint32_t trip;
+  /// Voltage at Front Controls.
   float systemvoltage;
+  /// Voltage on EngineData board
   float batteryvoltage;
+  /// Oil temperature in degrees Farenheight
   float oil_temp;
+  /// Guage pressure of oil in psi
   float oil_pres;
+  /// Blinker currently flashing (does not indicate actual lamp status)
   bool blink_left;
+  /// Blinker currently flashing (does not indicate actual lamp status)
   bool blink_right;
-  /// Lambda. Fixed point number 2 places after decimal, 0.01 (divide by 100)
+  /// Lambda. Fixed point 0.01 scale (divide by 100 for real value)
   uint16_t lambda;
+  /// Manifold Absolute Pressure. kilo Pascals
   int map_kpa;
+  /// Throttle Position Sensor 0-100%
   int tps_percent;
+  /// Engine is considered running or not
   bool engineRunning;
+  /// Ignition advance in degrees
   uint8_t advance1;
+  /// Ignition advance in degrees
   uint8_t advance2;
+  /// Ignition advance in degrees
   uint8_t advance3;
+  /// Ignition advance in degrees
   uint8_t advance4;
+
+  /// Yaw. Rotation orthoganal to the ground.
+  float yaw;
+  /// Pitch. Rotation front to back.
+  float pitch;
+  /// Roll. Rotation side to side. (ie. "lean angle")
+  float roll;
+
+  /// Linear Acceleration. Forward and back.
+  double acc_forward;
+  /// Linear Acceleration. Side to Side.
+  double acc_side;
+  /// Linear Acceleration. Up and down.
+  double acc_vert;
 };
 
+/// Enumeration of loggable data. These get pushed into a vector to represent user choice in order.
 typedef enum {
   FMT_RPM,
+  FMT_IG_RPM,
   FMT_ALT_RPM,
   FMT_SPEED,
   FMT_ODOMETER,
@@ -130,6 +167,12 @@ typedef enum {
   FMT_ADVANCE1,
   FMT_ADVANCE2,
   FMT_ADVANCE3,
-  FMT_ADVANCE4
+  FMT_ADVANCE4,
+  FMT_YAW,
+  FMT_PITCH,
+  FMT_ROLL,
+  FMT_ACC_FORWARD,
+  FMT_ACC_SIDE,
+  FMT_ACC_VERT
 } log_fmt_data;
 #endif
