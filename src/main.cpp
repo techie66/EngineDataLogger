@@ -35,6 +35,10 @@
 #include "cmdline.h"
 #include "hexconvert.h"
 
+#ifdef FEAT_POWERCALC
+#include "powercalc.h"
+#endif /* FEAT_POWERCALC */
+
 #ifdef FEAT_I2C
 #include <unistd.h>			//Needed for I2C port
 #include <fcntl.h>			//Needed for I2C port
@@ -255,6 +259,7 @@ int main(int argc, char *argv[])
     }
 
     // Parse format string
+    // TODO strip out whitespace when comparing
     char *pt;
     pt = strtok(args_info.output_file_format_arg, ",");
     while (pt != NULL) {
@@ -312,6 +317,8 @@ int main(int argc, char *argv[])
         log_format.push_back(FMT_ACC_SIDE);
       else if ( strcmp(pt, "acc_vert") == 0 )
         log_format.push_back(FMT_ACC_VERT);
+      else if ( strcmp(pt, "power") == 0 )
+        log_format.push_back(FMT_POWER);
       else {
         error_message (ERROR, "ERROR:OPTIONS: Invalid output-file-format");
         return -1;
@@ -849,6 +856,7 @@ int main(int argc, char *argv[])
     log_data.speed = enData.speed;
     log_data.systemvoltage = fcData.systemVoltage;
     log_data.batteryvoltage = enData.batteryVoltage;
+    log_data.power = trailing_average_power(log_data);
     if ( args_info.output_file_given ) {
       if ( ( (currtime.tv_sec - log_time_last.tv_sec) * 1000000 + currtime.tv_usec - log_time_last.tv_usec ) > LOG_INTERVAL ) {
         log_time_last.tv_sec = currtime.tv_sec;
@@ -922,13 +930,16 @@ int main(int argc, char *argv[])
               fprintf(fd_log, "%7.2f,", log_data.roll);
               break;
             case FMT_ACC_FORWARD:
-              fprintf(fd_log, "%6.3f,", log_data.acc_forward);
+              fprintf(fd_log, "%7.3f,", log_data.acc_forward);
               break;
             case FMT_ACC_SIDE:
-              fprintf(fd_log, "%6.3f,", log_data.acc_side);
+              fprintf(fd_log, "%7.3f,", log_data.acc_side);
               break;
             case FMT_ACC_VERT:
-              fprintf(fd_log, "%6.3f,", log_data.acc_vert);
+              fprintf(fd_log, "%7.3f,", log_data.acc_vert);
+              break;
+            case FMT_POWER:
+              fprintf(fd_log, "%5d,", log_data.power);
               break;
             case FMT_TIME:
               fprintf(fd_log, "%s.%06ld,", time_buf, currtime.tv_usec);

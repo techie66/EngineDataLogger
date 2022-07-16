@@ -41,7 +41,7 @@ const char *gengetopt_args_info_detailed_help[] = {
   "  -o, --output-file=filename    Output file for CSV logging\n                                  (default=`/dev/null')",
   "  -d, --output-file-date        Insert date and time into output filename.",
   "      --output-file-format=format\n                                Format string of output CSV file",
-  "  \n  		Comma-separated list of loggable values. Valid items are: rpm, alt_rpm,\n  speed, map_kpa, tps_percent, odometer, trip, \n  		systemvoltage, batteryvoltage, oil_temp, oil_pres, lambda,\n  enginerunning(bool), blink_left(bool), blink_right(bool), \n  		advance1, advance2, advance3, advance4, and time(current date/time)",
+  "  \n  		Comma-separated list of loggable values. Valid items are: rpm, ig_rpm,\n  alt_rpm, speed, map_kpa, tps_percent,\n      odometer, trip, systemvoltage, batteryvoltage, oil_temp, oil_pres,\n  lambda, enginerunning(bool), blink_left(bool),\n      blink_right(bool), advance1, advance2, advance3, advance4, yaw, pitch,\n  roll, acc_forward, acc_side, acc_vert, power,\n      and time(current date/time)",
   "  -g, --gear-ratios=STRING      RPM/Speed ratios. Comma separated. (Eg. -g\n                                  \"175,122,95,78,67\")",
   "  -v, --v                       Verbose output. Specify multiple times for\n                                  increasing verbosity.",
   "      --verbose=VERBOSITY       Set level of verbosity explicitly. \n                                  (Overrides -v)\n                                    (possible values=\"NONE\", \"ERROR\",\n                                  \"WARN\", \"INFO\", \"DEBUG\"\n                                  default=`ERROR')",

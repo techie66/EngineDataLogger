@@ -33,6 +33,7 @@
 #define TIME_BUF_LEN 256
 #define LOG_FILE_LEN 4096
 #define FC_CMD_SIZE 8
+#define WATTS_PER_HPI 745.6998715823
 
 // CmdD flags
 const uint8_t		BRAKE_ON = 1 << 2,
@@ -143,6 +144,9 @@ struct	bike_data {
   double acc_side;
   /// Linear Acceleration. Up and down.
   double acc_vert;
+
+  /// Calculated power (HP-Imperial)
+  int power;
 };
 
 /// Enumeration of loggable data. These get pushed into a vector to represent user choice in order.
@@ -173,6 +177,7 @@ typedef enum {
   FMT_ROLL,
   FMT_ACC_FORWARD,
   FMT_ACC_SIDE,
-  FMT_ACC_VERT
+  FMT_ACC_VERT,
+  FMT_POWER
 } log_fmt_data;
 #endif

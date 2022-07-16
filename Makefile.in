@@ -104,14 +104,18 @@ bin_PROGRAMS = enginedatalogger$(EXEEXT)
 @DASHBOARD_TRUE@		    src/cb1100f-app_generated.h \
 @DASHBOARD_TRUE@		    src/bluetooth.h
 
-@FRONTCONTROLS_TRUE@am__append_3 = \
+@POWERCALC_TRUE@am__append_3 = \
+@POWERCALC_TRUE@		    src/powercalc.cpp \
+@POWERCALC_TRUE@		    src/powercalc.h
+
+@FRONTCONTROLS_TRUE@am__append_4 = \
 @FRONTCONTROLS_TRUE@		    src/front_controls.cpp \
 @FRONTCONTROLS_TRUE@		    src/front_controls.h
 
-@DASHBOARD_TRUE@am__append_4 = \
+@DASHBOARD_TRUE@am__append_5 = \
 @DASHBOARD_TRUE@		    src/cb1100f-app_generated.h
 
-@HAVE_GENGETOPT_TRUE@am__append_5 = \
+@HAVE_GENGETOPT_TRUE@am__append_6 = \
 @HAVE_GENGETOPT_TRUE@				src/cmdline.h \
 @HAVE_GENGETOPT_TRUE@				src/cmdline.c
 
@@ -138,16 +142,19 @@ am__enginedatalogger_SOURCES_DIST = src/main.cpp src/hexconvert.cpp \
 	src/definitions.h src/can.cpp src/can.h src/imu_can.c \
 	src/imu_can.h src/ignitech_can.c src/ignitech_can.h src/obd2.c \
 	src/obd2.h src/bluetooth.cpp src/cb1100f-app_generated.h \
-	src/bluetooth.h src/front_controls.cpp src/front_controls.h
+	src/bluetooth.h src/powercalc.cpp src/powercalc.h \
+	src/front_controls.cpp src/front_controls.h
 am__dirstamp = $(am__leading_dot)dirstamp
 @CANBUS_TRUE@am__objects_1 = src/can.$(OBJEXT) src/imu_can.$(OBJEXT) \
 @CANBUS_TRUE@	src/ignitech_can.$(OBJEXT) src/obd2.$(OBJEXT)
 @DASHBOARD_TRUE@am__objects_2 = src/bluetooth.$(OBJEXT)
-@FRONTCONTROLS_TRUE@am__objects_3 = src/front_controls.$(OBJEXT)
+@POWERCALC_TRUE@am__objects_3 = src/powercalc.$(OBJEXT)
+@FRONTCONTROLS_TRUE@am__objects_4 = src/front_controls.$(OBJEXT)
 am_enginedatalogger_OBJECTS = src/main.$(OBJEXT) \
 	src/hexconvert.$(OBJEXT) src/serial.$(OBJEXT) \
 	src/error_handling.$(OBJEXT) src/cmdline.$(OBJEXT) \
-	$(am__objects_1) $(am__objects_2) $(am__objects_3)
+	$(am__objects_1) $(am__objects_2) $(am__objects_3) \
+	$(am__objects_4)
 enginedatalogger_OBJECTS = $(am_enginedatalogger_OBJECTS)
 enginedatalogger_LDADD = $(LDADD)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -198,7 +205,7 @@ am__depfiles_remade = src/$(DEPDIR)/bluetooth.Po src/$(DEPDIR)/can.Po \
 	src/$(DEPDIR)/front_controls.Po src/$(DEPDIR)/hexconvert.Po \
 	src/$(DEPDIR)/ignitech_can.Po src/$(DEPDIR)/imu_can.Po \
 	src/$(DEPDIR)/main.Po src/$(DEPDIR)/obd2.Po \
-	src/$(DEPDIR)/serial.Po
+	src/$(DEPDIR)/powercalc.Po src/$(DEPDIR)/serial.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -387,8 +394,8 @@ enginedatalogger_SOURCES = src/main.cpp src/hexconvert.cpp \
 	src/serial.cpp src/serial.h src/error_handling.cpp \
 	src/error_handling.h src/cmdline.c src/cmdline.h \
 	src/definitions.h $(am__append_1) $(am__append_2) \
-	$(am__append_3)
-BUILT_SOURCES = $(am__append_4) $(am__append_5)
+	$(am__append_3) $(am__append_4)
+BUILT_SOURCES = $(am__append_5) $(am__append_6)
 etcdir = $(builddir)/etc
 myconfdir = $(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
@@ -529,6 +536,8 @@ src/ignitech_can.$(OBJEXT): src/$(am__dirstamp) \
 src/obd2.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/bluetooth.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/powercalc.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/front_controls.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 
@@ -588,6 +597,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/imu_can.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/obd2.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/powercalc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/serial.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -962,6 +972,7 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/imu_can.Po
 	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f src/$(DEPDIR)/obd2.Po
+	-rm -f src/$(DEPDIR)/powercalc.Po
 	-rm -f src/$(DEPDIR)/serial.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -1022,6 +1033,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/imu_can.Po
 	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f src/$(DEPDIR)/obd2.Po
+	-rm -f src/$(DEPDIR)/powercalc.Po
 	-rm -f src/$(DEPDIR)/serial.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

@@ -12,6 +12,9 @@
 /* Support I2C */
 #undef FEAT_I2C
 
+/* Support Power Calculation */
+#undef FEAT_POWERCALC
+
 /* define if the compiler supports basic C++11 syntax */
 #undef HAVE_CXX11
 

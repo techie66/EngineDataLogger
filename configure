@@ -649,6 +649,8 @@ I2C_FALSE
 I2C_TRUE
 FRONTCONTROLS_FALSE
 FRONTCONTROLS_TRUE
+POWERCALC_FALSE
+POWERCALC_TRUE
 CANBUS_FALSE
 CANBUS_TRUE
 EGREP
@@ -754,6 +756,7 @@ enable_silent_rules
 enable_maintainer_mode
 enable_dependency_tracking
 enable_can
+enable_powercalc
 enable_frontcontrols
 enable_i2c
 enable_gpio
@@ -1418,6 +1421,8 @@ Optional Features:
   --disable-dependency-tracking
                           speeds up one-time build
   --disable-can           Disable support for CAN Bus
+  --disable-powercalc     Disable support for calculating power from
+                          weight/speed/and accel
   --disable-frontcontrols Disable support for Front Controls
   --disable-i2c           Disable support for I2C
   --disable-gpio          Disable support for GPIO
@@ -5643,6 +5648,37 @@ else
 fi
 
 
+# Check whether --enable-powercalc was given.
+if test "${enable_powercalc+set}" = set; then :
+  enableval=$enable_powercalc;
+else
+  enable_powercalc=yes
+fi
+
+
+if test "x$enable_powercalc" != xno; then :
+
+   powercalc=true
+   #AC_CHECK_HEADERS([ ],,[powercalc=false])
+
+fi
+if test "x$powercalc" = "xtrue"; then :
+
+
+$as_echo "#define FEAT_POWERCALC 1" >>confdefs.h
+
+
+fi
+
+ if test "x$powercalc" = xtrue; then
+  POWERCALC_TRUE=
+  POWERCALC_FALSE='#'
+else
+  POWERCALC_TRUE='#'
+  POWERCALC_FALSE=
+fi
+
+
 # Check whether --enable-frontcontrols was given.
 if test "${enable_frontcontrols+set}" = set; then :
   enableval=$enable_frontcontrols;
@@ -6804,6 +6840,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${CANBUS_TRUE}" && test -z "${CANBUS_FALSE}"; then
   as_fn_error $? "conditional \"CANBUS\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${POWERCALC_TRUE}" && test -z "${POWERCALC_FALSE}"; then
+  as_fn_error $? "conditional \"POWERCALC\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${FRONTCONTROLS_TRUE}" && test -z "${FRONTCONTROLS_FALSE}"; then

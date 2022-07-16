@@ -5,9 +5,10 @@ option "config-file"	c "Configuration file." string typestr="filename" optional
 option "output-file"	o "Output file for CSV logging" string typestr="filename" default="/dev/null" optional dependon="output-file-format"
 option "output-file-date"	d "Insert date and time into output filename." optional
 option "output-file-format" - "Format string of output CSV file" string typestr="format" optional dependon="output-file" details="
-		Comma-separated list of loggable values. Valid items are: rpm, ig_rpm, alt_rpm, speed, map_kpa, tps_percent, odometer, trip, 
-		systemvoltage, batteryvoltage, oil_temp, oil_pres, lambda, enginerunning(bool), blink_left(bool), blink_right(bool), 
-		advance1, advance2, advance3, advance4, yaw, pitch, roll, acc_forward, acc_side, acc_vert, and time(current date/time)"
+		Comma-separated list of loggable values. Valid items are: rpm, ig_rpm, alt_rpm, speed, map_kpa, tps_percent,
+    odometer, trip, systemvoltage, batteryvoltage, oil_temp, oil_pres, lambda, enginerunning(bool), blink_left(bool),
+    blink_right(bool), advance1, advance2, advance3, advance4, yaw, pitch, roll, acc_forward, acc_side, acc_vert, power,
+    and time(current date/time)"
 option "gear-ratios"	g "RPM/Speed ratios. Comma separated. (Eg. -g \"175,122,95,78,67\")" string optional
 option "v"		v "Verbose output. Specify multiple times for increasing verbosity." optional multiple(1-3)
 option "verbose"	- "Set level of verbosity explicitly. \n(Overrides -v)\n" enum typestr="VERBOSITY" values="NONE","ERROR","WARN","INFO","DEBUG" default="ERROR" optional

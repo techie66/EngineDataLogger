@@ -30,11 +30,18 @@ enginedatalogger_SOURCES += \
 		    src/bluetooth.h
 endif
 
+if POWERCALC
+enginedatalogger_SOURCES += \
+		    src/powercalc.cpp \
+		    src/powercalc.h
+endif
+
 if FRONTCONTROLS
 enginedatalogger_SOURCES += \
 		    src/front_controls.cpp \
 		    src/front_controls.h
 endif
+
 BUILT_SOURCES = 
 
 if DASHBOARD

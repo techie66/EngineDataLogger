@@ -33,6 +33,24 @@ AS_IF([test "x$canbus" = "xtrue"],
 
 AM_CONDITIONAL([CANBUS], [test "x$canbus" = xtrue])
 
+AC_ARG_ENABLE([powercalc],
+	[AS_HELP_STRING([--disable-powercalc],
+		[Disable support for calculating power from weight/speed/and accel])],
+	[],
+	[enable_powercalc=yes])
+
+AS_IF([test "x$enable_powercalc" != xno],
+	[
+   powercalc=true
+   #AC_CHECK_HEADERS([ ],,[powercalc=false])
+])
+AS_IF([test "x$powercalc" = "xtrue"],
+  [
+    AC_DEFINE([FEAT_POWERCALC],[1],[Support Power Calculation])
+  ])
+
+AM_CONDITIONAL([POWERCALC], [test "x$powercalc" = xtrue])
+
 AC_ARG_ENABLE([frontcontrols],
 	[AS_HELP_STRING([--disable-frontcontrols],
 		[Disable support for Front Controls])],
