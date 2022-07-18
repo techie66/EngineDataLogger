@@ -1,5 +1,6 @@
 var structEDL_1_1AppBuffer_1_1BikeBuilder =
 [
+    [ "Table", "structEDL_1_1AppBuffer_1_1BikeBuilder.html#aa4bedb7b9a2ecf4a9c51230b5d5b4b31", null ],
     [ "BikeBuilder", "structEDL_1_1AppBuffer_1_1BikeBuilder.html#a101d83a80a50ed34716d3c344588fac5", null ],
     [ "add_alt_rpm", "structEDL_1_1AppBuffer_1_1BikeBuilder.html#a11bc46099d189f7a4b002e3e550093ab", null ],
     [ "add_batteryvoltage", "structEDL_1_1AppBuffer_1_1BikeBuilder.html#aaa3d354dde225ba058ea30ef0b6725fd", null ],
@@ -16,7 +17,6 @@ var structEDL_1_1AppBuffer_1_1BikeBuilder =
     [ "add_systemvoltage", "structEDL_1_1AppBuffer_1_1BikeBuilder.html#ad5c6c85e1bc78eb7c2278d23bd8fc5a4", null ],
     [ "add_trip", "structEDL_1_1AppBuffer_1_1BikeBuilder.html#ae4f18a7b51fd1e6a26e1af06d605a212", null ],
     [ "Finish", "structEDL_1_1AppBuffer_1_1BikeBuilder.html#a070c562401a4cccd78162ead62a81437", null ],
-    [ "operator=", "structEDL_1_1AppBuffer_1_1BikeBuilder.html#a988366d3496cc1b5a94696f18df70f66", null ],
     [ "fbb_", "structEDL_1_1AppBuffer_1_1BikeBuilder.html#a48587d678df09e79e2089655b93b9153", null ],
     [ "start_", "structEDL_1_1AppBuffer_1_1BikeBuilder.html#ac360c89ae9f7ac91a4124e9166926081", null ]
 ];

@@ -1,0 +1,41 @@
+\hypertarget{powercalc_8h}{}\doxysection{src/powercalc.h File Reference}
+\label{powercalc_8h}\index{src/powercalc.h@{src/powercalc.h}}
+
+
+Header file for power calculation functions.  
+
+
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}error\+\_\+handling.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}definitions.\+h\char`\"{}}\newline
+Include dependency graph for powercalc.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{powercalc_8h__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{powercalc_8h_a21de4d97d61997821150a0d74d967fd1}\label{powercalc_8h_a21de4d97d61997821150a0d74d967fd1}} 
+int {\bfseries trailing\+\_\+average\+\_\+power} (\mbox{\hyperlink{structbike__data}{bike\+\_\+data}} \&log\+\_\+data, int periods=20)
+\item 
+int \mbox{\hyperlink{powercalc_8h_a1dec6ba085ce91733e9c4c7e6088a598}{timeval\+\_\+subtract}} (struct timeval $\ast$result, struct timeval $\ast$x, struct timeval $\ast$y)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Header file for power calculation functions. 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{powercalc_8h_a1dec6ba085ce91733e9c4c7e6088a598}\label{powercalc_8h_a1dec6ba085ce91733e9c4c7e6088a598}} 
+\index{powercalc.h@{powercalc.h}!timeval\_subtract@{timeval\_subtract}}
+\index{timeval\_subtract@{timeval\_subtract}!powercalc.h@{powercalc.h}}
+\doxysubsubsection{\texorpdfstring{timeval\_subtract()}{timeval\_subtract()}}
+{\footnotesize\ttfamily int timeval\+\_\+subtract (\begin{DoxyParamCaption}\item[{struct timeval $\ast$}]{result,  }\item[{struct timeval $\ast$}]{x,  }\item[{struct timeval $\ast$}]{y }\end{DoxyParamCaption})}
+
+@\+Alexey Frunze \href{https://stackoverflow.com/questions/15846762/timeval-subtract-explanation}{\texttt{ https\+://stackoverflow.\+com/questions/15846762/timeval-\/subtract-\/explanation}} Shamelessly copied 

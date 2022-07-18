@@ -1,5 +1,6 @@
 var structEDL_1_1AppBuffer_1_1FLATBUFFERS__FINAL__CLASS =
 [
+    [ "Builder", "structEDL_1_1AppBuffer_1_1FLATBUFFERS__FINAL__CLASS.html#ab0fe0787fa9e1595bf4ad3af112187cf", null ],
     [ "NativeTableType", "structEDL_1_1AppBuffer_1_1FLATBUFFERS__FINAL__CLASS.html#ad5061397850019341362cf39fd3051e3", null ],
     [ "alt_rpm", "structEDL_1_1AppBuffer_1_1FLATBUFFERS__FINAL__CLASS.html#ada42d5a49000365be1d0f2dadf3135aa", null ],
     [ "batteryvoltage", "structEDL_1_1AppBuffer_1_1FLATBUFFERS__FINAL__CLASS.html#a2cd842f61bc461d5d3b1bada2c6e63c6", null ],

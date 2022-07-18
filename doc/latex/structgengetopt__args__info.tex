@@ -76,6 +76,18 @@ char $\ast$ \mbox{\hyperlink{structgengetopt__args__info_a1b670c1f5410d38073f3ec
 const char $\ast$ \mbox{\hyperlink{structgengetopt__args__info_a85ee04594bd112b6aec46587db224cff}{gear\+\_\+ratios\+\_\+help}}
 \begin{DoxyCompactList}\small\item\em RPM/\+Speed ratios. Comma separated. (Eg. -\/g "{}175,122,95,78,67"{}) help description. ~\newline
  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structgengetopt__args__info_a965a037fc411c9f3af522572de5021a1}\label{structgengetopt__args__info_a965a037fc411c9f3af522572de5021a1}} 
+int \mbox{\hyperlink{structgengetopt__args__info_a965a037fc411c9f3af522572de5021a1}{weight\+\_\+arg}}
+\begin{DoxyCompactList}\small\item\em Weight of vehicle, in kg, to use for calculations. (default=\textquotesingle{}300\textquotesingle{}). ~\newline
+ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structgengetopt__args__info_a50a9ab19e3adc970968dcaaa28abca44}\label{structgengetopt__args__info_a50a9ab19e3adc970968dcaaa28abca44}} 
+char $\ast$ \mbox{\hyperlink{structgengetopt__args__info_a50a9ab19e3adc970968dcaaa28abca44}{weight\+\_\+orig}}
+\begin{DoxyCompactList}\small\item\em Weight of vehicle, in kg, to use for calculations. original value given at command line. ~\newline
+ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structgengetopt__args__info_a8aa2adb758dfca4f79a9d9bf7bd174fb}\label{structgengetopt__args__info_a8aa2adb758dfca4f79a9d9bf7bd174fb}} 
+const char $\ast$ \mbox{\hyperlink{structgengetopt__args__info_a8aa2adb758dfca4f79a9d9bf7bd174fb}{weight\+\_\+help}}
+\begin{DoxyCompactList}\small\item\em Weight of vehicle, in kg, to use for calculations. help description. ~\newline
+ \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{structgengetopt__args__info_a0b78b69a0bf322163281a85c6f44397d}\label{structgengetopt__args__info_a0b78b69a0bf322163281a85c6f44397d}} 
 unsigned int \mbox{\hyperlink{structgengetopt__args__info_a0b78b69a0bf322163281a85c6f44397d}{v\+\_\+min}}
 \begin{DoxyCompactList}\small\item\em Verbose output. Specify multiple times for increasing verbosity.\textquotesingle{}s minimum occurreces. \end{DoxyCompactList}\item 
@@ -266,18 +278,6 @@ char $\ast$ \mbox{\hyperlink{structgengetopt__args__info_afde0fcbe8cb8f64b9d891d
 const char $\ast$ \mbox{\hyperlink{structgengetopt__args__info_ae879487bf571043a6928148e06a4d314}{ignitech\+\_\+sai\+\_\+high\+\_\+mv\+\_\+help}}
 \begin{DoxyCompactList}\small\item\em High mv value. Eg\+: 4252 help description. ~\newline
  \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{structgengetopt__args__info_acacd43ce15a048610197fab7fcff03a6}\label{structgengetopt__args__info_acacd43ce15a048610197fab7fcff03a6}} 
-char $\ast$ \mbox{\hyperlink{structgengetopt__args__info_acacd43ce15a048610197fab7fcff03a6}{can\+\_\+id\+\_\+wb2\+\_\+arg}}
-\begin{DoxyCompactList}\small\item\em CAN id of Ignitech WB-\/2 packets. WB-\/2 packets disabled if not set. ~\newline
- \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{structgengetopt__args__info_ad421741c3da916f2ec1567d0d5dee5bc}\label{structgengetopt__args__info_ad421741c3da916f2ec1567d0d5dee5bc}} 
-char $\ast$ \mbox{\hyperlink{structgengetopt__args__info_ad421741c3da916f2ec1567d0d5dee5bc}{can\+\_\+id\+\_\+wb2\+\_\+orig}}
-\begin{DoxyCompactList}\small\item\em CAN id of Ignitech WB-\/2 packets. WB-\/2 packets disabled if not set original value given at command line. ~\newline
- \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{structgengetopt__args__info_a61c1900cb20c5c1087dadd7ea5c634e1}\label{structgengetopt__args__info_a61c1900cb20c5c1087dadd7ea5c634e1}} 
-const char $\ast$ \mbox{\hyperlink{structgengetopt__args__info_a61c1900cb20c5c1087dadd7ea5c634e1}{can\+\_\+id\+\_\+wb2\+\_\+help}}
-\begin{DoxyCompactList}\small\item\em CAN id of Ignitech WB-\/2 packets. WB-\/2 packets disabled if not set help description. ~\newline
- \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{structgengetopt__args__info_ab9fd677f890731fd7d6f6c62e6dfc99c}\label{structgengetopt__args__info_ab9fd677f890731fd7d6f6c62e6dfc99c}} 
 unsigned int \mbox{\hyperlink{structgengetopt__args__info_ab9fd677f890731fd7d6f6c62e6dfc99c}{help\+\_\+given}}
 \begin{DoxyCompactList}\small\item\em Whether help was given. ~\newline
@@ -309,6 +309,10 @@ unsigned int \mbox{\hyperlink{structgengetopt__args__info_a3fbc26202e7f83948a53a
 \mbox{\Hypertarget{structgengetopt__args__info_a8db03500e5c3d29e088aa995061661b0}\label{structgengetopt__args__info_a8db03500e5c3d29e088aa995061661b0}} 
 unsigned int \mbox{\hyperlink{structgengetopt__args__info_a8db03500e5c3d29e088aa995061661b0}{gear\+\_\+ratios\+\_\+given}}
 \begin{DoxyCompactList}\small\item\em Whether gear-\/ratios was given. ~\newline
+ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structgengetopt__args__info_a72ab2b75cfd6175786130068d0032e48}\label{structgengetopt__args__info_a72ab2b75cfd6175786130068d0032e48}} 
+unsigned int \mbox{\hyperlink{structgengetopt__args__info_a72ab2b75cfd6175786130068d0032e48}{weight\+\_\+given}}
+\begin{DoxyCompactList}\small\item\em Whether weight was given. ~\newline
  \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{structgengetopt__args__info_a6c3265c37524b1c4606629dfc6b72368}\label{structgengetopt__args__info_a6c3265c37524b1c4606629dfc6b72368}} 
 unsigned int \mbox{\hyperlink{structgengetopt__args__info_a6c3265c37524b1c4606629dfc6b72368}{v\+\_\+given}}
@@ -377,10 +381,6 @@ unsigned int \mbox{\hyperlink{structgengetopt__args__info_a747eaddba8ffd8b94fed1
 \mbox{\Hypertarget{structgengetopt__args__info_ad1a51f867f78f989ea567abd9c88fc3c}\label{structgengetopt__args__info_ad1a51f867f78f989ea567abd9c88fc3c}} 
 unsigned int \mbox{\hyperlink{structgengetopt__args__info_ad1a51f867f78f989ea567abd9c88fc3c}{ignitech\+\_\+sai\+\_\+high\+\_\+mv\+\_\+given}}
 \begin{DoxyCompactList}\small\item\em Whether ignitech-\/sai-\/high-\/mv was given. ~\newline
- \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{structgengetopt__args__info_a6ce625cd018b2be43018075ec7232dd2}\label{structgengetopt__args__info_a6ce625cd018b2be43018075ec7232dd2}} 
-unsigned int \mbox{\hyperlink{structgengetopt__args__info_a6ce625cd018b2be43018075ec7232dd2}{can\+\_\+id\+\_\+wb2\+\_\+given}}
-\begin{DoxyCompactList}\small\item\em Whether can-\/id-\/wb2 was given. ~\newline
  \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 

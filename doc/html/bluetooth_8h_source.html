@@ -120,23 +120,23 @@ $(document).ready(function(){initNavTree('bluetooth_8h_source.html',''); initRes
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classEDL__Bluetooth.html">   32</a></span>&#160;<span class="keyword">class </span><a class="code" href="classEDL__Bluetooth.html">EDL_Bluetooth</a></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keyword">struct </span>sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordtype">char</span> buf[1024] = { 0 };</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordtype">int</span> s, client, bytes_read;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        socklen_t opt = <span class="keyword">sizeof</span>(rem_addr);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        bdaddr_t loc_BDADDR_ANY = {};</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordtype">void</span> Init(<span class="keywordtype">int</span>);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <span class="keyword">struct </span>sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="keywordtype">char</span> buf[1024] = { 0 };</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <span class="keywordtype">int</span> s, client, bytes_read;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  socklen_t opt = <span class="keyword">sizeof</span>(rem_addr);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  bdaddr_t loc_BDADDR_ANY = {};</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  <span class="keywordtype">void</span> Init(<span class="keywordtype">int</span>);</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="classEDL__Bluetooth.html">EDL_Bluetooth</a>();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="classEDL__Bluetooth.html">EDL_Bluetooth</a>(<span class="keywordtype">int</span> bt_port);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">int</span> Accept();</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> Send(<span class="keyword">const</span> flatbuffers::FlatBufferBuilder&amp; fbb);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">int</span> Close();</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    System_CMD Read();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">int</span> getListener();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">int</span> getClient();</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <a class="code" href="classEDL__Bluetooth.html">EDL_Bluetooth</a>();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <a class="code" href="classEDL__Bluetooth.html">EDL_Bluetooth</a>(<span class="keywordtype">int</span> bt_port);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keywordtype">int</span> Accept();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keywordtype">void</span> Send(<span class="keyword">const</span> flatbuffers::FlatBufferBuilder &amp;fbb);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keywordtype">int</span> Close();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  System_CMD Read();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <span class="keywordtype">int</span> getListener();</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keywordtype">int</span> getClient();</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;};</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#endif</span></div>

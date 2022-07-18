@@ -105,18 +105,13 @@ Quick Start</h2>
 <div class="line">./configure</div>
 <div class="line">make</div>
 <div class="line">sudo make install</div>
-</div><!-- fragment --><p> After installation it will be necessary to setup a config file. An example is distrubuted as <code>/usr/local/etc/enginedatalogger/enginedatalogger.conf.dist</code> (on most systems, other systems may be in a different directory, see output from <code>sudo make install</code>) Copy this file to <code>/usr/local/etc/enginedatalogger/enginedatalogger.conf</code> and edit as necessary.</p>
-<h2><a class="anchor" id="autotoc_md4"></a>
+</div><!-- fragment --> <h2><a class="anchor" id="autotoc_md4"></a>
+Detailed Install</h2>
+<p>Please have a look at <a href="https://github.com/techie66/EngineDataLogger/wiki">The Wiki</a></p>
+<p>After installation it will be necessary to setup a config file. An example is distrubuted as <code>/usr/local/etc/enginedatalogger/enginedatalogger.conf.dist</code> (on most systems, other systems may be in a different directory, see output from <code>sudo make install</code>) Copy this file to <code>/usr/local/etc/enginedatalogger/enginedatalogger.conf</code> and edit as necessary.</p>
+<h2><a class="anchor" id="autotoc_md5"></a>
 Dependencies</h2>
-<h3><a class="anchor" id="autotoc_md5"></a>
-Included:&lt;br&gt;</h3>
-<ul>
-<li>I2C dev Lib - <a href="https://github.com/jrowberg/i2cdevlib">https://github.com/jrowberg/i2cdevlib</a> <br  />
-</li>
-</ul>
-<h3><a class="anchor" id="autotoc_md6"></a>
-Not Included</h3>
-<p>The configure script will install these for you under Raspberry Pi OS</p><ul>
+<p>The install-deps.sh script will install these for you under Raspberry Pi OS</p><ul>
 <li><a class="el" href="bluetooth_8h_source.html">bluetooth.h</a> - BLuetooth Headers</li>
 <li>bcm2835 library - <a href="http://www.airspayce.com/mikem/bcm2835/index.html">http://www.airspayce.com/mikem/bcm2835/index.html</a> <br  />
 </li>
@@ -129,20 +124,21 @@ Not Included</h3>
 </ul>
 </li>
 <li>libISP2 - Library for reading the Innovate ISP V2<ul>
-<li><a href="https://github.com/techie66/libISP2">https://github.com/techie66/libISP2</a> </li>
+<li><a href="https://github.com/techie66/libISP2">https://github.com/techie66/libISP2</a></li>
+</ul>
+</li>
+<li>libIgnitech - Library for reading from Ignitech TCIP-4<ul>
+<li><a href="https://github.com/techie66/libIgnitech">https://github.com/techie66/libIgnitech</a></li>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md6"></a>
 Development</h2>
 <ul>
-<li>Build flatbuffers header with <code>flatc -c --gen-object-api ../data/cb1100f-app.fbs</code> Do this from within <code>src/</code> directory.</li>
-<li>Build cmdline header with <code>gengetopt -C -i ../data/cmdline.ggo</code> Do this from within <code>src/</code> directory.</li>
-</ul>
-<p>Generate code from modified DBC files <code>python3 -m cantools generate_c_source ../data/xxxx.dbc</code> Do this from within <code>src/</code> directory.</p><ul>
+<li>Generate code from modified DBC files <code>python3 -m cantools generate_c_source ../data/xxxx.dbc</code> Do this from within <code>src/</code> directory.</li>
 <li>Adhere to coding style. Source files formatted with astyle accourding to _astylerc in root directory. Eg. <code>astyle --project src/main.cpp</code> </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<h1><a class="anchor" id="autotoc_md7"></a>
 License</h1>
 <p>EngineDataLogger is licensed under the GNU GPLv3. Dependencies are licensed under their respective licenses. See LICENSE for full text of GPLv3. </p>
 </div></div><!-- PageDoc -->

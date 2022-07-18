@@ -3,10 +3,6 @@ var structgengetopt__args__info =
     [ "can_arg", "structgengetopt__args__info.html#adacbba2581b154057f0e9d8a93b1d3af", null ],
     [ "can_given", "structgengetopt__args__info.html#a752760767815d015858bba6b767d0240", null ],
     [ "can_help", "structgengetopt__args__info.html#aa54320e3c5a67b08d09beb9cb62322e5", null ],
-    [ "can_id_wb2_arg", "structgengetopt__args__info.html#acacd43ce15a048610197fab7fcff03a6", null ],
-    [ "can_id_wb2_given", "structgengetopt__args__info.html#a6ce625cd018b2be43018075ec7232dd2", null ],
-    [ "can_id_wb2_help", "structgengetopt__args__info.html#a61c1900cb20c5c1087dadd7ea5c634e1", null ],
-    [ "can_id_wb2_orig", "structgengetopt__args__info.html#ad421741c3da916f2ec1567d0d5dee5bc", null ],
     [ "can_orig", "structgengetopt__args__info.html#a52e7ac80bb1f9a4005e5c2fb1dae4343", null ],
     [ "config_file_arg", "structgengetopt__args__info.html#a911085ddc308cb2e00053572a67d35af", null ],
     [ "config_file_given", "structgengetopt__args__info.html#af961de7593e1ac8a5246a86cb20f1eb3", null ],
@@ -92,5 +88,9 @@ var structgengetopt__args__info =
     [ "verbose_help", "structgengetopt__args__info.html#a2211468546b1ab4ad200a860722cc28f", null ],
     [ "verbose_orig", "structgengetopt__args__info.html#a157adef2d71080c031840902f06ed779", null ],
     [ "version_given", "structgengetopt__args__info.html#ad4953a2130b2f8b94a3a687014f278e1", null ],
-    [ "version_help", "structgengetopt__args__info.html#adef454ea6f3ff4114ae5009e58360cfc", null ]
+    [ "version_help", "structgengetopt__args__info.html#adef454ea6f3ff4114ae5009e58360cfc", null ],
+    [ "weight_arg", "structgengetopt__args__info.html#a965a037fc411c9f3af522572de5021a1", null ],
+    [ "weight_given", "structgengetopt__args__info.html#a72ab2b75cfd6175786130068d0032e48", null ],
+    [ "weight_help", "structgengetopt__args__info.html#a8aa2adb758dfca4f79a9d9bf7bd174fb", null ],
+    [ "weight_orig", "structgengetopt__args__info.html#a50a9ab19e3adc970968dcaaa28abca44", null ]
 ];

@@ -1,4 +1,4 @@
-.TH "bike_data" 3 "Thu Jul 7 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
+.TH "bike_data" 3 "Mon Jul 18 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,63 +10,117 @@ bike_data
 
 .in +1c
 .ti -1c
+.RI "int \fBrpm\fP"
+.br
+.RI "RPM\&. Best of available sources\&. "
+.ti -1c
 .RI "int \fBig_rpm\fP"
 .br
+.RI "RPM\&. From Ignitech TCIP-4\&. "
 .ti -1c
 .RI "int32_t \fBalt_rpm\fP"
 .br
+.RI "RPM\&. From EngineData device\&. "
 .ti -1c
 .RI "float \fBspeed\fP"
 .br
+.RI "Vehicle Speed\&. "
 .ti -1c
 .RI "uint32_t \fBodometer\fP"
 .br
+.RI "Odometer\&. Fixed point 0\&.01 scale (divide by 100 for real value) "
 .ti -1c
 .RI "uint32_t \fBtrip\fP"
 .br
+.RI "Resettable Trip Distance\&. Fixed point 0\&.01 scale (divide by 100 for real value) "
 .ti -1c
 .RI "float \fBsystemvoltage\fP"
 .br
+.RI "Voltage at Front Controls\&. "
 .ti -1c
 .RI "float \fBbatteryvoltage\fP"
 .br
+.RI "Voltage on EngineData board\&. "
 .ti -1c
 .RI "float \fBoil_temp\fP"
 .br
+.RI "Oil temperature in degrees Farenheight\&. "
 .ti -1c
 .RI "float \fBoil_pres\fP"
 .br
+.RI "Guage pressure of oil in psi\&. "
 .ti -1c
 .RI "bool \fBblink_left\fP"
 .br
+.RI "Blinker currently flashing (does not indicate actual lamp status) "
 .ti -1c
 .RI "bool \fBblink_right\fP"
 .br
+.RI "Blinker currently flashing (does not indicate actual lamp status) "
 .ti -1c
 .RI "uint16_t \fBlambda\fP"
 .br
-.RI "Lambda\&. Fixed point number 2 places after decimal, 0\&.01 (divide by 100) "
+.RI "Lambda\&. Fixed point 0\&.01 scale (divide by 100 for real value) "
 .ti -1c
 .RI "int \fBmap_kpa\fP"
 .br
+.RI "Manifold Absolute Pressure\&. kilo Pascals\&. "
 .ti -1c
 .RI "int \fBtps_percent\fP"
 .br
+.RI "Throttle Position Sensor 0-100%\&. "
 .ti -1c
 .RI "bool \fBengineRunning\fP"
 .br
+.RI "Engine is considered running or not\&. "
 .ti -1c
 .RI "uint8_t \fBadvance1\fP"
 .br
+.RI "Ignition advance in degrees\&. "
 .ti -1c
 .RI "uint8_t \fBadvance2\fP"
 .br
+.RI "Ignition advance in degrees\&. "
 .ti -1c
 .RI "uint8_t \fBadvance3\fP"
 .br
+.RI "Ignition advance in degrees\&. "
 .ti -1c
 .RI "uint8_t \fBadvance4\fP"
 .br
+.RI "Ignition advance in degrees\&. "
+.ti -1c
+.RI "float \fByaw\fP"
+.br
+.RI "Yaw\&. Rotation orthoganal to the ground\&. "
+.ti -1c
+.RI "float \fBpitch\fP"
+.br
+.RI "Pitch\&. Rotation front to back\&. "
+.ti -1c
+.RI "float \fBroll\fP"
+.br
+.RI "Roll\&. Rotation side to side\&. (ie\&. 'lean angle') "
+.ti -1c
+.RI "double \fBacc_forward\fP"
+.br
+.RI "Linear Acceleration\&. Forward and back\&. "
+.ti -1c
+.RI "double \fBacc_side\fP"
+.br
+.RI "Linear Acceleration\&. Side to Side\&. "
+.ti -1c
+.RI "double \fBacc_vert\fP"
+.br
+.RI "Linear Acceleration\&. Up and down\&. "
+.ti -1c
+.RI "int \fBpower\fP"
+.br
+.RI "Calculated power (HP-Imperial) "
+.ti -1c
+.RI "int \fBweight\fP = _DEFAULT_WEIGHT"
+.br
+.RI "Weight of vehicle (total/loaded) in kg's\&. "
 .in -1c
 
 .SH "Author"

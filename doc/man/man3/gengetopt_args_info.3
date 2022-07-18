@@ -1,4 +1,4 @@
-.TH "gengetopt_args_info" 3 "Thu Jul 7 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
+.TH "gengetopt_args_info" 3 "Mon Jul 18 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -106,6 +106,24 @@ gengetopt_args_info \- Where the command line options are stored\&.
 .RI "const char * \fBgear_ratios_help\fP"
 .br
 .RI "RPM/Speed ratios\&. Comma separated\&. (Eg\&. -g "175,122,95,78,67") help description\&. 
+.br
+ "
+.ti -1c
+.RI "int \fBweight_arg\fP"
+.br
+.RI "Weight of vehicle, in kg, to use for calculations\&. (default='300')\&. 
+.br
+ "
+.ti -1c
+.RI "char * \fBweight_orig\fP"
+.br
+.RI "Weight of vehicle, in kg, to use for calculations\&. original value given at command line\&. 
+.br
+ "
+.ti -1c
+.RI "const char * \fBweight_help\fP"
+.br
+.RI "Weight of vehicle, in kg, to use for calculations\&. help description\&. 
 .br
  "
 .ti -1c
@@ -393,24 +411,6 @@ gengetopt_args_info \- Where the command line options are stored\&.
 .br
  "
 .ti -1c
-.RI "char * \fBcan_id_wb2_arg\fP"
-.br
-.RI "CAN id of Ignitech WB-2 packets\&. WB-2 packets disabled if not set\&. 
-.br
- "
-.ti -1c
-.RI "char * \fBcan_id_wb2_orig\fP"
-.br
-.RI "CAN id of Ignitech WB-2 packets\&. WB-2 packets disabled if not set original value given at command line\&. 
-.br
- "
-.ti -1c
-.RI "const char * \fBcan_id_wb2_help\fP"
-.br
-.RI "CAN id of Ignitech WB-2 packets\&. WB-2 packets disabled if not set help description\&. 
-.br
- "
-.ti -1c
 .RI "unsigned int \fBhelp_given\fP"
 .br
 .RI "Whether help was given\&. 
@@ -456,6 +456,12 @@ gengetopt_args_info \- Where the command line options are stored\&.
 .RI "unsigned int \fBgear_ratios_given\fP"
 .br
 .RI "Whether gear-ratios was given\&. 
+.br
+ "
+.ti -1c
+.RI "unsigned int \fBweight_given\fP"
+.br
+.RI "Whether weight was given\&. 
 .br
  "
 .ti -1c
@@ -558,12 +564,6 @@ gengetopt_args_info \- Where the command line options are stored\&.
 .RI "unsigned int \fBignitech_sai_high_mv_given\fP"
 .br
 .RI "Whether ignitech-sai-high-mv was given\&. 
-.br
- "
-.ti -1c
-.RI "unsigned int \fBcan_id_wb2_given\fP"
-.br
-.RI "Whether can-id-wb2 was given\&. 
 .br
  "
 .in -1c

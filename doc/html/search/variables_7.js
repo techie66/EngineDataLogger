@@ -1,19 +1,8 @@
 var searchData=
 [
-  ['lambda_444',['lambda',['../structignitech__can__ignitech__wb__2__t.html#a98d2ed1b5fcc5c2a5d47750b5338a60b',1,'ignitech_can_ignitech_wb_2_t::lambda()'],['../structbike__data.html#a1969b890430ab68b9fb3cb8d3bec2c21',1,'bike_data::lambda()']]],
-  ['lat_5fdecimal_5fdegrees_445',['lat_decimal_degrees',['../structgps__gps__loc__t.html#a4b6729754ed4aeafb33bee35d0c84dc1',1,'gps_gps_loc_t']]],
-  ['lc2_5farg_446',['lc2_arg',['../structgengetopt__args__info.html#a08b6f84ba8539ccd1f7700046b7484f3',1,'gengetopt_args_info']]],
-  ['lc2_5fdelay_5farg_447',['lc2_delay_arg',['../structgengetopt__args__info.html#a9d1c3770feb8e34a86627e6966362a93',1,'gengetopt_args_info']]],
-  ['lc2_5fdelay_5fgiven_448',['lc2_delay_given',['../structgengetopt__args__info.html#aa0bad0b297009fc932d6df5ae0ec7acf',1,'gengetopt_args_info']]],
-  ['lc2_5fdelay_5fhelp_449',['lc2_delay_help',['../structgengetopt__args__info.html#a513a074b41e91698ea72067e09b52d55',1,'gengetopt_args_info']]],
-  ['lc2_5fdelay_5forig_450',['lc2_delay_orig',['../structgengetopt__args__info.html#ad3bcc7eac38c144b972aaba35585b36a',1,'gengetopt_args_info']]],
-  ['lc2_5fgiven_451',['lc2_given',['../structgengetopt__args__info.html#a299fe7f8d5cce9bbbb54b9b1454ff866',1,'gengetopt_args_info']]],
-  ['lc2_5fhelp_452',['lc2_help',['../structgengetopt__args__info.html#ab3294d2c7bc451a07a0c67d5386c4452',1,'gengetopt_args_info']]],
-  ['lc2_5forig_453',['lc2_orig',['../structgengetopt__args__info.html#a9287f1ab950df67dd2f947e87eb4d40c',1,'gengetopt_args_info']]],
-  ['lc2_5fpin_5farg_454',['lc2_pin_arg',['../structgengetopt__args__info.html#aefec454ff2d5d55709914242bef3a4ff',1,'gengetopt_args_info']]],
-  ['lc2_5fpin_5fgiven_455',['lc2_pin_given',['../structgengetopt__args__info.html#afbe6d9f54d2125977efe508c77d7238d',1,'gengetopt_args_info']]],
-  ['lc2_5fpin_5fhelp_456',['lc2_pin_help',['../structgengetopt__args__info.html#a8fa0b659a7af5315c5031325ed60db5e',1,'gengetopt_args_info']]],
-  ['lc2_5fpin_5forig_457',['lc2_pin_orig',['../structgengetopt__args__info.html#ace6f8e0abd93a268d0b41dff3ebf7e4b',1,'gengetopt_args_info']]],
-  ['length_458',['length',['../structobd2__obd2__t.html#a1f588b784245858bf9f8f7700f02bb5d',1,'obd2_obd2_t']]],
-  ['long_5fdecimal_5fdegrees_459',['long_decimal_degrees',['../structgps__gps__loc__t.html#aaa63f416c283ae50b70a07218fe7740a',1,'gps_gps_loc_t']]]
+  ['hdop_483',['hdop',['../structgps__gps__stat__t.html#aadc10451084fbabddf26bcb985d5a353',1,'gps_gps_stat_t']]],
+  ['heading_484',['heading',['../structgps__gps__nav__t.html#a3a7c1f39012d7decd31930b4db20901f',1,'gps_gps_nav_t']]],
+  ['help_5fgiven_485',['help_given',['../structgengetopt__args__info.html#ab9fd677f890731fd7d6f6c62e6dfc99c',1,'gengetopt_args_info']]],
+  ['help_5fhelp_486',['help_help',['../structgengetopt__args__info.html#afb4efa68a6f43a4d112e9b96ffe89101',1,'gengetopt_args_info']]],
+  ['hour_487',['hour',['../structgps__gps__time__t.html#aed9a8ff7c6f8c5ef42120e10adf46220',1,'gps_gps_time_t']]]
 ];

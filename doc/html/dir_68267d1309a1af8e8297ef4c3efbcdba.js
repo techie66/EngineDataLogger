@@ -14,5 +14,6 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "ignitech_can.h", "ignitech__can_8h_source.html", null ],
     [ "imu_can.h", "imu__can_8h_source.html", null ],
     [ "obd2.h", "obd2_8h_source.html", null ],
+    [ "powercalc.h", "powercalc_8h.html", "powercalc_8h" ],
     [ "serial.h", "serial_8h_source.html", null ]
 ];

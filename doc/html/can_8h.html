@@ -97,35 +97,39 @@ $(document).ready(function(){initNavTree('can_8h.html',''); initResizable(); });
 <code>#include &lt;linux/can/raw.h&gt;</code><br />
 <code>#include &lt;sys/ioctl.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
 <code>#include &quot;error_handling.h&quot;</code><br />
 <code>#include &quot;definitions.h&quot;</code><br />
 <code>#include &lt;errno.h&gt;</code><br />
 <code>#include &quot;imu_can.h&quot;</code><br />
 <code>#include &quot;ignitech_can.h&quot;</code><br />
+<code>#include &quot;obd2.h&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for can.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="can_8h__incl.png" border="0" usemap="#asrc_2can_8h" alt=""/></div>
 <map name="asrc_2can_8h" id="asrc_2can_8h">
-<area shape="rect" title="Header file for CAN parsing." alt="" coords="495,5,571,32"/>
+<area shape="rect" title="Header file for CAN parsing." alt="" coords="585,5,661,32"/>
 <area shape="rect" title=" " alt="" coords="5,80,68,107"/>
 <area shape="rect" title=" " alt="" coords="93,80,178,107"/>
 <area shape="rect" title=" " alt="" coords="203,80,311,107"/>
 <area shape="rect" title=" " alt="" coords="335,80,418,107"/>
 <area shape="rect" title=" " alt="" coords="443,80,508,107"/>
-<area shape="rect" href="error__handling_8h_source.html" title=" " alt="" coords="533,80,647,107"/>
-<area shape="rect" href="definitions_8h_source.html" title=" " alt="" coords="672,80,764,107"/>
-<area shape="rect" title=" " alt="" coords="788,80,851,107"/>
-<area shape="rect" href="imu__can_8h_source.html" title=" " alt="" coords="875,80,958,107"/>
-<area shape="rect" href="ignitech__can_8h_source.html" title=" " alt="" coords="982,80,1089,107"/>
-<area shape="rect" title=" " alt="" coords="379,155,441,181"/>
-<area shape="rect" title=" " alt="" coords="465,155,534,181"/>
-<area shape="rect" title=" " alt="" coords="559,155,621,181"/>
-<area shape="rect" title=" " alt="" coords="646,155,710,181"/>
-<area shape="rect" title=" " alt="" coords="734,155,795,181"/>
-<area shape="rect" title=" " alt="" coords="852,155,917,181"/>
-<area shape="rect" title=" " alt="" coords="942,155,1017,181"/>
-<area shape="rect" title=" " alt="" coords="1041,155,1110,181"/>
+<area shape="rect" title=" " alt="" coords="532,80,600,107"/>
+<area shape="rect" href="error__handling_8h_source.html" title=" " alt="" coords="625,80,739,107"/>
+<area shape="rect" href="definitions_8h_source.html" title=" " alt="" coords="764,80,856,107"/>
+<area shape="rect" title=" " alt="" coords="880,80,943,107"/>
+<area shape="rect" href="imu__can_8h_source.html" title=" " alt="" coords="967,80,1050,107"/>
+<area shape="rect" href="ignitech__can_8h_source.html" title=" " alt="" coords="1074,80,1181,107"/>
+<area shape="rect" href="obd2_8h_source.html" title=" " alt="" coords="1205,80,1266,107"/>
+<area shape="rect" title=" " alt="" coords="471,155,533,181"/>
+<area shape="rect" title=" " alt="" coords="557,155,626,181"/>
+<area shape="rect" title=" " alt="" coords="651,155,713,181"/>
+<area shape="rect" title=" " alt="" coords="738,155,802,181"/>
+<area shape="rect" title=" " alt="" coords="826,155,887,181"/>
+<area shape="rect" title=" " alt="" coords="1000,155,1065,181"/>
+<area shape="rect" title=" " alt="" coords="1090,155,1165,181"/>
+<area shape="rect" title=" " alt="" coords="1189,155,1258,181"/>
 </map>
 </div>
 </div>
@@ -136,15 +140,18 @@ Functions</h2></td></tr>
 <tr class="memitem:af0943094fa51d2ce2253df2a63c74cbf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="can_8h.html#af0943094fa51d2ce2253df2a63c74cbf">can_sock_connect</a> (int can_s, char const *can_arg)</td></tr>
 <tr class="memdesc:af0943094fa51d2ce2253df2a63c74cbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to simplify connecting to CAN.  <a href="can_8h.html#af0943094fa51d2ce2253df2a63c74cbf">More...</a><br /></td></tr>
 <tr class="separator:af0943094fa51d2ce2253df2a63c74cbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a567932890950f71032b355522bec3e0c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="can_8h.html#a567932890950f71032b355522bec3e0c">can_parse</a> (const can_frame &amp;frame, <a class="el" href="structbike__data.html">bike_data</a> &amp;log_data)</td></tr>
-<tr class="memdesc:a567932890950f71032b355522bec3e0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to extract data from CAN frames.  <a href="can_8h.html#a567932890950f71032b355522bec3e0c">More...</a><br /></td></tr>
-<tr class="separator:a567932890950f71032b355522bec3e0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60073606b20a0fb2b6328d0fb7448c79"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="can_8h.html#a60073606b20a0fb2b6328d0fb7448c79">can_parse</a> (const can_frame &amp;frame, <a class="el" href="structbike__data.html">bike_data</a> &amp;log_data, const int can_s)</td></tr>
+<tr class="memdesc:a60073606b20a0fb2b6328d0fb7448c79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to extract data from CAN frames.  <a href="can_8h.html#a60073606b20a0fb2b6328d0fb7448c79">More...</a><br /></td></tr>
+<tr class="separator:a60073606b20a0fb2b6328d0fb7448c79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a228504366882ca4dcb781afee425d32b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="can_8h.html#a228504366882ca4dcb781afee425d32b">obd2_process</a> (const can_frame &amp;frame, <a class="el" href="structbike__data.html">bike_data</a> &amp;log_data, const int can_s)</td></tr>
+<tr class="memdesc:a228504366882ca4dcb781afee425d32b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle all OBD2 exchanges.  <a href="can_8h.html#a228504366882ca4dcb781afee425d32b">More...</a><br /></td></tr>
+<tr class="separator:a228504366882ca4dcb781afee425d32b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Header file for CAN parsing. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a567932890950f71032b355522bec3e0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a567932890950f71032b355522bec3e0c">&#9670;&nbsp;</a></span>can_parse()</h2>
+<a id="a60073606b20a0fb2b6328d0fb7448c79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60073606b20a0fb2b6328d0fb7448c79">&#9670;&nbsp;</a></span>can_parse()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -159,7 +166,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structbike__data.html">bike_data</a> &amp;&#160;</td>
-          <td class="paramname"><em>log_data</em>&#160;</td>
+          <td class="paramname"><em>log_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>can_s</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -175,7 +188,8 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">frame</td><td>A can_frame struct (linux/can.h) that already contains a valid recieved frame. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">log_data</td><td>A structure to store parsed data into.</td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">log_data</td><td>A structure to store parsed data into. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">can_s</td><td>Socket file-descriptor for CANSock interface</td></tr>
   </table>
   </dd>
 </dl>
@@ -229,6 +243,50 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if successful, or FALSE if error. </dd></dl>
+
+</div>
+</div>
+<a id="a228504366882ca4dcb781afee425d32b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a228504366882ca4dcb781afee425d32b">&#9670;&nbsp;</a></span>obd2_process()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int obd2_process </td>
+          <td>(</td>
+          <td class="paramtype">const can_frame &amp;&#160;</td>
+          <td class="paramname"><em>frame</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structbike__data.html">bike_data</a> &amp;&#160;</td>
+          <td class="paramname"><em>log_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>can_s</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Handle all OBD2 exchanges. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">frame</td><td>A can_frame struct (linux/can.h) that already contains a valid recieved frame. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">log_data</td><td>A structure to store parsed data into. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">can_s</td><td>Socket file-descriptor for CANSock interface </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

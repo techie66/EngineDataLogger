@@ -1,0 +1,75 @@
+.TH "obd2_obd2_iso_tp_t" 3 "Mon Jul 18 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+obd2_obd2_iso_tp_t
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <obd2\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "uint8_t \fBtype\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBsf_size\fP"
+.br
+.ti -1c
+.RI "uint16_t \fBff_size\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBcf_index\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBfc_flag\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBfc_block_size\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBfc_st\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBfc_st_ms\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBfc_st_us_mux\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBfc_st_us\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Signals in message OBD2_ISO_TP\&.
+.PP
+All signal values are as on the CAN bus\&. 
+.SH "Member Data Documentation"
+.PP 
+.SS "uint8_t obd2_obd2_iso_tp_t::cf_index"
+Range: 0\&.\&.15 (0\&.\&.15 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_iso_tp_t::fc_block_size"
+Range: 0\&.\&.255 (0\&.\&.255 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_iso_tp_t::fc_flag"
+Range: 0\&.\&.2 (0\&.\&.2 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_iso_tp_t::fc_st"
+Range: 0\&.\&.1 (0\&.\&.1 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_iso_tp_t::fc_st_ms"
+Range: 0\&.\&.127 (0\&.\&.127 ms) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_iso_tp_t::fc_st_us"
+Range: 1\&.\&.9 (100\&.\&.900 us) Scale: 100 Offset: 0 
+.SS "uint8_t obd2_obd2_iso_tp_t::fc_st_us_mux"
+Range: 7\&.\&.7 (7\&.\&.7 -) Scale: 1 Offset: 0 
+.SS "uint16_t obd2_obd2_iso_tp_t::ff_size"
+Range: 8\&.\&.4095 (8\&.\&.4095 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_iso_tp_t::sf_size"
+Range: 0\&.\&.7 (0\&.\&.7 -) Scale: 1 Offset: 0 
+.SS "uint8_t obd2_obd2_iso_tp_t::type"
+Range: 0\&.\&.3 (0\&.\&.3 -) Scale: 1 Offset: 0 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Engine Data Logger (EDL) from the source code\&.

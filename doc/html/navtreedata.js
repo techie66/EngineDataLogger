@@ -29,13 +29,11 @@ var NAVTREE =
       [ "Componenents", "index.html#autotoc_md1", null ],
       [ "Installation", "index.html#autotoc_md2", [
         [ "Quick Start", "index.html#autotoc_md3", null ],
-        [ "Dependencies", "index.html#autotoc_md4", [
-          [ "Included:<br>", "index.html#autotoc_md5", null ],
-          [ "Not Included", "index.html#autotoc_md6", null ]
-        ] ],
-        [ "Development", "index.html#autotoc_md7", null ]
+        [ "Detailed Install", "index.html#autotoc_md4", null ],
+        [ "Dependencies", "index.html#autotoc_md5", null ],
+        [ "Development", "index.html#autotoc_md6", null ]
       ] ],
-      [ "License", "index.html#autotoc_md8", null ]
+      [ "License", "index.html#autotoc_md7", null ]
     ] ],
     [ "Deprecated List", "deprecated.html", null ],
     [ "Classes", "annotated.html", [
@@ -63,8 +61,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "I2Cdev_8h_source.html",
-"structgengetopt__args__info.html#a513a074b41e91698ea72067e09b52d55",
-"structobd2__obd2__t.html#af364a9f84f6c1d58beac6eadb78ff02c"
+"structgengetopt__args__info.html#a157adef2d71080c031840902f06ed779",
+"structobd2__obd2__t.html#abc1a966c7dc63573960e960169257dfd"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

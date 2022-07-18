@@ -13,11 +13,14 @@ var hierarchy =
     [ "gps_gps_time_t", "structgps__gps__time__t.html", null ],
     [ "I2Cdev", "classI2Cdev.html", null ],
     [ "ignitech_can_ignitech_wb_2_t", "structignitech__can__ignitech__wb__2__t.html", null ],
+    [ "imu_can_body_accel_t", "structimu__can__body__accel__t.html", null ],
     [ "imu_can_body_position_t", "structimu__can__body__position__t.html", null ],
     [ "line_list", "structline__list.html", null ],
     [ "flatbuffers::NativeTable", null, [
       [ "EDL::AppBuffer::BikeT", "structEDL_1_1AppBuffer_1_1BikeT.html", null ]
     ] ],
+    [ "obd2_obd2_iso_tp_t", "structobd2__obd2__iso__tp__t.html", null ],
+    [ "obd2_obd2_request_t", "structobd2__obd2__request__t.html", null ],
     [ "obd2_obd2_t", "structobd2__obd2__t.html", null ],
     [ "flatbuffers::Table", null, [
       [ "EDL::AppBuffer::FLATBUFFERS_FINAL_CLASS", "structEDL_1_1AppBuffer_1_1FLATBUFFERS__FINAL__CLASS.html", null ]

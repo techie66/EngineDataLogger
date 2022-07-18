@@ -1,4 +1,4 @@
-.TH "EDL::AppBuffer::BikeBuilder" 3 "Thu Jul 7 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
+.TH "EDL::AppBuffer::BikeBuilder" 3 "Mon Jul 18 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -6,6 +6,13 @@ EDL::AppBuffer::BikeBuilder
 .SH SYNOPSIS
 .br
 .PP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef Bike \fBTable\fP"
+.br
+.in -1c
 .SS "Public Member Functions"
 
 .in +1c
@@ -53,9 +60,6 @@ EDL::AppBuffer::BikeBuilder
 .br
 .ti -1c
 .RI "\fBBikeBuilder\fP (flatbuffers::FlatBufferBuilder &_fbb)"
-.br
-.ti -1c
-.RI "\fBBikeBuilder\fP & \fBoperator=\fP (const \fBBikeBuilder\fP &)"
 .br
 .ti -1c
 .RI "flatbuffers::Offset< Bike > \fBFinish\fP ()"

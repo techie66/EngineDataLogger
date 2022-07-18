@@ -90,7 +90,7 @@ $(document).ready(function(){initNavTree('can_8h_source.html',''); initResizable
 <a href="can_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">    EngineDataLogger</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">    Copyright (C) 2018-2021  Jacob Geigle</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">    Copyright (C) 2018-2022  Jacob Geigle</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">    This program is free software; you can redistribute it and/or modify</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">    it under the terms of the GNU General Public License as published by</span></div>
@@ -115,22 +115,27 @@ $(document).ready(function(){initNavTree('can_8h_source.html',''); initResizable
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;linux/can/raw.h&gt;</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;sys/ioctl.h&gt;</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;error_handling.h&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;definitions.h&quot;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;errno.h&gt;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;imu_can.h&quot;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;ignitech_can.h&quot;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// 3rd-Party Libraries</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;error_handling.h&quot;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;definitions.h&quot;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &lt;errno.h&gt;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;imu_can.h&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;ignitech_can.h&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;obd2.h&quot;</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="can_8h.html#af0943094fa51d2ce2253df2a63c74cbf">can_sock_connect</a>( <span class="keywordtype">int</span> can_s, <span class="keywordtype">char</span> <span class="keyword">const</span> * can_arg);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keywordtype">void</span> <a class="code" href="can_8h.html#a567932890950f71032b355522bec3e0c">can_parse</a>(<span class="keyword">const</span> can_frame &amp;frame, <a class="code" href="structbike__data.html">bike_data</a> &amp;log_data);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="acan_8h_html_a567932890950f71032b355522bec3e0c"><div class="ttname"><a href="can_8h.html#a567932890950f71032b355522bec3e0c">can_parse</a></div><div class="ttdeci">void can_parse(const can_frame &amp;frame, bike_data &amp;log_data)</div><div class="ttdoc">Function to extract data from CAN frames.</div><div class="ttdef"><b>Definition:</b> can.cpp:45</div></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// 3rd-Party Libraries</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="can_8h.html#af0943094fa51d2ce2253df2a63c74cbf">can_sock_connect</a>( <span class="keywordtype">int</span> can_s, <span class="keywordtype">char</span> <span class="keyword">const</span> *can_arg);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keywordtype">void</span> <a class="code" href="can_8h.html#a60073606b20a0fb2b6328d0fb7448c79">can_parse</a>(<span class="keyword">const</span> can_frame &amp;frame, <a class="code" href="structbike__data.html">bike_data</a> &amp;log_data, <span class="keyword">const</span> <span class="keywordtype">int</span> can_s);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">int</span> <a class="code" href="can_8h.html#a228504366882ca4dcb781afee425d32b">obd2_process</a>(<span class="keyword">const</span> can_frame &amp;frame, <a class="code" href="structbike__data.html">bike_data</a> &amp;log_data, <span class="keyword">const</span> <span class="keywordtype">int</span> can_s);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="acan_8h_html_a228504366882ca4dcb781afee425d32b"><div class="ttname"><a href="can_8h.html#a228504366882ca4dcb781afee425d32b">obd2_process</a></div><div class="ttdeci">int obd2_process(const can_frame &amp;frame, bike_data &amp;log_data, const int can_s)</div><div class="ttdoc">Handle all OBD2 exchanges.</div><div class="ttdef"><b>Definition:</b> can.cpp:97</div></div>
+<div class="ttc" id="acan_8h_html_a60073606b20a0fb2b6328d0fb7448c79"><div class="ttname"><a href="can_8h.html#a60073606b20a0fb2b6328d0fb7448c79">can_parse</a></div><div class="ttdeci">void can_parse(const can_frame &amp;frame, bike_data &amp;log_data, const int can_s)</div><div class="ttdoc">Function to extract data from CAN frames.</div><div class="ttdef"><b>Definition:</b> can.cpp:45</div></div>
 <div class="ttc" id="acan_8h_html_af0943094fa51d2ce2253df2a63c74cbf"><div class="ttname"><a href="can_8h.html#af0943094fa51d2ce2253df2a63c74cbf">can_sock_connect</a></div><div class="ttdeci">bool can_sock_connect(int can_s, char const *can_arg)</div><div class="ttdoc">Function to simplify connecting to CAN.</div><div class="ttdef"><b>Definition:</b> can.cpp:21</div></div>
-<div class="ttc" id="astructbike__data_html"><div class="ttname"><a href="structbike__data.html">bike_data</a></div><div class="ttdef"><b>Definition:</b> definitions.h:89</div></div>
+<div class="ttc" id="astructbike__data_html"><div class="ttname"><a href="structbike__data.html">bike_data</a></div><div class="ttdef"><b>Definition:</b> definitions.h:93</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

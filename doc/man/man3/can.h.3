@@ -1,4 +1,4 @@
-.TH "src/can.h" 3 "Thu Jul 7 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
+.TH "src/can.h" 3 "Mon Jul 18 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,6 +17,8 @@ src/can.h \- Header file for CAN parsing\&.
 .br
 \fC#include <string\&.h>\fP
 .br
+\fC#include <unistd\&.h>\fP
+.br
 \fC#include 'error_handling\&.h'\fP
 .br
 \fC#include 'definitions\&.h'\fP
@@ -27,6 +29,8 @@ src/can.h \- Header file for CAN parsing\&.
 .br
 \fC#include 'ignitech_can\&.h'\fP
 .br
+\fC#include 'obd2\&.h'\fP
+.br
 
 .SS "Functions"
 
@@ -36,9 +40,13 @@ src/can.h \- Header file for CAN parsing\&.
 .br
 .RI "Function to simplify connecting to CAN\&. "
 .ti -1c
-.RI "void \fBcan_parse\fP (const can_frame &frame, \fBbike_data\fP &log_data)"
+.RI "void \fBcan_parse\fP (const can_frame &frame, \fBbike_data\fP &log_data, const int can_s)"
 .br
 .RI "Function to extract data from CAN frames\&. "
+.ti -1c
+.RI "int \fBobd2_process\fP (const can_frame &frame, \fBbike_data\fP &log_data, const int can_s)"
+.br
+.RI "Handle all OBD2 exchanges\&. "
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -47,7 +55,7 @@ Header file for CAN parsing\&.
 
 .SH "Function Documentation"
 .PP 
-.SS "void can_parse (const can_frame & frame, \fBbike_data\fP & log_data)"
+.SS "void can_parse (const can_frame & frame, \fBbike_data\fP & log_data, const int can_s)"
 
 .PP
 Function to extract data from CAN frames\&. This function takes CAN frames, parses them and puts the data into the right place\&.
@@ -61,7 +69,9 @@ What is a note?
 .RS 4
 \fIframe\fP A can_frame struct (linux/can\&.h) that already contains a valid recieved frame\&. 
 .br
-\fIlog_data\fP A structure to store parsed data into\&.
+\fIlog_data\fP A structure to store parsed data into\&. 
+.br
+\fIcan_s\fP Socket file-descriptor for CANSock interface
 .RE
 .PP
 \fBReturns\fP
@@ -99,6 +109,21 @@ Contains specific usage details, may not be suitably reusable\&.
 \fBReturns\fP
 .RS 4
 True if successful, or FALSE if error\&. 
+.RE
+.PP
+
+.SS "int obd2_process (const can_frame & frame, \fBbike_data\fP & log_data, const int can_s)"
+
+.PP
+Handle all OBD2 exchanges\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIframe\fP A can_frame struct (linux/can\&.h) that already contains a valid recieved frame\&. 
+.br
+\fIlog_data\fP A structure to store parsed data into\&. 
+.br
+\fIcan_s\fP Socket file-descriptor for CANSock interface 
 .RE
 .PP
 

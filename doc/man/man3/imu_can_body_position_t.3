@@ -1,4 +1,4 @@
-.TH "imu_can_body_position_t" 3 "Thu Jul 7 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
+.TH "imu_can_body_position_t" 3 "Mon Jul 18 2022" "Version v0.1" "Engine Data Logger (EDL)" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,6 +17,9 @@ imu_can_body_position_t
 .ti -1c
 .RI "uint16_t \fBpitch_angle\fP"
 .br
+.ti -1c
+.RI "uint16_t \fByaw_angle\fP"
+.br
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -29,6 +32,8 @@ All signal values are as on the CAN bus\&.
 Range: 0\&.\&.3600 (-180\&.\&.180 deg) Scale: 0\&.1 Offset: -180 
 .SS "uint16_t imu_can_body_position_t::roll_angle"
 Range: 0\&.\&.3600 (-180\&.\&.180 deg) Scale: 0\&.1 Offset: -180 
+.SS "uint16_t imu_can_body_position_t::yaw_angle"
+Range: 0\&.\&.7200 (-360\&.\&.360 deg) Scale: 0\&.1 Offset: -360 
 
 .SH "Author"
 .PP 

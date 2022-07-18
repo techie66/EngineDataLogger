@@ -1,5 +1,8 @@
 var structbike__data =
 [
+    [ "acc_forward", "structbike__data.html#a6665f15b1b2a8689d5c44dc1da06e7a7", null ],
+    [ "acc_side", "structbike__data.html#a86980f9c21a74e7f146e8ba7afc0d4cc", null ],
+    [ "acc_vert", "structbike__data.html#aaaa8ef3f6c928f501449b7dd5993a0b9", null ],
     [ "advance1", "structbike__data.html#aa0ea6c5592aea0887a522b8a4e88b23f", null ],
     [ "advance2", "structbike__data.html#a24b9fe8cd0ebd8ae225bc92d6cf7757a", null ],
     [ "advance3", "structbike__data.html#afcde676dc846a68515f970cb69fae119", null ],
@@ -15,8 +18,14 @@ var structbike__data =
     [ "odometer", "structbike__data.html#a9856ce11664651bea98208a8075e63b0", null ],
     [ "oil_pres", "structbike__data.html#a7bc2dfe5e53590d117e006623f81769f", null ],
     [ "oil_temp", "structbike__data.html#a67d3974d76d0e8b4ffabc817f9683618", null ],
+    [ "pitch", "structbike__data.html#a1a65a119dc8c51ea5e97ec6c96175eed", null ],
+    [ "power", "structbike__data.html#aff2174fd69a401b4c98a60d8065b6557", null ],
+    [ "roll", "structbike__data.html#a1b52231e8bf49a8e4a192d3ce0068c32", null ],
+    [ "rpm", "structbike__data.html#a8465a026d1cd1ed972a565df916ccdce", null ],
     [ "speed", "structbike__data.html#a15b591c47d0f8642d3e40bc0114f6c08", null ],
     [ "systemvoltage", "structbike__data.html#a29f95639b04165994246f0897ebea817", null ],
     [ "tps_percent", "structbike__data.html#ac3fded5c4d8aa4e4f1ff3e4f87de2802", null ],
-    [ "trip", "structbike__data.html#a30dc4c426d7b554f491ef0cab61e2ed8", null ]
+    [ "trip", "structbike__data.html#a30dc4c426d7b554f491ef0cab61e2ed8", null ],
+    [ "weight", "structbike__data.html#a110269388b7b94ebf9574851d21a7878", null ],
+    [ "yaw", "structbike__data.html#aa0d9c635492289759e5c5413a0e34693", null ]
 ];

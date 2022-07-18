@@ -10,12 +10,15 @@ Header file for CAN parsing.
 {\ttfamily \#include $<$linux/can/raw.\+h$>$}\newline
 {\ttfamily \#include $<$sys/ioctl.\+h$>$}\newline
 {\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
 {\ttfamily \#include \char`\"{}error\+\_\+handling.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}definitions.\+h\char`\"{}}\newline
 {\ttfamily \#include $<$errno.\+h$>$}\newline
 {\ttfamily \#include \char`\"{}imu\+\_\+can.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}ignitech\+\_\+can.\+h\char`\"{}}\newline
-Include dependency graph for can.\+h\+:\nopagebreak
+{\ttfamily \#include \char`\"{}obd2.\+h\char`\"{}}\newline
+Include dependency graph for can.\+h\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -27,8 +30,10 @@ Include dependency graph for can.\+h\+:\nopagebreak
 \item 
 bool \mbox{\hyperlink{can_8h_af0943094fa51d2ce2253df2a63c74cbf}{can\+\_\+sock\+\_\+connect}} (int can\+\_\+s, char const $\ast$can\+\_\+arg)
 \begin{DoxyCompactList}\small\item\em Function to simplify connecting to CAN. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{can_8h_a567932890950f71032b355522bec3e0c}{can\+\_\+parse}} (const can\+\_\+frame \&frame, \mbox{\hyperlink{structbike__data}{bike\+\_\+data}} \&log\+\_\+data)
-\begin{DoxyCompactList}\small\item\em Function to extract data from CAN frames. \end{DoxyCompactList}\end{DoxyCompactItemize}
+void \mbox{\hyperlink{can_8h_a60073606b20a0fb2b6328d0fb7448c79}{can\+\_\+parse}} (const can\+\_\+frame \&frame, \mbox{\hyperlink{structbike__data}{bike\+\_\+data}} \&log\+\_\+data, const int can\+\_\+s)
+\begin{DoxyCompactList}\small\item\em Function to extract data from CAN frames. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{can_8h_a228504366882ca4dcb781afee425d32b}{obd2\+\_\+process}} (const can\+\_\+frame \&frame, \mbox{\hyperlink{structbike__data}{bike\+\_\+data}} \&log\+\_\+data, const int can\+\_\+s)
+\begin{DoxyCompactList}\small\item\em Handle all OBD2 exchanges. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -37,11 +42,11 @@ Header file for CAN parsing.
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{can_8h_a567932890950f71032b355522bec3e0c}\label{can_8h_a567932890950f71032b355522bec3e0c}} 
+\mbox{\Hypertarget{can_8h_a60073606b20a0fb2b6328d0fb7448c79}\label{can_8h_a60073606b20a0fb2b6328d0fb7448c79}} 
 \index{can.h@{can.h}!can\_parse@{can\_parse}}
 \index{can\_parse@{can\_parse}!can.h@{can.h}}
 \doxysubsubsection{\texorpdfstring{can\_parse()}{can\_parse()}}
-{\footnotesize\ttfamily void can\+\_\+parse (\begin{DoxyParamCaption}\item[{const can\+\_\+frame \&}]{frame,  }\item[{\mbox{\hyperlink{structbike__data}{bike\+\_\+data}} \&}]{log\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void can\+\_\+parse (\begin{DoxyParamCaption}\item[{const can\+\_\+frame \&}]{frame,  }\item[{\mbox{\hyperlink{structbike__data}{bike\+\_\+data}} \&}]{log\+\_\+data,  }\item[{const int}]{can\+\_\+s }\end{DoxyParamCaption})}
 
 
 
@@ -56,7 +61,9 @@ What is a note?
 \begin{DoxyParams}[1]{Parameters}
 \mbox{\texttt{ in}}  & {\em frame} & A can\+\_\+frame struct (linux/can.\+h) that already contains a valid recieved frame. \\
 \hline
-\mbox{\texttt{ in,out}}  & {\em log\+\_\+data} & A structure to store parsed data into.\\
+\mbox{\texttt{ in,out}}  & {\em log\+\_\+data} & A structure to store parsed data into. \\
+\hline
+\mbox{\texttt{ in}}  & {\em can\+\_\+s} & Socket file-\/descriptor for CANSock interface\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -96,3 +103,22 @@ Contains specific usage details, may not be suitably reusable.
 \begin{DoxyReturn}{Returns}
 True if successful, or FALSE if error. 
 \end{DoxyReturn}
+\mbox{\Hypertarget{can_8h_a228504366882ca4dcb781afee425d32b}\label{can_8h_a228504366882ca4dcb781afee425d32b}} 
+\index{can.h@{can.h}!obd2\_process@{obd2\_process}}
+\index{obd2\_process@{obd2\_process}!can.h@{can.h}}
+\doxysubsubsection{\texorpdfstring{obd2\_process()}{obd2\_process()}}
+{\footnotesize\ttfamily int obd2\+\_\+process (\begin{DoxyParamCaption}\item[{const can\+\_\+frame \&}]{frame,  }\item[{\mbox{\hyperlink{structbike__data}{bike\+\_\+data}} \&}]{log\+\_\+data,  }\item[{const int}]{can\+\_\+s }\end{DoxyParamCaption})}
+
+
+
+Handle all OBD2 exchanges. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em frame} & A can\+\_\+frame struct (linux/can.\+h) that already contains a valid recieved frame. \\
+\hline
+\mbox{\texttt{ in}}  & {\em log\+\_\+data} & A structure to store parsed data into. \\
+\hline
+\mbox{\texttt{ in}}  & {\em can\+\_\+s} & Socket file-\/descriptor for CANSock interface \\
+\hline
+\end{DoxyParams}
