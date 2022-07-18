@@ -421,6 +421,10 @@ int main(int argc, char *argv[])
   engine_data	enData;
   bike_data	log_data;
 
+  if ( args_info.weight_given ) {
+    log_data.weight = args_info.weight_arg;
+  }
+
   #ifdef HAVE_LIBISP2
   isp2_t		lc2_data = isp2_t();
   lc2_data.status = ISP2_WARMING;

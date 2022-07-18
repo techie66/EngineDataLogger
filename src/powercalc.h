@@ -29,7 +29,7 @@
 #include "error_handling.h"
 #include "definitions.h"
 
-int trailing_average_power( bike_data &log_data, float weight_kg = 300, int periods = 20 );
+int trailing_average_power( bike_data &log_data, int periods = 20 );
 int timeval_subtract(struct timeval *result, struct timeval *x, struct timeval *y);
 
 #endif

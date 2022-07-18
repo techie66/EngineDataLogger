@@ -59,6 +59,9 @@ struct gengetopt_args_info
   char * gear_ratios_arg;	/**< @brief RPM/Speed ratios. Comma separated. (Eg. -g \"175,122,95,78,67\").  */
   char * gear_ratios_orig;	/**< @brief RPM/Speed ratios. Comma separated. (Eg. -g \"175,122,95,78,67\") original value given at command line.  */
   const char *gear_ratios_help; /**< @brief RPM/Speed ratios. Comma separated. (Eg. -g \"175,122,95,78,67\") help description.  */
+  int weight_arg;	/**< @brief Weight of vehicle, in kg, to use for calculations. (default='300').  */
+  char * weight_orig;	/**< @brief Weight of vehicle, in kg, to use for calculations. original value given at command line.  */
+  const char *weight_help; /**< @brief Weight of vehicle, in kg, to use for calculations. help description.  */
   unsigned int v_min; /**< @brief Verbose output. Specify multiple times for increasing verbosity.'s minimum occurreces */
   unsigned int v_max; /**< @brief Verbose output. Specify multiple times for increasing verbosity.'s maximum occurreces */
   const char *v_help; /**< @brief Verbose output. Specify multiple times for increasing verbosity. help description.  */
@@ -122,6 +125,7 @@ struct gengetopt_args_info
   unsigned int output_file_date_given ;	/**< @brief Whether output-file-date was given.  */
   unsigned int output_file_format_given ;	/**< @brief Whether output-file-format was given.  */
   unsigned int gear_ratios_given ;	/**< @brief Whether gear-ratios was given.  */
+  unsigned int weight_given ;	/**< @brief Whether weight was given.  */
   unsigned int v_given ;	/**< @brief Whether v was given.  */
   unsigned int verbose_given ;	/**< @brief Whether verbose was given.  */
   unsigned int quiet_given ;	/**< @brief Whether quiet was given.  */

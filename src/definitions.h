@@ -34,6 +34,7 @@
 #define LOG_FILE_LEN 4096
 #define FC_CMD_SIZE 8
 #define WATTS_PER_HPI 745.6998715823
+#define _DEFAULT_WEIGHT 300
 
 // CmdD flags
 const uint8_t		BRAKE_ON = 1 << 2,
@@ -147,6 +148,9 @@ struct	bike_data {
 
   /// Calculated power (HP-Imperial)
   int power;
+
+  /// Weight of vehicle (total/loaded) in kg's.
+  int weight = _DEFAULT_WEIGHT;
 };
 
 /// Enumeration of loggable data. These get pushed into a vector to represent user choice in order.

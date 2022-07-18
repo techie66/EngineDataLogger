@@ -17,7 +17,7 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 #include "powercalc.h"
-int trailing_average_power(bike_data &log_data, float weight_kg, int periods)
+int trailing_average_power(bike_data &log_data, int periods)
 {
   // TODO Calculate power by comparing deltas
   static float last_speed = 0;
@@ -30,7 +30,7 @@ int trailing_average_power(bike_data &log_data, float weight_kg, int periods)
   // TODO Calc power by accelerometer
   // power = force * speed
   // force = accel * mass
-  int _power = ( ( log_data.acc_forward * weight_kg ) * log_data.speed ) / WATTS_PER_HPI;
+  int _power = ( ( log_data.acc_forward * log_data.weight ) * log_data.speed ) / WATTS_PER_HPI;
 
 
   return _power;
