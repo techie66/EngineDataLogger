@@ -70,3 +70,6 @@ etc/shutdowncheck.service
 
 # A-Style backups
 *.orig
+
+# Doxygen generated Docs / Manpages
+doc/

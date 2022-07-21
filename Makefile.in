@@ -137,13 +137,13 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(myconfdir)" "$(DESTDIR)$(systemdsystemunitdir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__enginedatalogger_SOURCES_DIST = src/main.cpp src/hexconvert.cpp \
-	src/serial.cpp src/serial.h src/error_handling.cpp \
-	src/error_handling.h src/cmdline.c src/cmdline.h \
-	src/definitions.h src/can.cpp src/can.h src/imu_can.c \
-	src/imu_can.h src/ignitech_can.c src/ignitech_can.h src/obd2.c \
-	src/obd2.h src/bluetooth.cpp src/cb1100f-app_generated.h \
-	src/bluetooth.h src/powercalc.cpp src/powercalc.h \
-	src/front_controls.cpp src/front_controls.h
+	src/serial.cpp src/serial.h src/error_handling.c \
+	src/error_handling.h src/cmdline.c src/cmdline.h src/logfile.c \
+	src/logfile.h src/definitions.h src/can.cpp src/can.h \
+	src/imu_can.c src/imu_can.h src/ignitech_can.c \
+	src/ignitech_can.h src/obd2.c src/obd2.h src/bluetooth.cpp \
+	src/cb1100f-app_generated.h src/bluetooth.h src/powercalc.cpp \
+	src/powercalc.h src/front_controls.cpp src/front_controls.h
 am__dirstamp = $(am__leading_dot)dirstamp
 @CANBUS_TRUE@am__objects_1 = src/can.$(OBJEXT) src/imu_can.$(OBJEXT) \
 @CANBUS_TRUE@	src/ignitech_can.$(OBJEXT) src/obd2.$(OBJEXT)
@@ -153,8 +153,8 @@ am__dirstamp = $(am__leading_dot)dirstamp
 am_enginedatalogger_OBJECTS = src/main.$(OBJEXT) \
 	src/hexconvert.$(OBJEXT) src/serial.$(OBJEXT) \
 	src/error_handling.$(OBJEXT) src/cmdline.$(OBJEXT) \
-	$(am__objects_1) $(am__objects_2) $(am__objects_3) \
-	$(am__objects_4)
+	src/logfile.$(OBJEXT) $(am__objects_1) $(am__objects_2) \
+	$(am__objects_3) $(am__objects_4)
 enginedatalogger_OBJECTS = $(am_enginedatalogger_OBJECTS)
 enginedatalogger_LDADD = $(LDADD)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -204,8 +204,9 @@ am__depfiles_remade = src/$(DEPDIR)/bluetooth.Po src/$(DEPDIR)/can.Po \
 	src/$(DEPDIR)/cmdline.Po src/$(DEPDIR)/error_handling.Po \
 	src/$(DEPDIR)/front_controls.Po src/$(DEPDIR)/hexconvert.Po \
 	src/$(DEPDIR)/ignitech_can.Po src/$(DEPDIR)/imu_can.Po \
-	src/$(DEPDIR)/main.Po src/$(DEPDIR)/obd2.Po \
-	src/$(DEPDIR)/powercalc.Po src/$(DEPDIR)/serial.Po
+	src/$(DEPDIR)/logfile.Po src/$(DEPDIR)/main.Po \
+	src/$(DEPDIR)/obd2.Po src/$(DEPDIR)/powercalc.Po \
+	src/$(DEPDIR)/serial.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -391,11 +392,11 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 bin_SCRIPTS = bin/shutdowncheck.py
 enginedatalogger_SOURCES = src/main.cpp src/hexconvert.cpp \
-	src/serial.cpp src/serial.h src/error_handling.cpp \
-	src/error_handling.h src/cmdline.c src/cmdline.h \
-	src/definitions.h $(am__append_1) $(am__append_2) \
-	$(am__append_3) $(am__append_4)
-BUILT_SOURCES = $(am__append_5) $(am__append_6)
+	src/serial.cpp src/serial.h src/error_handling.c \
+	src/error_handling.h src/cmdline.c src/cmdline.h src/logfile.c \
+	src/logfile.h src/definitions.h $(am__append_1) \
+	$(am__append_2) $(am__append_3) $(am__append_4)
+BUILT_SOURCES = $(am__append_5) $(am__append_6) $(top_srcdir)/.version
 etcdir = $(builddir)/etc
 myconfdir = $(sysconfdir)/enginedatalogger
 dist_myconf_DATA = \
@@ -528,6 +529,8 @@ src/error_handling.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/cmdline.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/logfile.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/can.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/imu_can.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
@@ -595,6 +598,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/hexconvert.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ignitech_can.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/imu_can.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/logfile.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/obd2.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/powercalc.Po@am__quote@ # am--include-marker
@@ -774,6 +778,9 @@ distdir-am: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
+	$(MAKE) $(AM_MAKEFLAGS) \
+	  top_distdir="$(top_distdir)" distdir="$(distdir)" \
+	  dist-hook
 	-test -n "$(am__skip_mode_fix)" \
 	|| find "$(distdir)" -type d ! -perm -755 \
 		-exec chmod u+rwx,go+rx {} \; -o \
@@ -970,6 +977,7 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/hexconvert.Po
 	-rm -f src/$(DEPDIR)/ignitech_can.Po
 	-rm -f src/$(DEPDIR)/imu_can.Po
+	-rm -f src/$(DEPDIR)/logfile.Po
 	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f src/$(DEPDIR)/obd2.Po
 	-rm -f src/$(DEPDIR)/powercalc.Po
@@ -1031,6 +1039,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/hexconvert.Po
 	-rm -f src/$(DEPDIR)/ignitech_can.Po
 	-rm -f src/$(DEPDIR)/imu_can.Po
+	-rm -f src/$(DEPDIR)/logfile.Po
 	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f src/$(DEPDIR)/obd2.Po
 	-rm -f src/$(DEPDIR)/powercalc.Po
@@ -1059,8 +1068,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 .PHONY: CTAGS GTAGS TAGS all all-am am--depfiles am--refresh check \
 	check-am clean clean-binPROGRAMS clean-cscope clean-generic \
 	cscope cscopelist-am ctags ctags-am dist dist-all dist-bzip2 \
-	dist-gzip dist-lzip dist-shar dist-tarZ dist-xz dist-zip \
-	dist-zstd distcheck distclean distclean-compile \
+	dist-gzip dist-hook dist-lzip dist-shar dist-tarZ dist-xz \
+	dist-zip dist-zstd distcheck distclean distclean-compile \
 	distclean-generic distclean-hdr distclean-tags distcleancheck \
 	distdir distuninstallcheck dvi dvi-am html html-am info \
 	info-am install install-am install-binPROGRAMS \
@@ -1110,6 +1119,13 @@ $(dist_myconf_DATA): Makefile
 	mv $@.tmp $@
 
 $(etcdir)/enginedatalogger.conf.dist: $(etcdir)/enginedatalogger.conf.dist.in
+
+doc: Doxyfile
+	PROJECT_NUMBER=$(VERSION) doxygen Doxyfile
+$(top_srcdir)/.version:
+	echo $(VERSION) > $@-t && mv $@-t $@
+dist-hook:
+	echo $(VERSION) > $(distdir)/.tarball-version
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

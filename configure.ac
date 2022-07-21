@@ -2,7 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([EngineDataLogger], [v0.2.0], [jacob@geigle.me])
+#AC_INIT([EngineDataLogger], [v0.2.0], [jacob@geigle.me])
+AC_INIT([EngineDataLogger], m4_esyscmd([build-aux/git-version-gen .tarball-version]), [jacob@geigle.me])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -154,7 +155,7 @@ AS_IF([test "x$with_bluetooth" != xno -a "x$with_flatbuffers" != xno -a "x$enabl
 AM_CONDITIONAL([DASHBOARD], [test "x$feat_dashboard" = xtrue])
 
 # Checks for header files.
-AC_CHECK_HEADERS([fcntl.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h termios.h unistd.h float.h math.h errno.h stddef.h],,[
+AC_CHECK_HEADERS([fcntl.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h termios.h unistd.h float.h math.h errno.h stddef.h stdint.h signal.h],,[
   AC_MSG_ERROR([needed headers not found])                
   ])
 

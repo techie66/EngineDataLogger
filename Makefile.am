@@ -5,10 +5,12 @@ enginedatalogger_SOURCES= \
 		    src/hexconvert.cpp \
 		    src/serial.cpp \
 		    src/serial.h \
-		    src/error_handling.cpp \
+		    src/error_handling.c \
 		    src/error_handling.h \
 		    src/cmdline.c \
 		    src/cmdline.h \
+				src/logfile.c \
+				src/logfile.h \
 		    src/definitions.h
 
 if CANBUS
@@ -115,3 +117,13 @@ $(dist_myconf_DATA): Makefile
 	mv $@.tmp $@
 
 $(etcdir)/enginedatalogger.conf.dist: $(etcdir)/enginedatalogger.conf.dist.in
+
+doc: Doxyfile
+	PROJECT_NUMBER=$(VERSION) doxygen Doxyfile
+
+BUILT_SOURCES += $(top_srcdir)/.version
+$(top_srcdir)/.version:
+	echo $(VERSION) > $@-t && mv $@-t $@
+dist-hook:
+	echo $(VERSION) > $(distdir)/.tarball-version
+
