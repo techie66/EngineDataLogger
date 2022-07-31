@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
     // Parse format string
     char *pt;
     pt = strtok(args_info.output_file_format_arg, ",");
-    filter_chars("\t\n\r ",pt); // removes whitespace
+    filter_chars("\t\n\r ", pt); // removes whitespace
     while (pt != NULL) {
       if ( strcmp(pt, "rpm") == 0 )
         log_format.push_back(FMT_RPM);
@@ -270,7 +270,7 @@ int main(int argc, char *argv[])
       }
 
       pt = strtok(NULL, ",");
-      filter_chars("\t\n\r ",pt); // removes whitespace
+      filter_chars("\t\n\r ", pt); // removes whitespace
     }
   }
 
@@ -386,8 +386,7 @@ int main(int argc, char *argv[])
   while (!time_to_quit) { // time_to_quit defined error_handling.c
     int	length;
     // Check if restarting logfile
-    if ( restart_log == true )
-    {
+    if ( restart_log == true ) {
       restart_log = false;
       if ( args_info.output_file_given ) {
         log_restart(&log_file, &fd_log, args_info.output_file_orig, args_info.output_file_date_given, args_info.output_file_format_orig);
@@ -660,8 +659,7 @@ int main(int argc, char *argv[])
     }
 
     #ifdef FEAT_DASHBOARD
-    if (db_from_cmd == LOGRST)
-    {
+    if (db_from_cmd == LOGRST) {
       log_restart(&log_file, &fd_log, args_info.output_file_orig, args_info.output_file_date_given, args_info.output_file_format_orig);
       db_from_cmd = NO_CMD;
     }

@@ -19,7 +19,7 @@
 
 #include "error_handling.h"
 
-e_lvl LEVEL_DEBUG=DEBUG;
+e_lvl LEVEL_DEBUG = DEBUG;
 void error_message(e_lvl err_lvl, char const *fmt, ...)
 {
 
@@ -57,7 +57,7 @@ void error_message(e_lvl err_lvl, char const *fmt, ...)
   va_end(args);
 }
 
-volatile sig_atomic_t time_to_quit=false;
+volatile sig_atomic_t time_to_quit = false;
 void signalHandler( int signum )
 {
   error_message(INFO, "Signal %d received", signum);
@@ -69,7 +69,7 @@ void signalHandler( int signum )
   //exit(signum);
 }
 
-volatile sig_atomic_t restart_log=false;
+volatile sig_atomic_t restart_log = false;
 void hupHandler( int signum )
 {
   error_message(INFO, "Signal %d received", signum);

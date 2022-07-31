@@ -58,7 +58,7 @@ struct fc_data {
           serialCmdB,
           serialCmdC,
           serialCmdA,
-          inputCmdD, 
+          inputCmdD,
           inputCmdC;
   float	systemVoltage;
   bool	brake_on;

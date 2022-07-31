@@ -30,7 +30,7 @@ extern "C" {
 #include <stdbool.h>
 #include <errno.h>
 
-typedef enum e_lvl {NONE, ERROR, WARN, INFO, DEBUG}e_lvl;
+typedef enum e_lvl {NONE, ERROR, WARN, INFO, DEBUG} e_lvl;
 extern volatile sig_atomic_t time_to_quit;
 extern volatile sig_atomic_t restart_log;
 extern e_lvl  LEVEL_DEBUG;

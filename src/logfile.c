@@ -21,18 +21,18 @@
 #include "definitions.h"
 
 
-char *log_insert_time(char *buf1, const char *path,time_t tod)
+char *log_insert_time(char *buf1, const char *path, time_t tod)
 {
   const char *ext = NULL;
   const char *base = path;
-  ptrdiff_t pathlen=0;
+  ptrdiff_t pathlen = 0;
 
-  prep_path_insert(path,&pathlen,&base,&ext);
+  prep_path_insert(path, &pathlen, &base, &ext);
 
   // Get string for current time
   char stampbuf[TIME_BUF_LEN] = {0};
   if (tod == 0)
-        tod = time(NULL);
+    tod = time(NULL);
   if ( tod == -1 ) {
     error_message(ERROR, "ERROR: time() function failed");
     return NULL;
@@ -44,19 +44,19 @@ char *log_insert_time(char *buf1, const char *path,time_t tod)
   }
   int stamplen = strftime(stampbuf, TIME_BUF_LEN, "-%Y%m%d%H%M%S", ptm);
   // get enough buffer space
-  buf1 = copyout(buf1,path,pathlen,base,ext,stamplen,stampbuf);
+  buf1 = copyout(buf1, path, pathlen, base, ext, stamplen, stampbuf);
 
   return buf1;
 }
 
-char *log_insert_str(char *buf1, const char *path,const char* str)
+char *log_insert_str(char *buf1, const char *path, const char *str)
 {
   const char *ext = NULL;
   const char *base = path;
-  ptrdiff_t pathlen=0;
+  ptrdiff_t pathlen = 0;
 
-  prep_path_insert(path,&pathlen,&base,&ext);
-  buf1 = copyout(buf1,path,pathlen,base,ext,strlen(str),str);
+  prep_path_insert(path, &pathlen, &base, &ext);
+  buf1 = copyout(buf1, path, pathlen, base, ext, strlen(str), str);
 
 }
 
@@ -65,17 +65,17 @@ void prep_path_insert(const char *path, int *pathlen, const char **base, const c
   // find "base.ext" and ".ext" in "/dir/base.ext"
   const char *src = path;
   for (int chr = *src++;  chr != 0;  chr = *src++) {
-      switch (chr) {
+    switch (chr) {
       case '/':
-          *base = src;
-          *ext = NULL;
-          break;
+        *base = src;
+        *ext = NULL;
+        break;
       case '.':
-          // extra checks ignore hidden files
-          if (*ext == NULL && *(src - 2) != '/' && (src-1) != path)
-              *ext = src - 1;
-          break;
-      }
+        // extra checks ignore hidden files
+        if (*ext == NULL && *(src - 2) != '/' && (src - 1) != path)
+          *ext = src - 1;
+        break;
+    }
   }
 
   // full length of path
@@ -90,9 +90,8 @@ char *filter_chars(const char *filter, char *str)
   if ( filter == NULL )
     return str;
 
-  for(; *str != '\0'; ++str)
-  {
-    if(!strchr(filter,*str))
+  for (; *str != '\0'; ++str) {
+    if (!strchr(filter, *str))
       *put++ = *str;
   }
   *put = '\0';
@@ -102,62 +101,59 @@ char *filter_chars(const char *filter, char *str)
 
 // copyout -- fill in destination buffer
 char *
-copyout(char *buf1,const char *path,int pathlen, const char *base,
+copyout(char *buf1, const char *path, int pathlen, const char *base,
         const char *ext, int inslen, const char *ins_string)
 {
-    char *dst;
-    ptrdiff_t cpylen;
+  char *dst;
+  ptrdiff_t cpylen;
 
-    // get enough buffer space
-    if (buf1 == NULL)
-        buf1 = malloc(pathlen + inslen + 1);
+  // get enough buffer space
+  if (buf1 == NULL)
+    buf1 = malloc(pathlen + inslen + 1);
 
-    dst = buf1;
+  dst = buf1;
 
-    // ext must be to the right of base
-    do {
-        if (ext == NULL)
-            break;
-        if (base == NULL)
-            break;
-        if (ext >= base)
-            break;
-        ext = NULL;
-    } while (0);
+  // ext must be to the right of base
+  do {
+    if (ext == NULL)
+      break;
+    if (base == NULL)
+      break;
+    if (ext >= base)
+      break;
+    ext = NULL;
+  } while (0);
 
-    // copy over all but extension
-    if (ext != NULL)
-        cpylen = ext - path;
-    else
-        cpylen = pathlen;
-    dst = mempcpy(dst,path,cpylen);
+  // copy over all but extension
+  if (ext != NULL)
+    cpylen = ext - path;
+  else
+    cpylen = pathlen;
+  dst = mempcpy(dst, path, cpylen);
 
-    // copy over the date stamp
-    dst = mempcpy(dst,ins_string,inslen);
+  // copy over the date stamp
+  dst = mempcpy(dst, ins_string, inslen);
 
-    // copy over the extension
-    if (ext != NULL) {
-        cpylen = &path[pathlen] - ext;
-        dst = mempcpy(dst,ext,cpylen);
-    }
+  // copy over the extension
+  if (ext != NULL) {
+    cpylen = &path[pathlen] - ext;
+    dst = mempcpy(dst, ext, cpylen);
+  }
 
-    *dst = 0;
+  *dst = 0;
 
-    return buf1;
+  return buf1;
 }
 
 
 void log_open(char const **log_file, FILE **fd_log, char const *filename, _Bool file_date, char const *format)
 {
   if ( file_date ) {
-    *log_file = log_insert_time(NULL,filename,0);
-  }
-  else if (strcmp(filename, "-") == 0 )
-  {
+    *log_file = log_insert_time(NULL, filename, 0);
+  } else if (strcmp(filename, "-") == 0 ) {
     char *buf1 = strdup("/dev/stdout");
     *log_file = buf1;
-  }
-  else {
+  } else {
     char *buf0 = strdup(filename);
     *log_file = buf0;
   }
@@ -175,20 +171,20 @@ void log_open(char const **log_file, FILE **fd_log, char const *filename, _Bool 
 void log_restart(char const **log_file, FILE **fd_log, char const *filename, _Bool file_date, char const *format)
 {
   static int log_restarts = 0;
-  error_message(INFO,"Restarting log file");
+  error_message(INFO, "Restarting log file");
   fclose(*fd_log);
   // TODO can't free static string
-  free((void*)*log_file);
+  free((void *)*log_file);
   *log_file = NULL;
 
   if ( file_date ) {
-    log_open(log_file,fd_log,filename,file_date,format);
+    log_open(log_file, fd_log, filename, file_date, format);
   } else {
     // Add counter to log
     char insert_str[80];
-    sprintf(insert_str,".%d",log_restarts);
-    char *new_filename = log_insert_str(NULL,filename,insert_str);
-    log_open(log_file,fd_log,new_filename,file_date,format);
+    sprintf(insert_str, ".%d", log_restarts);
+    char *new_filename = log_insert_str(NULL, filename, insert_str);
+    log_open(log_file, fd_log, new_filename, file_date, format);
   }
 
   log_restarts++;
