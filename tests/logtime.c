@@ -1,9 +1,12 @@
 #include "../src/logfile.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc,char *argv[])
 {
   LEVEL_DEBUG=DEBUG; // error_handling.c
+  // Set Stable Timezone for testing purpose
+  putenv("TZ=UTC");
   // 
   time_t _time = 1658471847; // -20220722153727
   int _retval = 0;
@@ -22,18 +25,18 @@ int main(int argc,char *argv[])
     "./.path.dir./.xxx/.log.csv"
   };
   char *outputs[] = {
-    "log-20220722153727.csv",
-    ".log-20220722153727.csv",
-    "/dir/log-20220722153727.ext",
-    "/dir.path/.log-20220722153727.ext.gz",
-    "/.-20220722153727",
-    "/.log-20220722153727",
-    "./path/dir/log-20220722153727.csv",
-    "./path/.dir/log-20220722153727.csv",
-    "./.path.dir/xxx/log-20220722153727.csv",
-    "./.path.dir./xxx/log-20220722153727.csv",
-    "./.path.dir./.xxx/log-20220722153727.csv",
-    "./.path.dir./.xxx/.log-20220722153727.csv"
+    "log-20220722063727.csv",
+    ".log-20220722063727.csv",
+    "/dir/log-20220722063727.ext",
+    "/dir.path/.log-20220722063727.ext.gz",
+    "/.-20220722063727",
+    "/.log-20220722063727",
+    "./path/dir/log-20220722063727.csv",
+    "./path/.dir/log-20220722063727.csv",
+    "./.path.dir/xxx/log-20220722063727.csv",
+    "./.path.dir./xxx/log-20220722063727.csv",
+    "./.path.dir./.xxx/log-20220722063727.csv",
+    "./.path.dir./.xxx/.log-20220722063727.csv"
   };
   printf("Test Size: %d\n", sizeof(inputs)/sizeof(inputs[0]));
   for ( int i=0 ; i<sizeof(inputs)/sizeof(inputs[0]) ; i++ )
