@@ -33,3 +33,10 @@ jobs:
       run: make
     - name: make check
       run: make check
+    - name: Archive tests artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-logs
+        path: |
+          *.log
+          tests/*.log
