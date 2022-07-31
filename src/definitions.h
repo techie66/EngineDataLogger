@@ -20,7 +20,8 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
-#include <cstdint>
+#include <stdint.h>
+#include <stdbool.h> // C99 Bool Support
 
 // TODO option-ify
 #define RUNNING_RPM 900
@@ -53,36 +54,68 @@ const uint8_t		CLUTCH_DISENGAGED = 1 << 2,
 const uint8_t		ENGINE_RUNNING = 1 << 7;
 
 struct fc_data {
-  uint8_t serialCmdD = 0,
-          serialCmdB = 0,
-          serialCmdC = 0,
-          serialCmdA = 0,
-          inputCmdD = 0,
-          inputCmdC = 0;
-  float	systemVoltage = 0.0;
-  bool	brake_on = false;
-  bool	horn_on = false;
-  bool	left_on = false;
-  bool	right_on = false;
-  bool	high_on = false;
-  bool	kill_on = false;
-  bool	clutch_disengaged = false;
-  bool	kickstand_up = false;
-  bool	in_neutral = false;
+  uint8_t serialCmdD,
+          serialCmdB,
+          serialCmdC,
+          serialCmdA,
+          inputCmdD, 
+          inputCmdC;
+  float	systemVoltage;
+  bool	brake_on;
+  bool	horn_on;
+  bool	left_on;
+  bool	right_on;
+  bool	high_on;
+  bool	kill_on;
+  bool	clutch_disengaged;
+  bool	kickstand_up;
+  bool	in_neutral;
 };
+
+const struct fc_data FC_DATA_DEFAULT = {
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0.0,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false
+};
+
 struct			engine_data {
-  uint16_t	rpm = 0;
-  float		batteryVoltage = 0.0,
-          temp_oil = 0, // divide by 100 for actual temp
-          pres_oil = 0, // divide by 100 for actual pressure
-          speed = 0; // divide by 100 for actual speed
-  uint32_t	odometer = 0;
-  uint32_t	trip = 0;
+  uint16_t	rpm;
+  float		batteryVoltage,
+          temp_oil, // divide by 100 for actual temp
+          pres_oil, // divide by 100 for actual pressure
+          speed; // divide by 100 for actual speed
+  uint32_t	odometer;
+  uint32_t	trip;
 };
+
+const struct engine_data ENGINE_DATA_DEFAULT = {
+  0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0,
+  0
+};
+
 
 enum System_CMD {
   NO_CMD,
   TRPRST,
+  LOGRST,
   O2MANON,
   O2MANOFF
 };
@@ -150,7 +183,7 @@ struct	bike_data {
   int power;
 
   /// Weight of vehicle (total/loaded) in kg's.
-  int weight = _DEFAULT_WEIGHT;
+  int weight;
 };
 
 /// Enumeration of loggable data. These get pushed into a vector to represent user choice in order.

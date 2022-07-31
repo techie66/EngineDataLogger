@@ -16,20 +16,32 @@
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifndef ERRORS_H
 #define ERRORS_H
 
 #include <stdio.h>
 #include <stdarg.h>
-#include <csignal>
+#include <signal.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <errno.h>
 
-enum e_lvl {NONE, ERROR, WARN, INFO, DEBUG};
+typedef enum e_lvl {NONE, ERROR, WARN, INFO, DEBUG}e_lvl;
 extern volatile sig_atomic_t time_to_quit;
-extern e_lvl LEVEL_DEBUG;
+extern volatile sig_atomic_t restart_log;
+extern e_lvl  LEVEL_DEBUG;
+
 
 void error_message(e_lvl err_lvl, char const *fmt, ...);
 void signalHandler( int signum );
+void hupHandler( int signum );
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif

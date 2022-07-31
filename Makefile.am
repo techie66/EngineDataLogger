@@ -127,3 +127,5 @@ $(top_srcdir)/.version:
 dist-hook:
 	echo $(VERSION) > $(distdir)/.tarball-version
 
+SUBDIRS= . tests
+

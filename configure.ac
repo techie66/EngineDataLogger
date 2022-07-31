@@ -10,6 +10,9 @@ AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE(1.9 subdir-objects)
 AM_MAINTAINER_MODE()
 
+# Autotest
+AC_CONFIG_TESTDIR(tests)
+
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
@@ -198,5 +201,5 @@ AM_CONDITIONAL([HAVE_SYSTEMD], [test "x$with_systemdsystemunitdir" != "xno"])
 AC_CHECK_PROG([HAVE_GENGETOPT],[gengetopt],[yes])
 AM_CONDITIONAL([HAVE_GENGETOPT], [test "x$HAVE_GENGETOPT" = xyes])
 
-AC_CONFIG_FILES([Makefile data/cmdline.ggo])
+AC_CONFIG_FILES([Makefile tests/Makefile data/cmdline.ggo tests/atlocal])
 AC_OUTPUT

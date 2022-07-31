@@ -34,6 +34,7 @@
 #include <errno.h>
 #include "cmdline.h"
 #include "hexconvert.h"
+#include "logfile.h"
 
 #ifdef FEAT_POWERCALC
 #include "powercalc.h"
@@ -74,11 +75,6 @@
 #include "definitions.h"
 #include "error_handling.h"
 
-
-volatile sig_atomic_t 	time_to_quit = false;
-// Set default Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
-e_lvl			LEVEL_DEBUG = ERROR;
-
 int fc_open(const char *filename)
 {
   int fd;
@@ -111,27 +107,16 @@ int lc2_open(const char *filename)
 
 int main(int argc, char *argv[])
 {
+  // Set default Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
+  LEVEL_DEBUG = ERROR;
+
   // register signal handlers
   signal(SIGINT, signalHandler);
   signal(SIGTERM, signalHandler);
   // TODO SIGHUP start new output file?
-  signal(SIGHUP, signalHandler);
+  signal(SIGHUP, hupHandler);
 
-  // Get string for current time
-  char time_buf[TIME_BUF_LEN] = {0};
-  time_t rawtime = time(NULL);
-  if ( rawtime == -1 ) {
-    error_message(ERROR, "ERROR: time() function failed");
-    return -1;
-  }
-  struct tm *ptm = localtime(&rawtime);
-  if ( ptm == NULL ) {
-    error_message(ERROR, "ERROR: localtime() failed");
-    return -1;
-  }
-  strftime(time_buf, TIME_BUF_LEN, "%Y%m%d%H%M%S", ptm);
-
-  int 		fd_front_controls;
+  int 		fd_front_controls = -1;
   FILE		*fd_log;
 
   #ifdef FEAT_DASHBOARD
@@ -212,56 +197,16 @@ int main(int argc, char *argv[])
   #endif /* FEAT_CAN */
 
   char const *log_file = NULL;
+  time_t rawtime = time(NULL);
+
   std::vector<log_fmt_data> log_format;
   if ( args_info.output_file_given ) {
-    if ( args_info.output_file_date_given ) {
-      char log_file_tmp[LOG_FILE_LEN] = {0};
-      char *tmp = strdup(args_info.output_file_arg);
-      char *dir = strdup(dirname(tmp));
-      free(tmp);
-      tmp = strdup(args_info.output_file_arg);
-      char *base = strdup(basename(tmp));
-      free(tmp);
-      tmp = strchr(base, '.');
-      char *ext = NULL;
-      char *file = NULL;
-      if (tmp) {
-        ext = strdup(tmp);
-        file = strndup(base, (strlen(base) - strlen(ext)));
-        free(base);
-      } else {
-        file = strdup(base);
-        free(base);
-      }
-
-      if (dir) {
-        strcat(log_file_tmp, dir);
-        free(dir);
-      }
-      strcat(log_file_tmp, "/");
-      if (file) {
-        strcat(log_file_tmp, file);
-        free(file);
-      }
-      strcat(log_file_tmp, "-");
-      if (time_buf)
-        strcat(log_file_tmp, time_buf);
-      if (ext) {
-        strcat(log_file_tmp, ext);
-        free(ext);
-      }
-
-      log_file = log_file_tmp;
-    } else {
-      log_file = args_info.output_file_arg;
-      if (strcmp(args_info.output_file_arg, "-") == 0 )
-        log_file = "/dev/stdout";
-    }
+    log_open(&log_file, &fd_log, args_info.output_file_orig, args_info.output_file_date_given, args_info.output_file_format_orig);
 
     // Parse format string
-    // TODO strip out whitespace when comparing
     char *pt;
     pt = strtok(args_info.output_file_format_arg, ",");
+    filter_chars("\t\n\r ",pt); // removes whitespace
     while (pt != NULL) {
       if ( strcmp(pt, "rpm") == 0 )
         log_format.push_back(FMT_RPM);
@@ -324,17 +269,9 @@ int main(int argc, char *argv[])
         return -1;
       }
 
-      printf("%s", pt);
       pt = strtok(NULL, ",");
+      filter_chars("\t\n\r ",pt); // removes whitespace
     }
-
-    // Open log file
-    if ((fd_log = fopen(log_file, "a")) < 0) {
-      error_message (ERROR, "ERROR:LOG: Failed to open the log file err:%d - %s", errno, strerror(errno));
-      //return -1;
-    }
-    // Put proper CSV header here
-    fprintf(fd_log, "%s\n", args_info.output_file_format_orig);
   }
 
 
@@ -418,7 +355,7 @@ int main(int argc, char *argv[])
 
 
   // Main Loop
-  engine_data	enData;
+  engine_data	enData = ENGINE_DATA_DEFAULT;
   bike_data	log_data;
 
   if ( args_info.weight_given ) {
@@ -431,7 +368,7 @@ int main(int argc, char *argv[])
   #endif /* HAVE_LIBISP2 */
 
   #ifdef FEAT_FRONTCONTROLS
-  fc_data		fcData;
+  fc_data		fcData = FC_DATA_DEFAULT;
   #endif /* FEAT_FRONTCONTROLS */
 
   #ifdef FEAT_I2C
@@ -446,8 +383,16 @@ int main(int argc, char *argv[])
   bool    o2_manual = false;
   struct  timeval log_time_last;
   gettimeofday(&log_time_last, NULL);
-  while (!time_to_quit) {
+  while (!time_to_quit) { // time_to_quit defined error_handling.c
     int	length;
+    // Check if restarting logfile
+    if ( restart_log == true )
+    {
+      restart_log = false;
+      if ( args_info.output_file_given ) {
+        log_restart(&log_file, &fd_log, args_info.output_file_orig, args_info.output_file_date_given, args_info.output_file_format_orig);
+      }
+    }
     // Read all inputs
 
     #ifdef HAVE_LIBIGNITECH
@@ -546,6 +491,7 @@ int main(int argc, char *argv[])
     fd_set	readset,
             writeset;
     FD_ZERO(&readset);
+    FD_ZERO(&writeset);
     #ifdef FEAT_DASHBOARD
     FD_SET(dashboard.getListener(), &readset);
     max_fd = (max_fd > dashboard.getListener()) ? max_fd : dashboard.getListener();
@@ -714,6 +660,11 @@ int main(int argc, char *argv[])
     }
 
     #ifdef FEAT_DASHBOARD
+    if (db_from_cmd == LOGRST)
+    {
+      log_restart(&log_file, &fd_log, args_info.output_file_orig, args_info.output_file_date_given, args_info.output_file_format_orig);
+      db_from_cmd = NO_CMD;
+    }
     #ifdef FEAT_I2C
     if (db_from_cmd == TRPRST) {
       error_message(WARN, "Resetting Trip");
@@ -751,7 +702,6 @@ int main(int argc, char *argv[])
 
     bikeobj.alt_rpm = enData.rpm;
     bikeobj.rpm = my_rpm;
-    log_data.rpm = my_rpm;
     bikeobj.speed = enData.speed;
     bikeobj.odometer = enData.odometer;
     bikeobj.oil_temp = enData.temp_oil;
@@ -762,6 +712,8 @@ int main(int argc, char *argv[])
     bikeobj.blink_right = fcData.right_on;
     bikeobj.trip = enData.trip;
     #endif /* FEAT_DASHBOARD */
+
+    log_data.rpm = my_rpm;
 
     #ifdef HAVE_LIBISP2
     if (lc2_data.status == ISP2_NORMAL || o2_manual) {
@@ -800,11 +752,13 @@ int main(int argc, char *argv[])
     #endif /* FEAT_DASHBOARD */
     // Send commands
     FD_ZERO(&writeset);
+    max_fd = 0;
     #ifdef FEAT_DASHBOARD
     max_fd = (max_fd > dashboard.getListener()) ? max_fd : dashboard.getListener();
     if (dashboard.getClient() > 0) {
       FD_SET(dashboard.getClient(), &writeset);
       max_fd = (max_fd > dashboard.getClient()) ? max_fd : dashboard.getClient();
+      error_message(DEBUG, "DEBUG:Select write dashboard");
     }
     #endif /* FEAT_DASHBOARD */
 
@@ -812,6 +766,7 @@ int main(int argc, char *argv[])
     if (fd_front_controls > 0) {
       FD_SET(fd_front_controls, &writeset);
       max_fd = (max_fd > fd_front_controls) ? max_fd : fd_front_controls;
+      error_message(DEBUG, "DEBUG:Select write Front Controls");
     }
     #endif /* FEAT_FRONTCONTROLS */
 
@@ -828,7 +783,7 @@ int main(int argc, char *argv[])
     timeout.tv_usec = 0;
     select_result = select(max_fd + 1, NULL, &writeset, NULL, &timeout);
     if (select_result < 0) {
-      error_message (WARN, "error %d : %s", errno, strerror (errno));
+      error_message (WARN, "SELECT: write error %d : %s", errno, strerror (errno));
     } else if (select_result == 0) {
       // Timeout
       // #Dontcare

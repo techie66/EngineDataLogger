@@ -73,3 +73,18 @@ etc/shutdowncheck.service
 
 # Doxygen generated Docs / Manpages
 doc/
+
+# Distribution archives
+enginedatalogger*.tar.gz
+
+# Test logs and generated file
+tests/logtime
+tests/logstr
+tests/removeblanks
+*.log
+*.trs
+tests/atconfig
+tests/package.m4
+
+# Temporary files
+.version
