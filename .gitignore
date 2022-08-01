@@ -84,6 +84,7 @@ tests/removeblanks
 *.log
 *.trs
 tests/atconfig
+tests/atlocal
 tests/package.m4
 
 # Temporary files

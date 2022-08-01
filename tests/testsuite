@@ -902,7 +902,7 @@ fi
 # List of tests.
 if $at_list_p; then
   cat <<_ATEOF || at_write_fail=1
-EngineDataLogger 0.1.0.155-0838-dirty test suite test groups:
+EngineDataLogger 0.1.0.159-b450-dirty test suite test groups:
 
  NUM: FILE-NAME:LINE     TEST-GROUP-NAME
       KEYWORDS
@@ -943,7 +943,7 @@ _ATEOF
   exit $at_write_fail
 fi
 if $at_version_p; then
-  $as_echo "$as_me (EngineDataLogger 0.1.0.155-0838-dirty)" &&
+  $as_echo "$as_me (EngineDataLogger 0.1.0.159-b450-dirty)" &&
   cat <<\_ATEOF || at_write_fail=1
 
 Copyright (C) 2012 Free Software Foundation, Inc.
@@ -1123,11 +1123,11 @@ exec 5>>"$at_suite_log"
 
 # Banners and logs.
 $as_echo "## ------------------------------------------------- ##
-## EngineDataLogger 0.1.0.155-0838-dirty test suite. ##
+## EngineDataLogger 0.1.0.159-b450-dirty test suite. ##
 ## ------------------------------------------------- ##"
 {
   $as_echo "## ------------------------------------------------- ##
-## EngineDataLogger 0.1.0.155-0838-dirty test suite. ##
+## EngineDataLogger 0.1.0.159-b450-dirty test suite. ##
 ## ------------------------------------------------- ##"
   echo
 
@@ -1971,7 +1971,7 @@ _ASBOX
   $as_echo "Please send $at_msg and all information you think might help:
 
    To: <jacob@geigle.me>
-   Subject: [EngineDataLogger 0.1.0.155-0838-dirty] $as_me: $at_fail_list${at_fail_list:+ failed${at_xpass_list:+, }}$at_xpass_list${at_xpass_list:+ passed unexpectedly}
+   Subject: [EngineDataLogger 0.1.0.159-b450-dirty] $as_me: $at_fail_list${at_fail_list:+ failed${at_xpass_list:+, }}$at_xpass_list${at_xpass_list:+ passed unexpectedly}
 
 You may investigate any problem if you feel able to do so, in which
 case the test suite provides a good starting point.  Its output may
@@ -2003,7 +2003,7 @@ at_fn_check_prepare_dynamic "$abs_top_builddir/enginedatalogger -V" "example.at:
 at_status=$? at_failed=false
 $at_check_filter
 echo stderr:; cat "$at_stderr"
-$at_diff expout "$at_stdout" || at_failed=:
+echo stdout:; cat "$at_stdout"
 at_fn_check_status 0 $at_status "$at_srcdir/example.at:5"
 $at_failed && at_fn_log_failure
 $at_traceon; }
