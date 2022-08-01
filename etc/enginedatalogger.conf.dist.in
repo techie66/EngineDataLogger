@@ -1,0 +1,67 @@
+# EngineDataLogger Config
+# This file is an example of options that can be used.
+
+# Output Log file
+#	location of the output log file
+output-file = /var/log/enginedatalogger.log
+
+# Output file date
+#	If given (un-commented) will append current date and time to log file name when opening
+#output-file-date
+
+# Output file format
+#  Comma-separated list of loggable values
+#  output file will follow this list
+#output-file-format = "rpm,speed"
+
+# Verbosity
+# Options: NONE,ERROR,WARN,INFO,DEBUG
+# in order of how much is written to stdout
+verbose = WARN
+
+## Ignitech device settings
+# set `ignitech` to the device that is the ignitech controller
+#	usually something like /dev/ttyUSB0 
+#	its handy to set udev rules to ensure this is always the right device
+#ignitech = /dev/ignitech
+
+# Ignitech dump file
+#	optional file to pass to libIgnitech as a raw dump of all received bytes
+#	Only really useful for debugging
+#ignitech-dump-file = @runstatedir@/ignitech.dump.bin
+
+# Ignitech Servo as IAP
+#  read servo measurment as an IAP(MAP) sensor
+#  All 5 options must be set
+#ignitech-servo-as_iap
+#ignitech-sai-low = 21
+#ignitech-sai-low-mv = 708
+#ignitech-sai-high = 101
+#ignitech-sai-high-mv = 4252
+
+# Gear Ratios
+#  Comma-separated list of rpm/speed ratios from 1-5
+#gear-ratios = "175,122,95,78,67"
+
+## Innovate LC-2 device settings
+# set 'lc2' to the serial port the LC-2 is connected to
+#lc2 = /dev/ttyAMA0
+# set 'lc2-delay' to the number of seconds to wait until powering up the
+# LC-2 controller
+# Default if not set = 15
+#lc2-delay=15
+# set 'lc2-pin' to the GPIO pin used to control power to the
+# LC-2 controller
+#lc2-pin=26
+
+## Front Controls settings
+# set front-controls to the serial port that is connected to
+# front controls (eg /dev/ttyUSB0)
+#front-controls=/dev/ttyUSB0
+
+## Sleepy-Pi settings (aka EngineData)
+# set 'sleepy' to the I2C device that is used to talk to the Sleepy Pi
+#sleepy=/dev/i2c-1
+# set sleepy-addr to the I2C address that the Sleepy Pi 
+#  is listening on
+#sleepy-addr=0x04

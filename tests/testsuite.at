@@ -1,0 +1,2 @@
+AT_INIT
+m4_include(example.at)

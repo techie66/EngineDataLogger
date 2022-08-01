@@ -1,8 +1,91 @@
-data_logger
-*.o
-.depend
+enginedatalogger
 input.txt
 output.txt
 system_log.csv
 example_serial.txt
-simple_bluetooth
+
+# Generated code that needs to be regened every build
+src/cb1100f-app_generated.h
+src/cmdline.c
+src/cmdline.h
+data/cmdline.ggo
+
+# Vim swap files
+.*.swp
+*~
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+.Tpo
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+
+# Autotools/libtool/gnumake Stuff
+Makefile
+config.log
+config.status
+stamp-h1
+.deps
+.libs
+config.h
+libtool
+autom4te.cache
+.depend
+.dirstamp
+
+# generated config files
+etc/enginedatalogger.conf.dist
+etc/enginedatalogger.conf
+etc/enginedatalogger.service
+etc/enginedatalogger.path
+etc/shutdowncheck.service
+
+# A-Style backups
+*.orig
+
+# Doxygen generated Docs / Manpages
+doc/
+
+# Distribution archives
+enginedatalogger*.tar.gz
+
+# Test logs and generated file
+tests/logtime
+tests/logstr
+tests/removeblanks
+*.log
+*.trs
+tests/atconfig
+tests/atlocal
+tests/package.m4
+
+# Temporary files
+.version

@@ -1,0 +1,8 @@
+# Autoconf / Automake generated files
+* linguist-generated
+src/* linguist-generated=false
+etc/* linguist-generated=false
+bin/* linguist-generated=false
+src/cmdline.c linguist-generated
+src/cmdline.h linguist-generated
+
