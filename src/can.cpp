@@ -47,34 +47,43 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
   int _status = EXIT_FAILURE;
   switch (frame.can_id & 0x7FFFFFFF) {
     case IMU_CAN_BODY_POSITION_FRAME_ID: {
-      _status = EXIT_SUCCESS;
       struct imu_can_body_position_t st_body_pos;
       int status_unpack = imu_can_body_position_unpack(&st_body_pos, frame.data, sizeof(frame.data));
-      // Physical mounting may require changing up pitch and roll.
-      log_data.yaw = imu_can_body_position_yaw_angle_decode(st_body_pos.yaw_angle);
-      log_data.pitch = imu_can_body_position_pitch_angle_decode(st_body_pos.pitch_angle);
-      log_data.roll = imu_can_body_position_roll_angle_decode(st_body_pos.roll_angle);
+      if ( status_unpack == 0 )
+      {
+        _status = EXIT_SUCCESS;
+        // Physical mounting may require changing up pitch and roll.
+        log_data.yaw = imu_can_body_position_yaw_angle_decode(st_body_pos.yaw_angle);
+        log_data.pitch = imu_can_body_position_pitch_angle_decode(st_body_pos.pitch_angle);
+        log_data.roll = imu_can_body_position_roll_angle_decode(st_body_pos.roll_angle);
+      }
       error_message(INFO, "CAN:Body Roll: %f", log_data.roll);
     }
     break;
 
     case IMU_CAN_BODY_ACCEL_FRAME_ID: {
-      _status = EXIT_SUCCESS;
       struct imu_can_body_accel_t st_body_acc;
       int status_unpack = imu_can_body_accel_unpack(&st_body_acc, frame.data, sizeof(frame.data));
-      // Physical mounting may require changing up x and y
-      log_data.acc_forward = imu_can_body_accel_acc_x_decode(st_body_acc.acc_x);
-      log_data.acc_side = imu_can_body_accel_acc_y_decode(st_body_acc.acc_y);
-      log_data.acc_vert = imu_can_body_accel_acc_z_decode(st_body_acc.acc_z);
+      if ( status_unpack == 0 )
+      {
+        _status = EXIT_SUCCESS;
+        // Physical mounting may require changing up x and y
+        log_data.acc_forward = imu_can_body_accel_acc_x_decode(st_body_acc.acc_x);
+        log_data.acc_side = imu_can_body_accel_acc_y_decode(st_body_acc.acc_y);
+        log_data.acc_vert = imu_can_body_accel_acc_z_decode(st_body_acc.acc_z);
+      }
       error_message(INFO, "CAN:IMU X Accel: %f", log_data.acc_forward);
     }
     break;
 
     case IGNITECH_CAN_IGNITECH_WB_2_FRAME_ID: {
-      _status = EXIT_SUCCESS;
       struct ignitech_can_ignitech_wb_2_t st_wb2;
       int status_unpack = ignitech_can_ignitech_wb_2_unpack(&st_wb2, frame.data, sizeof(frame.data));
-      log_data.lambda = st_wb2.lambda; // Both scaled by 0.01, no conversion necessary
+      if ( status_unpack == 0 )
+      {
+        _status = EXIT_SUCCESS;
+        log_data.lambda = st_wb2.lambda; // Both scaled by 0.01, no conversion necessary
+      }
       error_message(DEBUG, "CAN:ignitech lambda: %f", ignitech_can_ignitech_wb_2_lambda_decode(st_wb2.lambda));
     }
     break;
@@ -84,6 +93,70 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
       error_message(DEBUG, "CAN:OBD2 Request");
     }
     break;
+
+    case GPS_GPS_LOC_FRAME_ID: {
+      error_message(DEBUG, "CAN:GPS Location Frame");
+      struct gps_gps_loc_t st_gps_loc;
+      int status_unpack = gps_gps_loc_unpack(&st_gps_loc, frame.data, sizeof(frame.data));
+      if ( status_unpack == 0 )
+      {
+        _status = EXIT_SUCCESS;
+        log_data.lat = gps_gps_loc_lat_decimal_degrees_decode(st_gps_loc.lat_decimal_degrees);
+        log_data.lon = gps_gps_loc_long_decimal_degrees_decode(st_gps_loc.long_decimal_degrees);
+      }
+    }
+    break;                           
+
+    case GPS_GPS_NAV_FRAME_ID: {
+      error_message(DEBUG, "CAN:GPS Navigation Frame");
+      struct gps_gps_nav_t st_gps_nav;
+      int status_unpack = gps_gps_nav_unpack(&st_gps_nav, frame.data, sizeof(frame.data));
+      if ( status_unpack == 0 )
+      {
+        _status = EXIT_SUCCESS;
+        log_data.altitude = gps_gps_nav_altitude_decode(st_gps_nav.altitude);
+        log_data.gps_speed = gps_gps_nav_speed_decode(st_gps_nav.speed);
+        log_data.gps_heading = gps_gps_nav_heading_decode(st_gps_nav.heading);
+      }
+    }
+    break;                           
+
+    case GPS_GPS_STAT_FRAME_ID: {
+      error_message(DEBUG, "CAN:GPS Stats Frame");
+      struct gps_gps_stat_t st_gps_stat;
+      int status_unpack = gps_gps_stat_unpack(&st_gps_stat, frame.data, sizeof(frame.data));
+      if ( status_unpack == 0 )
+      {
+        _status = EXIT_SUCCESS;
+        log_data.satV = st_gps_stat.visible_satellites;
+        log_data.satU = st_gps_stat.active_satellites;
+        log_data.gpsfix = (gps_fixtype)st_gps_stat.type;
+        log_data.pdop = gps_gps_stat_pdop_decode(st_gps_stat.pdop);
+        log_data.hdop = gps_gps_stat_hdop_decode(st_gps_stat.hdop);
+        log_data.vdop = gps_gps_stat_vdop_decode(st_gps_stat.vdop);
+      }
+    }
+    break;                           
+
+    case GPS_GPS_TIME_FRAME_ID: {
+      error_message(DEBUG, "CAN:GPS Time Frame");
+      struct gps_gps_time_t st_gps_time;
+      int status_unpack = gps_gps_time_unpack(&st_gps_time, frame.data, sizeof(frame.data));
+      if ( status_unpack == 0 )
+      {
+        _status = EXIT_SUCCESS;
+        struct tm tm_gps_time;
+        tm_gps_time.tm_year = st_gps_time.year - 1900;
+        tm_gps_time.tm_mon = st_gps_time.month - 1;
+        tm_gps_time.tm_mday = st_gps_time.day;
+        tm_gps_time.tm_hour = st_gps_time.hour;
+        tm_gps_time.tm_min = st_gps_time.minute;
+        tm_gps_time.tm_sec = st_gps_time.second;
+        tm_gps_time.tm_isdst = 0;
+        log_data.gpstime = timegm(&tm_gps_time);
+      }
+    }
+    break;                           
 
     default: /// Default if can_id is not in the switch print out message details
       error_message(WARN, "WARN:Unknown CAN frame%: %X", frame.can_id);

@@ -39,9 +39,10 @@ const char *gengetopt_args_info_detailed_help[] = {
   "  -V, --version                 Print version and exit",
   "  -c, --config-file=filename    Configuration file.",
   "  -o, --output-file=filename    Output file for CSV logging\n                                  (default=`/dev/null')",
+  "  -G, --gpx-file=filename       Output file for GPX logging\n                                  (default=`/dev/null')",
   "  -d, --output-file-date        Insert date and time into output filename.",
-  "      --output-file-format=format\n                                Format string of output CSV file",
-  "  \n  		Comma-separated list of loggable values. Valid items are: rpm, ig_rpm,\n  alt_rpm, speed, map_kpa, tps_percent,\n      odometer, trip, systemvoltage, batteryvoltage, oil_temp, oil_pres,\n  lambda, enginerunning(bool), blink_left(bool),\n      blink_right(bool), advance1, advance2, advance3, advance4, yaw, pitch,\n  roll, acc_forward, acc_side, acc_vert, power,\n      and time(current date/time)",
+  "  -O, --output-file-format=format\n                                Format string of output CSV file",
+  "  \n  		Comma-separated list of loggable values. Valid items are: rpm, ig_rpm,\n  alt_rpm, speed, map_kpa, tps_percent,\n      odometer, trip, systemvoltage, batteryvoltage, oil_temp, oil_pres,\n  lambda, enginerunning(bool), blink_left(bool),\n      blink_right(bool), advance1, advance2, advance3, advance4, yaw, pitch,\n  roll, acc_forward, acc_side, acc_vert, power,\n      latitude, longitude, altitude, gps_speed, gps_heading, gpsfix, pdop,\n  hdop, vdop, satellitesInView,\n      satellitesInUse, gpstime(UTC), and time(local date/time)",
   "  -g, --gear-ratios=STRING      RPM/Speed ratios. Comma separated. (Eg. -g\n                                  \"175,122,95,78,67\")",
   "  -W, --weight=kg               Weight of vehicle, in kg, to use for\n                                  calculations.  (default=`300')",
   "  -v, --v                       Verbose output. Specify multiple times for\n                                  increasing verbosity.",
@@ -76,7 +77,7 @@ init_help_array(void)
   gengetopt_args_info_help[4] = gengetopt_args_info_detailed_help[4];
   gengetopt_args_info_help[5] = gengetopt_args_info_detailed_help[5];
   gengetopt_args_info_help[6] = gengetopt_args_info_detailed_help[6];
-  gengetopt_args_info_help[7] = gengetopt_args_info_detailed_help[8];
+  gengetopt_args_info_help[7] = gengetopt_args_info_detailed_help[7];
   gengetopt_args_info_help[8] = gengetopt_args_info_detailed_help[9];
   gengetopt_args_info_help[9] = gengetopt_args_info_detailed_help[10];
   gengetopt_args_info_help[10] = gengetopt_args_info_detailed_help[11];
@@ -97,11 +98,12 @@ init_help_array(void)
   gengetopt_args_info_help[25] = gengetopt_args_info_detailed_help[26];
   gengetopt_args_info_help[26] = gengetopt_args_info_detailed_help[27];
   gengetopt_args_info_help[27] = gengetopt_args_info_detailed_help[28];
-  gengetopt_args_info_help[28] = 0; 
+  gengetopt_args_info_help[28] = gengetopt_args_info_detailed_help[29];
+  gengetopt_args_info_help[29] = 0; 
   
 }
 
-const char *gengetopt_args_info_help[29];
+const char *gengetopt_args_info_help[30];
 
 typedef enum {ARG_NO
   , ARG_FLAG
@@ -159,6 +161,7 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->version_given = 0 ;
   args_info->config_file_given = 0 ;
   args_info->output_file_given = 0 ;
+  args_info->gpx_file_given = 0 ;
   args_info->output_file_date_given = 0 ;
   args_info->output_file_format_given = 0 ;
   args_info->gear_ratios_given = 0 ;
@@ -190,6 +193,8 @@ void clear_args (struct gengetopt_args_info *args_info)
   args_info->config_file_orig = NULL;
   args_info->output_file_arg = gengetopt_strdup ("/dev/null");
   args_info->output_file_orig = NULL;
+  args_info->gpx_file_arg = gengetopt_strdup ("/dev/null");
+  args_info->gpx_file_orig = NULL;
   args_info->output_file_format_arg = NULL;
   args_info->output_file_format_orig = NULL;
   args_info->gear_ratios_arg = NULL;
@@ -234,29 +239,30 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->version_help = gengetopt_args_info_detailed_help[2] ;
   args_info->config_file_help = gengetopt_args_info_detailed_help[3] ;
   args_info->output_file_help = gengetopt_args_info_detailed_help[4] ;
-  args_info->output_file_date_help = gengetopt_args_info_detailed_help[5] ;
-  args_info->output_file_format_help = gengetopt_args_info_detailed_help[6] ;
-  args_info->gear_ratios_help = gengetopt_args_info_detailed_help[8] ;
-  args_info->weight_help = gengetopt_args_info_detailed_help[9] ;
-  args_info->v_help = gengetopt_args_info_detailed_help[10] ;
+  args_info->gpx_file_help = gengetopt_args_info_detailed_help[5] ;
+  args_info->output_file_date_help = gengetopt_args_info_detailed_help[6] ;
+  args_info->output_file_format_help = gengetopt_args_info_detailed_help[7] ;
+  args_info->gear_ratios_help = gengetopt_args_info_detailed_help[9] ;
+  args_info->weight_help = gengetopt_args_info_detailed_help[10] ;
+  args_info->v_help = gengetopt_args_info_detailed_help[11] ;
   args_info->v_min = 1;
   args_info->v_max = 3;
-  args_info->verbose_help = gengetopt_args_info_detailed_help[11] ;
-  args_info->quiet_help = gengetopt_args_info_detailed_help[12] ;
-  args_info->front_controls_help = gengetopt_args_info_detailed_help[14] ;
-  args_info->ignitech_help = gengetopt_args_info_detailed_help[15] ;
-  args_info->lc2_help = gengetopt_args_info_detailed_help[16] ;
-  args_info->lc2_delay_help = gengetopt_args_info_detailed_help[17] ;
-  args_info->lc2_pin_help = gengetopt_args_info_detailed_help[18] ;
-  args_info->sleepy_help = gengetopt_args_info_detailed_help[19] ;
-  args_info->sleepy_addr_help = gengetopt_args_info_detailed_help[20] ;
-  args_info->can_help = gengetopt_args_info_detailed_help[21] ;
-  args_info->ignitech_dump_file_help = gengetopt_args_info_detailed_help[23] ;
-  args_info->ignitech_servo_as_iap_help = gengetopt_args_info_detailed_help[24] ;
-  args_info->ignitech_sai_low_help = gengetopt_args_info_detailed_help[25] ;
-  args_info->ignitech_sai_low_mv_help = gengetopt_args_info_detailed_help[26] ;
-  args_info->ignitech_sai_high_help = gengetopt_args_info_detailed_help[27] ;
-  args_info->ignitech_sai_high_mv_help = gengetopt_args_info_detailed_help[28] ;
+  args_info->verbose_help = gengetopt_args_info_detailed_help[12] ;
+  args_info->quiet_help = gengetopt_args_info_detailed_help[13] ;
+  args_info->front_controls_help = gengetopt_args_info_detailed_help[15] ;
+  args_info->ignitech_help = gengetopt_args_info_detailed_help[16] ;
+  args_info->lc2_help = gengetopt_args_info_detailed_help[17] ;
+  args_info->lc2_delay_help = gengetopt_args_info_detailed_help[18] ;
+  args_info->lc2_pin_help = gengetopt_args_info_detailed_help[19] ;
+  args_info->sleepy_help = gengetopt_args_info_detailed_help[20] ;
+  args_info->sleepy_addr_help = gengetopt_args_info_detailed_help[21] ;
+  args_info->can_help = gengetopt_args_info_detailed_help[22] ;
+  args_info->ignitech_dump_file_help = gengetopt_args_info_detailed_help[24] ;
+  args_info->ignitech_servo_as_iap_help = gengetopt_args_info_detailed_help[25] ;
+  args_info->ignitech_sai_low_help = gengetopt_args_info_detailed_help[26] ;
+  args_info->ignitech_sai_low_mv_help = gengetopt_args_info_detailed_help[27] ;
+  args_info->ignitech_sai_high_help = gengetopt_args_info_detailed_help[28] ;
+  args_info->ignitech_sai_high_mv_help = gengetopt_args_info_detailed_help[29] ;
   
 }
 
@@ -359,6 +365,8 @@ cmdline_parser_release (struct gengetopt_args_info *args_info)
   free_string_field (&(args_info->config_file_orig));
   free_string_field (&(args_info->output_file_arg));
   free_string_field (&(args_info->output_file_orig));
+  free_string_field (&(args_info->gpx_file_arg));
+  free_string_field (&(args_info->gpx_file_orig));
   free_string_field (&(args_info->output_file_format_arg));
   free_string_field (&(args_info->output_file_format_orig));
   free_string_field (&(args_info->gear_ratios_arg));
@@ -474,6 +482,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "config-file", args_info->config_file_orig, 0);
   if (args_info->output_file_given)
     write_into_file(outfile, "output-file", args_info->output_file_orig, 0);
+  if (args_info->gpx_file_given)
+    write_into_file(outfile, "gpx-file", args_info->gpx_file_orig, 0);
   if (args_info->output_file_date_given)
     write_into_file(outfile, "output-file-date", 0, 0 );
   if (args_info->output_file_format_given)
@@ -694,11 +704,6 @@ cmdline_parser_required2 (struct gengetopt_args_info *args_info, const char *pro
   if (args_info->output_file_given && ! args_info->output_file_format_given)
     {
       fprintf (stderr, "%s: '--output-file' ('-o') option depends on option 'output-file-format'%s\n", prog_name, (additional_error ? additional_error : ""));
-      error_occurred = 1;
-    }
-  if (args_info->output_file_format_given && ! args_info->output_file_given)
-    {
-      fprintf (stderr, "%s: '--output-file-format' option depends on option 'output-file'%s\n", prog_name, (additional_error ? additional_error : ""));
       error_occurred = 1;
     }
   if (args_info->lc2_delay_given && ! args_info->lc2_given)
@@ -929,8 +934,9 @@ cmdline_parser_internal (
         { "version",	0, NULL, 'V' },
         { "config-file",	1, NULL, 'c' },
         { "output-file",	1, NULL, 'o' },
+        { "gpx-file",	1, NULL, 'G' },
         { "output-file-date",	0, NULL, 'd' },
-        { "output-file-format",	1, NULL, 0 },
+        { "output-file-format",	1, NULL, 'O' },
         { "gear-ratios",	1, NULL, 'g' },
         { "weight",	1, NULL, 'W' },
         { "v",	0, NULL, 'v' },
@@ -953,7 +959,7 @@ cmdline_parser_internal (
         { 0,  0, 0, 0 }
       };
 
-      c = getopt_long (argc, argv, "hVc:o:dg:W:vqf:i:l:s:", long_options, &option_index);
+      c = getopt_long (argc, argv, "hVc:o:G:dO:g:W:vqf:i:l:s:", long_options, &option_index);
 
       if (c == -1) break;	/* Exit from `while (1)' loop.  */
 
@@ -993,6 +999,18 @@ cmdline_parser_internal (
             goto failure;
         
           break;
+        case 'G':	/* Output file for GPX logging.  */
+        
+        
+          if (update_arg( (void *)&(args_info->gpx_file_arg), 
+               &(args_info->gpx_file_orig), &(args_info->gpx_file_given),
+              &(local_args_info.gpx_file_given), optarg, 0, "/dev/null", ARG_STRING,
+              check_ambiguity, override, 0, 0,
+              "gpx-file", 'G',
+              additional_error))
+            goto failure;
+        
+          break;
         case 'd':	/* Insert date and time into output filename..  */
         
         
@@ -1001,6 +1019,18 @@ cmdline_parser_internal (
               &(local_args_info.output_file_date_given), optarg, 0, 0, ARG_NO,
               check_ambiguity, override, 0, 0,
               "output-file-date", 'd',
+              additional_error))
+            goto failure;
+        
+          break;
+        case 'O':	/* Format string of output CSV file.  */
+        
+        
+          if (update_arg( (void *)&(args_info->output_file_format_arg), 
+               &(args_info->output_file_format_orig), &(args_info->output_file_format_given),
+              &(local_args_info.output_file_format_given), optarg, 0, 0, ARG_STRING,
+              check_ambiguity, override, 0, 0,
+              "output-file-format", 'O',
               additional_error))
             goto failure;
         
@@ -1102,24 +1132,10 @@ cmdline_parser_internal (
             exit (EXIT_SUCCESS);
           }
 
-          /* Format string of output CSV file.  */
-          if (strcmp (long_options[option_index].name, "output-file-format") == 0)
-          {
-          
-          
-            if (update_arg( (void *)&(args_info->output_file_format_arg), 
-                 &(args_info->output_file_format_orig), &(args_info->output_file_format_given),
-                &(local_args_info.output_file_format_given), optarg, 0, 0, ARG_STRING,
-                check_ambiguity, override, 0, 0,
-                "output-file-format", '-',
-                additional_error))
-              goto failure;
-          
-          }
           /* Set level of verbosity explicitly. 
           (Overrides -v)
 .  */
-          else if (strcmp (long_options[option_index].name, "verbose") == 0)
+          if (strcmp (long_options[option_index].name, "verbose") == 0)
           {
           
           

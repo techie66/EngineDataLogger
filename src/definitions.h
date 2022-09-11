@@ -22,11 +22,13 @@
 
 #include <stdint.h>
 #include <stdbool.h> // C99 Bool Support
+#include <time.h>
 
 // TODO option-ify
 #define RUNNING_RPM 900
 #define STOPPED_RPM 500
 #define LOG_INTERVAL 50000
+#define GPX_INTERVAL 1000000
 #define O2_PIN 26	// Default //
 #define LC2_POWER_DELAY 15 // delay in seconds. Default //
 #define ENGINE_DATA_ADDR 0x04
@@ -120,6 +122,12 @@ enum System_CMD {
   O2MANOFF
 };
 
+typedef enum {
+  GPS_NO_FIX=1,
+  GPS_2D_FIX,
+  GPS_3D_FIX
+}gps_fixtype;
+
 /*
  * @brief Loggable data
  */
@@ -184,6 +192,73 @@ struct	bike_data {
 
   /// Weight of vehicle (total/loaded) in kg's.
   int weight;
+
+  /// Latitude in Decimal Degrees
+  double lat;
+  /// Longitude in Decimal Degrees
+  double lon;
+  /// GPS Elevation
+  int altitude;
+  /// GPS Speed
+  float gps_speed;
+  /// GPS Heading
+  float gps_heading;
+  /// GPS Fix Type
+  gps_fixtype gpsfix;
+  /// PDOP
+  float pdop;
+  /// HDOP
+  float hdop;
+  /// VDOP
+  float vdop;
+  /// Satellites in View
+  int satV;
+  /// Satellites in Use
+  int satU;
+  /// GPS Time (UTC)
+  time_t gpstime;
+};
+const struct bike_data BIKE_DATA_DEFAULT = {
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  GPS_NO_FIX,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
 };
 
 /// Enumeration of loggable data. These get pushed into a vector to represent user choice in order.
@@ -215,6 +290,18 @@ typedef enum {
   FMT_ACC_FORWARD,
   FMT_ACC_SIDE,
   FMT_ACC_VERT,
-  FMT_POWER
+  FMT_POWER,
+  FMT_LAT,
+  FMT_LON,
+  FMT_ALTITUDE,
+  FMT_GPS_SPEED,
+  FMT_GPS_HEADING,
+  FMT_GPS_FIX,
+  FMT_GPS_PDOP,
+  FMT_GPS_HDOP,
+  FMT_GPS_VDOP,
+  FMT_SAT_INVIEW,
+  FMT_SAT_INUSE,
+  FMT_GPS_TIME,
 } log_fmt_data;
 #endif

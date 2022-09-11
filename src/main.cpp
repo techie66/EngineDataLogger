@@ -71,6 +71,10 @@
 #include "front_controls.h"
 #endif /* FEAT_FRONTCONTROLS */
 
+#ifdef FEAT_GPX
+#include "gpx.h"
+#endif /* FEAT_GPX */
+
 #include "serial.h"
 #include "definitions.h"
 #include "error_handling.h"
@@ -179,17 +183,17 @@ int main(int argc, char *argv[])
 
   bool active_can = false;
   #ifdef FEAT_CAN
-  bool can_sock_good;
-  unsigned char hexbuffer[4] = {0};
-  char const *can_if = NULL;
+  bool can_sock_good = false;
+  //unsigned char hexbuffer[4] = {0};
+  //char const *can_if = NULL;
   int can_s = socket(PF_CAN, SOCK_RAW, CAN_RAW);
   if (can_s < 0) {
     error_message(ERROR, "Error:CAN: Socket creation failed.");
     return -1;
   }
-  struct can_frame frame;
-  frame.can_id = 0;
-  frame.can_dlc = 0;
+  struct can_frame frame = can_frame();
+  //frame.can_id = 0;
+  //frame.can_dlc = 0;
   if ( args_info.can_given ) {
     active_can = true;
     can_sock_good = can_sock_connect(can_s, args_info.can_arg);
@@ -197,7 +201,16 @@ int main(int argc, char *argv[])
   #endif /* FEAT_CAN */
 
   char const *log_file = NULL;
-  time_t rawtime = time(NULL);
+
+  #ifdef FEAT_GPX
+  GPX gpx;
+  if ( args_info.gpx_file_given ) {
+    char * gpx_file;
+
+    std::string s(args_info.gpx_file_orig);
+    gpx.initialize(s);
+  }
+  #endif /* FEAT_GPX */
 
   std::vector<log_fmt_data> log_format;
   if ( args_info.output_file_given ) {
@@ -264,6 +277,30 @@ int main(int argc, char *argv[])
         log_format.push_back(FMT_ACC_VERT);
       else if ( strcmp(pt, "power") == 0 )
         log_format.push_back(FMT_POWER);
+      else if ( strcmp(pt, "latitude") == 0 )
+        log_format.push_back(FMT_LAT);
+      else if ( strcmp(pt, "longitude") == 0 )
+        log_format.push_back(FMT_LON);
+      else if ( strcmp(pt, "altitude") == 0 )
+        log_format.push_back(FMT_ALTITUDE);
+      else if ( strcmp(pt, "gps_speed") == 0 )
+        log_format.push_back(FMT_GPS_SPEED);
+      else if ( strcmp(pt, "gps_heading") == 0 )
+        log_format.push_back(FMT_GPS_HEADING);
+      else if ( strcmp(pt, "gpsfix") == 0 )
+        log_format.push_back(FMT_GPS_FIX);
+      else if ( strcmp(pt, "pdop") == 0 )
+        log_format.push_back(FMT_GPS_PDOP);
+      else if ( strcmp(pt, "hdop") == 0 )
+        log_format.push_back(FMT_GPS_HDOP);
+      else if ( strcmp(pt, "vdop") == 0 )
+        log_format.push_back(FMT_GPS_VDOP);
+      else if ( strcmp(pt, "satellitesInView") == 0 )
+        log_format.push_back(FMT_SAT_INVIEW);
+      else if ( strcmp(pt, "satellitesInUse") == 0 )
+        log_format.push_back(FMT_SAT_INUSE);
+      else if ( strcmp(pt, "gpstime") == 0 )
+        log_format.push_back(FMT_GPS_TIME);
       else {
         error_message (ERROR, "ERROR:OPTIONS: Invalid output-file-format");
         return -1;
@@ -357,6 +394,7 @@ int main(int argc, char *argv[])
   // Main Loop
   engine_data	enData = ENGINE_DATA_DEFAULT;
   bike_data	log_data;
+  log_data = BIKE_DATA_DEFAULT;
 
   if ( args_info.weight_given ) {
     log_data.weight = args_info.weight_arg;
@@ -379,10 +417,11 @@ int main(int argc, char *argv[])
   System_CMD	db_from_cmd = NO_CMD;
   #endif /* FEAT_DASHBOARD */
 
-  bool    engineRunning = false;
+  bool    __attribute__ ((unused)) engineRunning = false;
   bool    o2_manual = false;
-  struct  timeval log_time_last;
+  struct  timeval log_time_last, gpx_time_last;
   gettimeofday(&log_time_last, NULL);
+  gettimeofday(&gpx_time_last, NULL);
   while (!time_to_quit) { // time_to_quit defined error_handling.c
     int	length;
     // Check if restarting logfile
@@ -448,21 +487,14 @@ int main(int argc, char *argv[])
 
     #ifdef HAVE_LIBIGNITECH
     if ( active_tcip4 ) {
-      static int num_failures = 0;
       // Read Ignition
       ignition_read_status = ignition->read_async();
       if (ignition_read_status == IGN_ERR ) {
-        //if (ignition_read_status < IGN_SUC )
         error_message (ERROR, "ERROR:IGNITECH: Failed to Read Ignitech err:%d - %s", errno, strerror(errno));
-        //num_failures++;
-        //if ( num_failures > IGNITECH_MAX_RESETS ) {
-        num_failures = 0;
         log_data.ig_rpm = 0;
         log_data.batteryvoltage = 0;
         log_data.map_kpa = 0;
-        //}
       } else if (ignition_read_status != IGN_ERR) {
-        //num_failures = 0;
         error_message (DEBUG, "DEBUG:Read Ignitech, RPM: %d, Battery: %d\n", ignition->get_rpm(), ignition->get_battery_mV());
         log_data.ig_rpm = ignition->get_rpm();
         log_data.advance1 = ignition->get_advance1();
@@ -630,7 +662,7 @@ int main(int argc, char *argv[])
       }
       #if defined(HAVE_LIBBCM2835) && defined(HAVE_LIBISP2)
       if ( args_info.lc2_given ) {
-        if (my_time - start_running_time > LC2_POWER_DELAY) {
+        if (my_time - start_running_time > lc2_power_delay) {
           bcm2835_gpio_write(o2_pin, HIGH);
         }
       }
@@ -826,6 +858,9 @@ int main(int argc, char *argv[])
             case FMT_ALT_RPM:
               fprintf(fd_log, "%4d,", log_data.alt_rpm);
               break;
+            case FMT_IG_RPM:
+              fprintf(fd_log, "%4d,", log_data.ig_rpm);
+              break;
             case FMT_SPEED:
               fprintf(fd_log, "%6.2f,", log_data.speed);
               break;
@@ -901,6 +936,56 @@ int main(int argc, char *argv[])
             case FMT_TIME:
               fprintf(fd_log, "%s.%06ld,", time_buf, currtime.tv_usec);
               break;
+            case FMT_LAT:
+              fprintf(fd_log, "%10.6f,", log_data.lat);
+              break;
+            case FMT_LON:
+              fprintf(fd_log, "%10.6f,", log_data.lon);
+              break;
+            case FMT_ALTITUDE:
+              fprintf(fd_log, "%6d,", log_data.altitude);
+              break;
+            case FMT_GPS_SPEED:
+              fprintf(fd_log, "%6.1f,", log_data.gps_speed);
+              break;
+            case FMT_GPS_HEADING:
+              fprintf(fd_log, "%6.1f,", log_data.gps_heading);
+              break;
+            case FMT_GPS_FIX:
+              switch (log_data.gpsfix)
+              {
+                case GPS_NO_FIX:
+                  fprintf(fd_log, " NO FIX,");
+                  break;
+                case GPS_2D_FIX:
+                  fprintf(fd_log, " 2D FIX,");
+                  break;
+                case GPS_3D_FIX:
+                  fprintf(fd_log, " 3D FIX,");
+                  break;
+                default:
+                  fprintf(fd_log, " ?? FIX,");
+              }
+              break;
+            case FMT_GPS_PDOP:
+              fprintf(fd_log, "%5.1f,", log_data.pdop);
+              break;
+            case FMT_GPS_HDOP:
+              fprintf(fd_log, "%5.1f,", log_data.hdop);
+              break;
+            case FMT_GPS_VDOP:
+              fprintf(fd_log, "%5.1f,", log_data.vdop);
+              break;
+            case FMT_SAT_INVIEW:
+              fprintf(fd_log, "%3d,", log_data.satV);
+              break;
+            case FMT_SAT_INUSE:
+              fprintf(fd_log, "%3d,", log_data.satU);
+              break;
+            case FMT_GPS_TIME:
+              strftime(time_buf, 100, "%D %T", gmtime(&log_data.gpstime));
+              fprintf(fd_log, "%s,", time_buf);
+              break;
           }
         }
         fprintf(fd_log, "\n");
@@ -908,7 +993,26 @@ int main(int argc, char *argv[])
       }
     }
 
-    //usleep(50000);
+    #ifdef FEAT_GPX
+    // GPX Logging
+    if ( args_info.gpx_file_given ) {
+      if ( ( (currtime.tv_sec - gpx_time_last.tv_sec) * 1000000 + currtime.tv_usec - gpx_time_last.tv_usec ) > GPX_INTERVAL ) {
+        gpx_time_last.tv_sec = currtime.tv_sec;
+        gpx_time_last.tv_usec = currtime.tv_usec;
+        strftime(time_buf, 100, "%FT%TZ", localtime(&log_data.gpstime));
+        std::string s(time_buf);
+        gpx.startTrkPt(log_data.lat,log_data.lon,log_data.altitude,s);
+        for (std::vector<log_fmt_data>::iterator it = log_format.begin() ; it != log_format.end(); ++it) {
+          switch (*it) {
+            case FMT_RPM:
+              gpx.addExtension("rpm",std::to_string(log_data.rpm));
+              break;
+          }
+        }
+        gpx.endTrkPt();
+      }
+    }
+    #endif /* FEAT_GPX */
   }
   // TODO also check ignitech
   #if defined(HAVE_LIBBCM2835) && defined(HAVE_LIBISP2)
@@ -917,6 +1021,11 @@ int main(int argc, char *argv[])
     bcm2835_close();
   }
   #endif /* HAVE_LIBBCM2835  HAVE_LIBISP2 */
+
+  #ifdef FEAT_GPX
+  gpx.close();
+  #endif /* FEAT_GPX */
+
   // Return 0 for clean exit
   return 0;
 }

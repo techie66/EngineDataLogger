@@ -1,3 +1,5 @@
+AM_CFLAGS = -Wall -Wextra
+AM_CXXFLAGS = -Wall -Wextra
 bin_PROGRAMS = enginedatalogger
 bin_SCRIPTS = bin/shutdowncheck.py
 enginedatalogger_SOURCES= \
@@ -21,6 +23,8 @@ enginedatalogger_SOURCES += \
 		    src/imu_can.h \
 		    src/ignitech_can.c \
 		    src/ignitech_can.h \
+		    src/gps.c \
+		    src/gps.h \
 		    src/obd2.c \
 		    src/obd2.h
 endif
@@ -30,6 +34,12 @@ enginedatalogger_SOURCES += \
 		    src/bluetooth.cpp \
 		    src/cb1100f-app_generated.h \
 		    src/bluetooth.h
+endif
+
+if GPX
+enginedatalogger_SOURCES += \
+		    src/gpx.cpp \
+		    src/gpx.h
 endif
 
 if POWERCALC

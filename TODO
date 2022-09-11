@@ -2,7 +2,13 @@
 Make tests for all local funtions.
 Add option to quit on input device failure? defeats automatic retries.
 Option for "test mode" that quits after a brief, settable time eg '--test 15' quits after 15 seconds
-Write GPX format logs, GPS from CAN
 GPS time -> sync systemtime with adjtime / clock_settime
+GPS data loggable (all stats?)
 Bluetooth auto pairing
+
+## GPX
+Write GPX format logs, GPS from CAN
+option - interpolate position between GPS points
+  IMU / speed / gps heading/speed
+option - log GPX at gps speed (~1s) or at regular speed
 

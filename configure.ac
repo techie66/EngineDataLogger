@@ -95,6 +95,25 @@ AS_IF([test "x$with_bcm2835" != xno -a "x$enable_gpio" != xno],
 ])
 AM_CONDITIONAL([GPIO], [test "$ac_cv_lib_bcm2835_bcm2835_i2c_write_read_rs" = "yes"])
 
+AC_ARG_ENABLE([gpx],
+	[AS_HELP_STRING([--disable-gpx],
+		[Disable support for GPX Output])],
+	[],
+  [AC_DEFINE([FEAT_GPX],[1],[Support Logging to GPX files])]
+	[enable_gpx=yes])
+#AC_ARG_WITH([gpx],
+#	[AS_HELP_STRING([--without-gpx],
+#		[compile without libgpx, which is needed for gpx output])],
+#		[],
+#		[with_libgpx=yes])
+#AS_IF([test "x$with_libgpx" != xno -a "x$enable_gpx" != xno],
+#	[AC_CHECK_LIB([gpx], [main],,[
+#		AC_MSG_ERROR([libgpx NOT FOUND! You can try automatic installation with: `./install-deps.sh libgpx`])
+#	])
+#])
+#AM_CONDITIONAL([GPX], [test "$ac_cv_lib_gpx_main" = "yes"])
+AM_CONDITIONAL([GPX], [test "$enable_gpx" = "yes"])
+
 AC_ARG_WITH([ignitech],
 	[AS_HELP_STRING([--without-ignitech],
 		[Compile without libIgnitech, which is needed to communicate with an Ignitech TCIP-4 ignition.])],

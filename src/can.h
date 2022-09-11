@@ -31,12 +31,14 @@
 #include <sys/ioctl.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 #include "error_handling.h"
 #include "definitions.h"
 #include <errno.h>
 #include "imu_can.h"
 #include "ignitech_can.h"
 #include "obd2.h"
+#include "gps.h"
 
 // 3rd-Party Libraries
 

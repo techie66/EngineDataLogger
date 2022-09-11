@@ -9,6 +9,9 @@
 /* Support Front Controls */
 #undef FEAT_FRONTCONTROLS
 
+/* Support Logging to GPX files */
+#undef FEAT_GPX
+
 /* Support I2C */
 #undef FEAT_I2C
 

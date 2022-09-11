@@ -52,6 +52,9 @@ struct gengetopt_args_info
   char * output_file_arg;	/**< @brief Output file for CSV logging (default='/dev/null').  */
   char * output_file_orig;	/**< @brief Output file for CSV logging original value given at command line.  */
   const char *output_file_help; /**< @brief Output file for CSV logging help description.  */
+  char * gpx_file_arg;	/**< @brief Output file for GPX logging (default='/dev/null').  */
+  char * gpx_file_orig;	/**< @brief Output file for GPX logging original value given at command line.  */
+  const char *gpx_file_help; /**< @brief Output file for GPX logging help description.  */
   const char *output_file_date_help; /**< @brief Insert date and time into output filename. help description.  */
   char * output_file_format_arg;	/**< @brief Format string of output CSV file.  */
   char * output_file_format_orig;	/**< @brief Format string of output CSV file original value given at command line.  */
@@ -122,6 +125,7 @@ struct gengetopt_args_info
   unsigned int version_given ;	/**< @brief Whether version was given.  */
   unsigned int config_file_given ;	/**< @brief Whether config-file was given.  */
   unsigned int output_file_given ;	/**< @brief Whether output-file was given.  */
+  unsigned int gpx_file_given ;	/**< @brief Whether gpx-file was given.  */
   unsigned int output_file_date_given ;	/**< @brief Whether output-file-date was given.  */
   unsigned int output_file_format_given ;	/**< @brief Whether output-file-format was given.  */
   unsigned int gear_ratios_given ;	/**< @brief Whether gear-ratios was given.  */
