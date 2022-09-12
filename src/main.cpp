@@ -808,6 +808,17 @@ int main(int argc, char *argv[])
     }
     #endif /* FEAT_I2C */
 
+    #ifdef FEAT_CAN
+    if ( active_can ) {
+      if ( can_sock_good ) {
+        FD_SET(can_s, &writeset);
+        max_fd = (max_fd > can_s) ? max_fd : can_s;
+      } else {
+        can_sock_good = can_sock_connect(can_s, args_info.can_arg);
+      }
+    }
+    #endif /* FEAT_CAN */
+
     // Do Select()
     timeout.tv_sec = 0;
     timeout.tv_usec = 0;
@@ -830,6 +841,24 @@ int main(int argc, char *argv[])
         dashboard.Send(fbb);
       }
       #endif /* FEAT_DASHBOARD */
+
+      #ifdef FEAT_CAN
+      if (FD_ISSET(can_s, &writeset)) {
+        error_message (DEBUG, "Select write CAN");
+        //int nbytes = read(can_s, &frame, sizeof(struct can_frame));
+	//can_send();
+	struct can_frame _serial_commands;
+	_serial_commands.can_dlc = 4;
+	_serial_commands.can_id = 226;
+	_serial_commands.data[0] = 0;
+	_serial_commands.data[1] = 0;
+	_serial_commands.data[2] = 0;
+	_serial_commands.data[3] = fcData.serialCmdA;
+	if (write(can_s, &_serial_commands, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "CAN: SerialCMD Write failed");
+        }
+      }
+      #endif /* FEAT_CAN */
     }
 
     // Log data
