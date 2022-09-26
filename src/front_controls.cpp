@@ -23,7 +23,7 @@
 
 #include "front_controls.h"
 
-int readFC(int &fd_front_controls, fc_data &fcData)
+int readFC(int &fd_front_controls, bike_data &log_data)
 {
   int	n = 0,
       i = 0,
@@ -58,25 +58,25 @@ int readFC(int &fd_front_controls, fc_data &fcData)
       error_message(DEBUG, "Found a newline");
       // Process FC_CMD_SIZE bytes and convert to usable variables
       i_serial_in = i_serial_in - FC_CMD_SIZE + 1;
-      fcData.inputCmdD = serial_in[i_serial_in];
-      fcData.inputCmdC = serial_in[i_serial_in + 1];
+      log_data.inputCmdD = serial_in[i_serial_in];
+      log_data.inputCmdC = serial_in[i_serial_in + 1];
       i_serial_in += 2;
-      memcpy((void *)&fcData.systemVoltage, (void *)&serial_in[i_serial_in], 4);
+      memcpy((void *)&log_data.systemvoltage, (void *)&serial_in[i_serial_in], 4);
 
       char 	CmdC[9],
             CmdD[9];
-      strcpy(CmdC, exCmd_bin(fcData.inputCmdC));
-      strcpy(CmdD, exCmd_bin(fcData.inputCmdD));
-      error_message (INFO, "inputCmdD: %s inputCmdC: %s Voltage: %f", CmdD, CmdC, fcData.systemVoltage);
-      fcData.brake_on = fcData.inputCmdD & BRAKE_ON;
-      fcData.horn_on = fcData.inputCmdD & HORN_ON;
-      fcData.left_on = fcData.inputCmdD & LEFT_ON;
-      fcData.right_on = fcData.inputCmdD & RIGHT_ON;
-      fcData.high_on = fcData.inputCmdD & HIGH_BEAMS_ON;
-      fcData.kill_on = fcData.inputCmdD & KILL_ON;
-      fcData.clutch_disengaged = fcData.inputCmdC & CLUTCH_DISENGAGED;
-      fcData.kickstand_up = fcData.inputCmdC & KICKSTAND_UP;
-      fcData.in_neutral = fcData.inputCmdC & IN_NEUTRAL;
+      strcpy(CmdC, exCmd_bin(log_data.inputCmdC));
+      strcpy(CmdD, exCmd_bin(log_data.inputCmdD));
+      error_message (INFO, "inputCmdD: %s inputCmdC: %s Voltage: %f", CmdD, CmdC, log_data.systemvoltage);
+      log_data.brake_on = log_data.inputCmdD & BRAKE_ON;
+      log_data.horn_on = log_data.inputCmdD & HORN_ON;
+      log_data.blink_left = log_data.inputCmdD & LEFT_ON;
+      log_data.blink_right = log_data.inputCmdD & RIGHT_ON;
+      log_data.high_on = log_data.inputCmdD & HIGH_BEAMS_ON;
+      log_data.kill_on = log_data.inputCmdD & KILL_ON;
+      log_data.clutch_disengaged = log_data.inputCmdC & CLUTCH_DISENGAGED;
+      log_data.kickstand_up = log_data.inputCmdC & KICKSTAND_UP;
+      log_data.in_neutral = log_data.inputCmdC & IN_NEUTRAL;
     }
   } else if (n == 0) {
     error_message(WARN, "FC zero data length. closing");
@@ -86,7 +86,7 @@ int readFC(int &fd_front_controls, fc_data &fcData)
   return 0;
 }
 
-int writeFC(int fd_front_controls, fc_data &fcData)
+int writeFC(int fd_front_controls, bike_data &log_data)
 {
   int result;
 
@@ -95,17 +95,17 @@ int writeFC(int fd_front_controls, fc_data &fcData)
         CmdB[9],
         CmdC[9],
         CmdD[9];
-  strcpy(CmdA, exCmd_bin(fcData.serialCmdA));
-  strcpy(CmdB, exCmd_bin(fcData.serialCmdB));
-  strcpy(CmdC, exCmd_bin(fcData.serialCmdC));
-  strcpy(CmdD, exCmd_bin(fcData.serialCmdD));
+  strcpy(CmdA, exCmd_bin(log_data.serialCmdA));
+  strcpy(CmdB, exCmd_bin(log_data.serialCmdB));
+  strcpy(CmdC, exCmd_bin(log_data.serialCmdC));
+  strcpy(CmdD, exCmd_bin(log_data.serialCmdD));
   error_message (DEBUG, "A: %s B: %s C: %s D: %s", CmdA, CmdB, CmdC, CmdD);
   unsigned char	buf[6];
   buf[0] = 'A';
-  buf[1] = fcData.serialCmdD;
-  buf[2] = fcData.serialCmdB;
-  buf[3] = fcData.serialCmdC;
-  buf[4] = fcData.serialCmdA;
+  buf[1] = log_data.serialCmdD;
+  buf[2] = log_data.serialCmdB;
+  buf[3] = log_data.serialCmdC;
+  buf[4] = log_data.serialCmdA;
   buf[5] = 'Z';
   result = write(fd_front_controls, buf, 6);
   if (result < 0 ) {

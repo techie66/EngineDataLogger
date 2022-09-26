@@ -41,8 +41,8 @@ const char *gengetopt_args_info_detailed_help[] = {
   "  -o, --output-file=filename    Output file for CSV logging\n                                  (default=`/dev/null')",
   "  -G, --gpx-file=filename       Output file for GPX logging\n                                  (default=`/dev/null')",
   "  -d, --output-file-date        Insert date and time into output filename.",
-  "  -O, --output-file-format=format\n                                Format string of output CSV file",
-  "  \n  		Comma-separated list of loggable values. Valid items are: rpm, ig_rpm,\n  alt_rpm, speed, map_kpa, tps_percent,\n      odometer, trip, systemvoltage, batteryvoltage, oil_temp, oil_pres,\n  lambda, enginerunning(bool), blink_left(bool),\n      blink_right(bool), advance1, advance2, advance3, advance4, yaw, pitch,\n  roll, acc_forward, acc_side, acc_vert, power,\n      latitude, longitude, altitude, gps_speed, gps_heading, gpsfix, pdop,\n  hdop, vdop, satellitesInView,\n      satellitesInUse, gpstime(UTC), and time(local date/time)",
+  "      --output-file-format=format\n                                Format string of output CSV file",
+  "  \n  		Comma-separated list of loggable values. Valid items are: rpm, ig_rpm,\n  alt_rpm, speed, map_kpa, tps_percent,\n      odometer, trip, systemvoltage, batteryvoltage, oil_temp, oil_pres,\n  lambda, enginerunning(bool), blink_left(bool),\n      blink_right(bool), advance1, advance2, advance3, advance4, yaw, pitch,\n  roll, acc_forward, acc_side, acc_vert, power,\n      latitude, longitude, altitude, gps_speed, gps_heading, gpsfix, pdop,\n  hdop, vdop, satellitesInView,\n      satellitesInUse, gpstime(UTC), and time(current date/time)",
   "  -g, --gear-ratios=STRING      RPM/Speed ratios. Comma separated. (Eg. -g\n                                  \"175,122,95,78,67\")",
   "  -W, --weight=kg               Weight of vehicle, in kg, to use for\n                                  calculations.  (default=`300')",
   "  -v, --v                       Verbose output. Specify multiple times for\n                                  increasing verbosity.",
@@ -706,6 +706,11 @@ cmdline_parser_required2 (struct gengetopt_args_info *args_info, const char *pro
       fprintf (stderr, "%s: '--output-file' ('-o') option depends on option 'output-file-format'%s\n", prog_name, (additional_error ? additional_error : ""));
       error_occurred = 1;
     }
+  if (args_info->output_file_format_given && ! args_info->output_file_given)
+    {
+      fprintf (stderr, "%s: '--output-file-format' option depends on option 'output-file'%s\n", prog_name, (additional_error ? additional_error : ""));
+      error_occurred = 1;
+    }
   if (args_info->lc2_delay_given && ! args_info->lc2_given)
     {
       fprintf (stderr, "%s: '--lc2-delay' option depends on option 'lc2'%s\n", prog_name, (additional_error ? additional_error : ""));
@@ -936,7 +941,7 @@ cmdline_parser_internal (
         { "output-file",	1, NULL, 'o' },
         { "gpx-file",	1, NULL, 'G' },
         { "output-file-date",	0, NULL, 'd' },
-        { "output-file-format",	1, NULL, 'O' },
+        { "output-file-format",	1, NULL, 0 },
         { "gear-ratios",	1, NULL, 'g' },
         { "weight",	1, NULL, 'W' },
         { "v",	0, NULL, 'v' },
@@ -959,7 +964,7 @@ cmdline_parser_internal (
         { 0,  0, 0, 0 }
       };
 
-      c = getopt_long (argc, argv, "hVc:o:G:dO:g:W:vqf:i:l:s:", long_options, &option_index);
+      c = getopt_long (argc, argv, "hVc:o:G:dg:W:vqf:i:l:s:", long_options, &option_index);
 
       if (c == -1) break;	/* Exit from `while (1)' loop.  */
 
@@ -1019,18 +1024,6 @@ cmdline_parser_internal (
               &(local_args_info.output_file_date_given), optarg, 0, 0, ARG_NO,
               check_ambiguity, override, 0, 0,
               "output-file-date", 'd',
-              additional_error))
-            goto failure;
-        
-          break;
-        case 'O':	/* Format string of output CSV file.  */
-        
-        
-          if (update_arg( (void *)&(args_info->output_file_format_arg), 
-               &(args_info->output_file_format_orig), &(args_info->output_file_format_given),
-              &(local_args_info.output_file_format_given), optarg, 0, 0, ARG_STRING,
-              check_ambiguity, override, 0, 0,
-              "output-file-format", 'O',
               additional_error))
             goto failure;
         
@@ -1132,10 +1125,24 @@ cmdline_parser_internal (
             exit (EXIT_SUCCESS);
           }
 
+          /* Format string of output CSV file.  */
+          if (strcmp (long_options[option_index].name, "output-file-format") == 0)
+          {
+          
+          
+            if (update_arg( (void *)&(args_info->output_file_format_arg), 
+                 &(args_info->output_file_format_orig), &(args_info->output_file_format_given),
+                &(local_args_info.output_file_format_given), optarg, 0, 0, ARG_STRING,
+                check_ambiguity, override, 0, 0,
+                "output-file-format", '-',
+                additional_error))
+              goto failure;
+          
+          }
           /* Set level of verbosity explicitly. 
           (Overrides -v)
 .  */
-          if (strcmp (long_options[option_index].name, "verbose") == 0)
+          else if (strcmp (long_options[option_index].name, "verbose") == 0)
           {
           
           

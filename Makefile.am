@@ -23,6 +23,8 @@ enginedatalogger_SOURCES += \
 		    src/imu_can.h \
 		    src/ignitech_can.c \
 		    src/ignitech_can.h \
+		    src/fc.c \
+		    src/fc.h \
 		    src/gps.c \
 		    src/gps.h \
 		    src/obd2.c \

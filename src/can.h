@@ -39,6 +39,7 @@
 #include "ignitech_can.h"
 #include "obd2.h"
 #include "gps.h"
+#include "fc.h"
 
 // 3rd-Party Libraries
 

@@ -406,7 +406,7 @@ int main(int argc, char *argv[])
   #endif /* HAVE_LIBISP2 */
 
   #ifdef FEAT_FRONTCONTROLS
-  fc_data		fcData = FC_DATA_DEFAULT;
+  //fc_data		fcData = FC_DATA_DEFAULT;
   #endif /* FEAT_FRONTCONTROLS */
 
   #ifdef FEAT_I2C
@@ -585,7 +585,7 @@ int main(int argc, char *argv[])
       #ifdef FEAT_FRONTCONTROLS
       if (FD_ISSET(fd_front_controls, &readset)) {
         error_message (DEBUG, "DEBUG:Select read front controls");
-        readFC(fd_front_controls, fcData);
+        readFC(fd_front_controls, log_data);
       }
       #endif /* FEAT_FRONTCONTROLS */
       #ifdef FEAT_DASHBOARD
@@ -645,7 +645,7 @@ int main(int argc, char *argv[])
     #endif /* HAVE_LIBIGNITECH */
 
     #ifdef FEAT_FRONTCONTROLS
-    if (!fcData.kill_on) {
+    if (!log_data.kill_on) {
       my_rpm = 0;
     }
     #endif /* FEAT_FRONT_CONTROLS */
@@ -653,7 +653,7 @@ int main(int argc, char *argv[])
     if (my_rpm > RUNNING_RPM) {
       engineRunning = true;
       #ifdef FEAT_FRONTCONTROLS
-      fcData.serialCmdA |= ENGINE_RUNNING;
+      log_data.serialCmdA |= ENGINE_RUNNING;
       #endif /* FEAT_FRONT_CONTROLS */
       gettimeofday(&currtime, NULL);
       my_time = currtime.tv_sec;
@@ -669,12 +669,12 @@ int main(int argc, char *argv[])
       #endif /* HAVE_LIBBCM2835 HAVE_LIBISP2*/
 
       #ifdef FEAT_FRONTCONTROLS
-      error_message (DEBUG, "Running. %s", exCmd_bin(fcData.serialCmdA));
+      error_message (DEBUG, "Running. %s", exCmd_bin(log_data.serialCmdA));
       #endif /* FEAT_FRONTCONTROLS */
     } else if ( my_rpm <= STOPPED_RPM ) {
       engineRunning = false;
       #ifdef FEAT_FRONTCONTROLS
-      fcData.serialCmdA &= ~ENGINE_RUNNING;
+      log_data.serialCmdA &= ~ENGINE_RUNNING;
       #endif /* FEAT_FRONT_CONTROLS */
       start_running_time = 0;
       #if defined(HAVE_LIBBCM2835) && defined(HAVE_LIBISP2)
@@ -686,7 +686,7 @@ int main(int argc, char *argv[])
       #endif /* HAVE_LIBBCM2835 HAVE_LIBISP2*/
 
       #ifdef FEAT_FRONTCONTROLS
-      error_message (DEBUG, "Not Running. %s", exCmd_bin(fcData.serialCmdA));
+      error_message (DEBUG, "Not Running. %s", exCmd_bin(log_data.serialCmdA));
       #endif /* FEAT_FRONTCONTROLS */
     }
 
@@ -737,9 +737,9 @@ int main(int argc, char *argv[])
     bikeobj.oil_temp = enData.temp_oil;
     bikeobj.oil_pres = enData.pres_oil;
     bikeobj.batteryvoltage = enData.batteryVoltage;
-    bikeobj.systemvoltage = fcData.systemVoltage;
-    bikeobj.blink_left = fcData.left_on;
-    bikeobj.blink_right = fcData.right_on;
+    bikeobj.systemvoltage = log_data.systemvoltage;
+    bikeobj.blink_left = log_data.blink_left;
+    bikeobj.blink_right = log_data.blink_right;
     bikeobj.trip = enData.trip;
     #endif /* FEAT_DASHBOARD */
 
@@ -772,7 +772,7 @@ int main(int argc, char *argv[])
       }
     }
     #ifdef FEAT_FRONTCONTROLS
-    if (fcData.in_neutral) {
+    if (log_data.in_neutral) {
       bikeobj.gear = "N";
     }
     #endif /* FEAT_FRONTCONTROLS */
@@ -832,7 +832,7 @@ int main(int argc, char *argv[])
       #ifdef FEAT_FRONTCONTROLS
       if (FD_ISSET(fd_front_controls, &writeset)) {
         // Front controls accepts commands
-        writeFC(fd_front_controls, fcData);
+        writeFC(fd_front_controls, log_data);
       }
       #endif /* FEAT_FRONTCONTROLS */
       #ifdef FEAT_DASHBOARD
@@ -846,15 +846,15 @@ int main(int argc, char *argv[])
       if (FD_ISSET(can_s, &writeset)) {
         error_message (DEBUG, "Select write CAN");
         //int nbytes = read(can_s, &frame, sizeof(struct can_frame));
-	//can_send();
-	struct can_frame _serial_commands;
-	_serial_commands.can_dlc = 4;
-	_serial_commands.can_id = 226;
-	_serial_commands.data[0] = 0;
-	_serial_commands.data[1] = 0;
-	_serial_commands.data[2] = 0;
-	_serial_commands.data[3] = fcData.serialCmdA;
-	if (write(can_s, &_serial_commands, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+        //can_send();
+        struct can_frame _serial_commands;
+        _serial_commands.can_dlc = 4;
+        _serial_commands.can_id = 226;
+        _serial_commands.data[0] = 0;
+        _serial_commands.data[1] = 0;
+        _serial_commands.data[2] = 0;
+        _serial_commands.data[3] = log_data.serialCmdA;
+        if (write(can_s, &_serial_commands, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
           error_message(ERROR, "CAN: SerialCMD Write failed");
         }
       }
@@ -872,7 +872,7 @@ int main(int argc, char *argv[])
     log_data.oil_pres = enData.pres_oil;
     log_data.alt_rpm = enData.rpm;
     log_data.speed = enData.speed;
-    log_data.systemvoltage = fcData.systemVoltage;
+//    log_data.systemvoltage = fcData.systemVoltage;
     log_data.batteryvoltage = enData.batteryVoltage;
     log_data.power = trailing_average_power(log_data);
     if ( args_info.output_file_given ) {

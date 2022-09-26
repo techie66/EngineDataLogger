@@ -55,44 +55,6 @@ const uint8_t		CLUTCH_DISENGAGED = 1 << 2,
 // CmdA flags
 const uint8_t		ENGINE_RUNNING = 1 << 7;
 
-struct fc_data {
-  uint8_t serialCmdD,
-          serialCmdB,
-          serialCmdC,
-          serialCmdA,
-          inputCmdD,
-          inputCmdC;
-  float	systemVoltage;
-  bool	brake_on;
-  bool	horn_on;
-  bool	left_on;
-  bool	right_on;
-  bool	high_on;
-  bool	kill_on;
-  bool	clutch_disengaged;
-  bool	kickstand_up;
-  bool	in_neutral;
-};
-
-const struct fc_data FC_DATA_DEFAULT = {
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0.0,
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-  false
-};
-
 struct			engine_data {
   uint16_t	rpm;
   float		batteryVoltage,
@@ -152,6 +114,32 @@ struct	bike_data {
   float oil_temp;
   /// Guage pressure of oil in psi
   float oil_pres;
+  /// Sent to Front Controls,
+  uint8_t serialCmdD,
+          /// Sent to Front Controls,
+          serialCmdB,
+          /// Sent to Front Controls,
+          serialCmdC,
+          /// Sent to Front Controls, bit 7 indicates engine is running
+          serialCmdA, 
+          /// Raw data byte when reading front controls over USB/Serial
+          inputCmdD,
+          /// Raw data byte when reading front controls over USB/Serial
+          inputCmdC;
+  /// From Front Controls
+  bool  brake_on;
+  /// From Front Controls
+  bool  horn_on;
+  /// From Front Controls
+  bool  high_on; 
+  /// From Front Controls
+  bool  kill_on;
+  /// From Front Controls
+  bool  clutch_disengaged;
+  /// From Front Controls
+  bool  kickstand_up;
+  /// From Front Controls
+  bool  in_neutral;
   /// Blinker currently flashing (does not indicate actual lamp status)
   bool blink_left;
   /// Blinker currently flashing (does not indicate actual lamp status)
@@ -219,46 +207,59 @@ struct	bike_data {
   time_t gpstime;
 };
 const struct bike_data BIKE_DATA_DEFAULT = {
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  GPS_NO_FIX,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0
+  0, // rpm
+  0, // ig_rpm
+  0, // alt_rpm
+  0, // speed
+  0, // odometer
+  0, // trip
+  0, // sys volt
+  0, // batt volt
+  0, // oil temp
+  0, // oil pres
+  0, // serialCmdD
+  0, // serialCmdB
+  0, // serialCmdC
+  0, // serialCmdA
+  0, // inputCmdD
+  0, // inputCmdC
+  0, // brake_on
+  0, // horn_on
+  0, // high_on
+  0, // kill_on
+  0, // clutch_disengaged
+  0, // kickstand_up
+  0, // in_neutral
+  0, // blink left
+  0, // blink right
+  0, // lambda
+  0, // map
+  0, // tps
+  0, // running
+  0, // advance 1
+  0, // advance 2
+  0, // advance 3
+  0, // advance 4
+  0, // yaw
+  0, // pitch
+  0, // roll
+  0, // acc forward
+  0, // acc side
+  0, // acc vert
+  0, // power
+  0, // weight
+  0, // lat 
+  0, // lon
+  0, // altitude
+  0, // gps speed
+  0, // gps heading
+  GPS_NO_FIX, // gps fix type
+  0, // pdop
+  0, // hdop
+  0, // vdop
+  0, // satV
+  0, // satU
+  0 // gpstime
 };
 
 /// Enumeration of loggable data. These get pushed into a vector to represent user choice in order.

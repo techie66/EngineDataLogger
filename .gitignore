@@ -8,6 +8,7 @@ example_serial.txt
 src/cb1100f-app_generated.h
 src/cmdline.c
 src/cmdline.h
+data/cmdline.ggo
 
 # Vim swap files
 .*.swp
