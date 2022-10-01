@@ -849,7 +849,7 @@ int main(int argc, char *argv[])
         //can_send();
         struct can_frame _serial_commands;
         _serial_commands.can_dlc = 4;
-        _serial_commands.can_id = 226;
+        _serial_commands.can_id = 0x226;
         _serial_commands.data[0] = 0;
         _serial_commands.data[1] = 0;
         _serial_commands.data[2] = 0;
