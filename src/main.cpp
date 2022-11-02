@@ -1025,7 +1025,8 @@ int main(int argc, char *argv[])
     #ifdef FEAT_GPX
     // GPX Logging
     if ( args_info.gpx_file_given ) {
-      if ( ( (currtime.tv_sec - gpx_time_last.tv_sec) * 1000000 + currtime.tv_usec - gpx_time_last.tv_usec ) > GPX_INTERVAL ) {
+      if ( ( (currtime.tv_sec - gpx_time_last.tv_sec) * 1000000 + currtime.tv_usec - gpx_time_last.tv_usec ) > GPX_INTERVAL 
+		      && log_data.gpsfix > GPS_NO_FIX ) {
         gpx_time_last.tv_sec = currtime.tv_sec;
         gpx_time_last.tv_usec = currtime.tv_usec;
         strftime(time_buf, 100, "%FT%TZ", localtime(&log_data.gpstime));
