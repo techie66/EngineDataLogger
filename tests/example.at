@@ -1,5 +1,5 @@
 AT_BANNER([Version Check])
-AT_SETUP([version])
+AT_SETUP([Pretend to check version])
 AT_KEYWORDS([version])
 echo "EngineDataLogger 0.1.0.155-0838-dirty" > expout
 AT_CHECK([$abs_top_builddir/enginedatalogger -V], [], [ignore], [ignore])

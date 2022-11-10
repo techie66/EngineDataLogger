@@ -423,6 +423,14 @@ int main(int argc, char *argv[])
   gettimeofday(&log_time_last, NULL);
   gettimeofday(&gpx_time_last, NULL);
   while (!time_to_quit) { // time_to_quit defined error_handling.c
+    if ( args_info.test_mode_arg > 0 ) {
+      error_message (DEBUG, "TESTMODE: %d ", args_info.test_mode_arg);
+      static int _test_mode_countdown = 1;
+      _test_mode_countdown--;
+      if ( _test_mode_countdown == 0 )
+        time_to_quit = true;
+    }
+
     int	length;
     // Check if restarting logfile
     if ( restart_log == true ) {
@@ -571,6 +579,10 @@ int main(int argc, char *argv[])
     timeout.tv_sec = 0;
     timeout.tv_usec = LOG_INTERVAL;
 
+    if ( args_info.test_mode_arg > 0 ) {
+      timeout.tv_sec = 60;
+    }
+
     // Do Select()
     select_result = select(max_fd + 1, &readset, &writeset, NULL, &timeout);
     if (select_result < 0) {
@@ -583,7 +595,7 @@ int main(int argc, char *argv[])
 
 
       #ifdef FEAT_FRONTCONTROLS
-      if (FD_ISSET(fd_front_controls, &readset)) {
+      if (fd_front_controls>0 && FD_ISSET(fd_front_controls, &readset)) {
         error_message (DEBUG, "DEBUG:Select read front controls");
         readFC(fd_front_controls, log_data);
       }
@@ -822,6 +834,11 @@ int main(int argc, char *argv[])
     // Do Select()
     timeout.tv_sec = 0;
     timeout.tv_usec = 0;
+
+    if ( args_info.test_mode_arg > 1 ) {
+      timeout.tv_sec = 60;
+    }
+
     select_result = select(max_fd + 1, NULL, &writeset, NULL, &timeout);
     if (select_result < 0) {
       error_message (WARN, "SELECT: write error %d : %s", errno, strerror (errno));
@@ -830,7 +847,7 @@ int main(int argc, char *argv[])
       // #Dontcare
     } else if (select_result > 0) {
       #ifdef FEAT_FRONTCONTROLS
-      if (FD_ISSET(fd_front_controls, &writeset)) {
+      if (fd_front_controls>0 && FD_ISSET(fd_front_controls, &writeset)) {
         // Front controls accepts commands
         writeFC(fd_front_controls, log_data);
       }
@@ -876,7 +893,7 @@ int main(int argc, char *argv[])
     log_data.batteryvoltage = enData.batteryVoltage;
     log_data.power = trailing_average_power(log_data);
     if ( args_info.output_file_given ) {
-      if ( ( (currtime.tv_sec - log_time_last.tv_sec) * 1000000 + currtime.tv_usec - log_time_last.tv_usec ) > LOG_INTERVAL ) {
+      if ( ( (currtime.tv_sec - log_time_last.tv_sec) * 1000000 + currtime.tv_usec - log_time_last.tv_usec ) > LOG_INTERVAL || args_info.test_mode_arg > 0 ) {
         log_time_last.tv_sec = currtime.tv_sec;
         log_time_last.tv_usec = currtime.tv_usec;
         for (std::vector<log_fmt_data>::iterator it = log_format.begin() ; it != log_format.end(); ++it) {
@@ -918,7 +935,7 @@ int main(int argc, char *argv[])
               fprintf(fd_log, "%d,", log_data.blink_right);
               break;
             case FMT_LAMBDA:
-              fprintf(fd_log, "%5.2f,", log_data.lambda / 100.0);
+              fprintf(fd_log, "%5.2f,", log_data.lambda / 1000.0);
               break;
             case FMT_MAP_KPA:
               fprintf(fd_log, "%3d,", log_data.map_kpa);

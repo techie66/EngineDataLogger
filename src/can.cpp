@@ -82,7 +82,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
       if ( status_unpack == 0 )
       {
         _status = EXIT_SUCCESS;
-        log_data.lambda = st_wb2.lambda; // Both scaled by 0.01, no conversion necessary
+        log_data.lambda = st_wb2.lambda * 10 ; // Convert scaled by 0.01 to 0.001
       }
       error_message(DEBUG, "CAN:ignitech lambda: %f", ignitech_can_ignitech_wb_2_lambda_decode(st_wb2.lambda));
     }

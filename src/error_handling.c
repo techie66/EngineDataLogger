@@ -23,6 +23,7 @@ e_lvl LEVEL_DEBUG = DEBUG;
 void error_message(e_lvl err_lvl, char const *fmt, ...)
 {
 
+  FILE *dest = stderr;
 
   // Handle error messages
   va_list args;
@@ -33,26 +34,26 @@ void error_message(e_lvl err_lvl, char const *fmt, ...)
         ++fmt;
         if (*fmt == 'd') {
           int i = va_arg(args, int);
-          printf( "%d", i ) ;
+          fprintf(dest, "%d", i ) ;
         } else if (*fmt == 'c') {
           int c = va_arg(args, int);
-          printf( "%c", (char)c ) ;
+          fprintf(dest, "%c", (char)c ) ;
         } else if (*fmt == 'X') {
           int X = va_arg(args, int);
-          printf( "%X", X ) ;
+          fprintf(dest, "%X", X ) ;
         } else if (*fmt == 'f') {
           double d = va_arg(args, double);
-          printf( "%f", d ) ;
+          fprintf(dest, "%f", d ) ;
         } else if (*fmt == 's') {
           const char *str = va_arg(args, const char *);
-          printf( "%s", str );
+          fprintf(dest, "%s", str );
         }
       } else {
-        printf( "%c", (char)*fmt);
+        fprintf(dest, "%c", (char)*fmt);
       }
       ++fmt;
     }
-    printf("\n");
+    fprintf(dest, "\n");
   }
   va_end(args);
 }
