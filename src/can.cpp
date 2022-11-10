@@ -82,7 +82,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
       if ( status_unpack == 0 )
       {
         _status = EXIT_SUCCESS;
-        log_data.lambda = st_wb2.lambda; // Both scaled by 0.01, no conversion necessary
+        log_data.lambda = st_wb2.lambda * 10 ; // Convert scaled by 0.01 to 0.001
       }
       error_message(DEBUG, "CAN:ignitech lambda: %f", ignitech_can_ignitech_wb_2_lambda_decode(st_wb2.lambda));
     }
@@ -105,7 +105,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
         log_data.lon = gps_gps_loc_long_decimal_degrees_decode(st_gps_loc.long_decimal_degrees);
       }
     }
-    break;                           
+    break;
 
     case GPS_GPS_NAV_FRAME_ID: {
       error_message(DEBUG, "CAN:GPS Navigation Frame");
@@ -119,7 +119,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
         log_data.gps_heading = gps_gps_nav_heading_decode(st_gps_nav.heading);
       }
     }
-    break;                           
+    break;
 
     case GPS_GPS_STAT_FRAME_ID: {
       error_message(DEBUG, "CAN:GPS Stats Frame");
@@ -136,7 +136,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
         log_data.vdop = gps_gps_stat_vdop_decode(st_gps_stat.vdop);
       }
     }
-    break;                           
+    break;
 
     case GPS_GPS_TIME_FRAME_ID: {
       error_message(DEBUG, "CAN:GPS Time Frame");
@@ -156,7 +156,28 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
         log_data.gpstime = timegm(&tm_gps_time);
       }
     }
-    break;                           
+    break;
+
+    case FC_FRONT_CONTROLS_FRAME_ID: {
+      error_message(DEBUG, "CAN:Front Controls Frame");
+      struct fc_front_controls_t st_front_controls;
+      int status_unpack = fc_front_controls_unpack(&st_front_controls, frame.data, sizeof(frame.data));
+      if ( status_unpack == 0 )
+      {
+        _status = EXIT_SUCCESS;
+        log_data.brake_on = st_front_controls.brake;
+        log_data.horn_on = st_front_controls.horn;
+        log_data.blink_left = st_front_controls.left;
+        log_data.blink_right = st_front_controls.right;
+        log_data.high_on = st_front_controls.high;
+        log_data.kill_on = st_front_controls.kill;
+        log_data.clutch_disengaged = st_front_controls.clutch;
+        log_data.kickstand_up = st_front_controls.kickstand;
+        log_data.in_neutral = st_front_controls.neutral;
+        log_data.systemvoltage = fc_front_controls_voltage_decode(st_front_controls.voltage);
+      }
+    }
+    break;
 
     default: /// Default if can_id is not in the switch print out message details
       error_message(WARN, "WARN:Unknown CAN frame%: %X", frame.can_id);

@@ -1,0 +1,7 @@
+AT_BANNER([Regression test lambda])
+AT_SETUP([test libISP])
+echo "lambda
+ 1.23," > expout
+AT_CHECK([$abs_top_builddir/enginedatalogger --test-mode=1 -o - --output-file-format lambda --lc2=$abs_top_builddir/tests/lambda1.data], [0], [expout], [ignore])
+AT_CLEANUP
+

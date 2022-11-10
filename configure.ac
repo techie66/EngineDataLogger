@@ -220,5 +220,5 @@ AM_CONDITIONAL([HAVE_SYSTEMD], [test "x$with_systemdsystemunitdir" != "xno"])
 AC_CHECK_PROG([HAVE_GENGETOPT],[gengetopt],[yes])
 AM_CONDITIONAL([HAVE_GENGETOPT], [test "x$HAVE_GENGETOPT" = xyes])
 
-AC_CONFIG_FILES([Makefile tests/Makefile data/cmdline.ggo tests/atlocal])
+AC_CONFIG_FILES([Makefile tests/Makefile data/cmdline.ggo tests/atlocal tests/testsuite.at])
 AC_OUTPUT
