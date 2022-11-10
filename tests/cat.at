@@ -1,0 +1,10 @@
+AT_BANNER([echo simple unit tests])
+AT_SETUP([execute echo -n])
+AT_CHECK([echo -n "hello"], [0], [hello], [])
+AT_CLEANUP
+
+AT_SETUP([execute echo])
+echo "hello" > expout
+AT_CHECK([echo "hello"], [0], [expout], [])
+AT_CLEANUP
+

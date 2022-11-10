@@ -40,3 +40,5 @@ option "sleepy-addr"	- "Address for Sleepy Pi." string default="0x04" typestr="0
 @IGNITECH_TRUE@option "ignitech-sai-low-mv" - "Low mv value. Eg: 708" int optional dependon="ignitech-sai-high"
 @IGNITECH_TRUE@option "ignitech-sai-high" - "High kpa reading. Eg: 102" int optional dependon="ignitech-sai-high-mv"
 @IGNITECH_TRUE@option "ignitech-sai-high-mv" - "High mv value. Eg: 4252" int optional dependon="ignitech"
+
+option "test-mode"      - "Secret test mode. Does not continue running" int optional default="0" hidden
