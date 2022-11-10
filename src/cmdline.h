@@ -45,6 +45,7 @@ struct gengetopt_args_info
 {
   const char *help_help; /**< @brief Print help and exit help description.  */
   const char *detailed_help_help; /**< @brief Print help, including all details and hidden options, and exit help description.  */
+  const char *full_help_help; /**< @brief Print help, including hidden options, and exit help description.  */
   const char *version_help; /**< @brief Print version and exit help description.  */
   char * config_file_arg;	/**< @brief Configuration file..  */
   char * config_file_orig;	/**< @brief Configuration file. original value given at command line.  */
@@ -119,9 +120,13 @@ struct gengetopt_args_info
   int ignitech_sai_high_mv_arg;	/**< @brief High mv value. Eg: 4252.  */
   char * ignitech_sai_high_mv_orig;	/**< @brief High mv value. Eg: 4252 original value given at command line.  */
   const char *ignitech_sai_high_mv_help; /**< @brief High mv value. Eg: 4252 help description.  */
+  int test_mode_arg;	/**< @brief Secret test mode. Does not continue running (default='0').  */
+  char * test_mode_orig;	/**< @brief Secret test mode. Does not continue running original value given at command line.  */
+  const char *test_mode_help; /**< @brief Secret test mode. Does not continue running help description.  */
   
   unsigned int help_given ;	/**< @brief Whether help was given.  */
   unsigned int detailed_help_given ;	/**< @brief Whether detailed-help was given.  */
+  unsigned int full_help_given ;	/**< @brief Whether full-help was given.  */
   unsigned int version_given ;	/**< @brief Whether version was given.  */
   unsigned int config_file_given ;	/**< @brief Whether config-file was given.  */
   unsigned int output_file_given ;	/**< @brief Whether output-file was given.  */
@@ -147,6 +152,7 @@ struct gengetopt_args_info
   unsigned int ignitech_sai_low_mv_given ;	/**< @brief Whether ignitech-sai-low-mv was given.  */
   unsigned int ignitech_sai_high_given ;	/**< @brief Whether ignitech-sai-high was given.  */
   unsigned int ignitech_sai_high_mv_given ;	/**< @brief Whether ignitech-sai-high-mv was given.  */
+  unsigned int test_mode_given ;	/**< @brief Whether test-mode was given.  */
 
 } ;
 
@@ -168,6 +174,8 @@ extern const char *gengetopt_args_info_usage;
 extern const char *gengetopt_args_info_description;
 /** @brief all the lines making the help output */
 extern const char *gengetopt_args_info_help[];
+/** @brief all the lines making the full help output (including hidden options) */
+extern const char *gengetopt_args_info_full_help[];
 /** @brief all the lines making the detailed help output (including hidden options and details) */
 extern const char *gengetopt_args_info_detailed_help[];
 
@@ -231,6 +239,10 @@ int cmdline_parser_file_save(const char *filename,
  * Print the help
  */
 void cmdline_parser_print_help(void);
+/**
+ * Print the full help (including hidden options)
+ */
+void cmdline_parser_print_full_help(void);
 /**
  * Print the detailed help (including hidden options and details)
  */

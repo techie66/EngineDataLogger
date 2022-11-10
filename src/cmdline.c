@@ -36,6 +36,7 @@ const char *gengetopt_args_info_description = "";
 const char *gengetopt_args_info_detailed_help[] = {
   "  -h, --help                    Print help and exit",
   "      --detailed-help           Print help, including all details and hidden\n                                  options, and exit",
+  "      --full-help               Print help, including hidden options, and exit",
   "  -V, --version                 Print version and exit",
   "  -c, --config-file=filename    Configuration file.",
   "  -o, --output-file=filename    Output file for CSV logging\n                                  (default=`/dev/null')",
@@ -64,8 +65,48 @@ const char *gengetopt_args_info_detailed_help[] = {
   "      --ignitech-sai-low-mv=INT Low mv value. Eg: 708",
   "      --ignitech-sai-high=INT   High kpa reading. Eg: 102",
   "      --ignitech-sai-high-mv=INT\n                                High mv value. Eg: 4252",
+  "      --test-mode=INT           Secret test mode. Does not continue running\n                                  (default=`0')",
     0
 };
+static void
+init_full_help_array(void)
+{
+  gengetopt_args_info_full_help[0] = gengetopt_args_info_detailed_help[0];
+  gengetopt_args_info_full_help[1] = gengetopt_args_info_detailed_help[1];
+  gengetopt_args_info_full_help[2] = gengetopt_args_info_detailed_help[2];
+  gengetopt_args_info_full_help[3] = gengetopt_args_info_detailed_help[3];
+  gengetopt_args_info_full_help[4] = gengetopt_args_info_detailed_help[4];
+  gengetopt_args_info_full_help[5] = gengetopt_args_info_detailed_help[5];
+  gengetopt_args_info_full_help[6] = gengetopt_args_info_detailed_help[6];
+  gengetopt_args_info_full_help[7] = gengetopt_args_info_detailed_help[7];
+  gengetopt_args_info_full_help[8] = gengetopt_args_info_detailed_help[8];
+  gengetopt_args_info_full_help[9] = gengetopt_args_info_detailed_help[10];
+  gengetopt_args_info_full_help[10] = gengetopt_args_info_detailed_help[11];
+  gengetopt_args_info_full_help[11] = gengetopt_args_info_detailed_help[12];
+  gengetopt_args_info_full_help[12] = gengetopt_args_info_detailed_help[13];
+  gengetopt_args_info_full_help[13] = gengetopt_args_info_detailed_help[14];
+  gengetopt_args_info_full_help[14] = gengetopt_args_info_detailed_help[15];
+  gengetopt_args_info_full_help[15] = gengetopt_args_info_detailed_help[16];
+  gengetopt_args_info_full_help[16] = gengetopt_args_info_detailed_help[17];
+  gengetopt_args_info_full_help[17] = gengetopt_args_info_detailed_help[18];
+  gengetopt_args_info_full_help[18] = gengetopt_args_info_detailed_help[19];
+  gengetopt_args_info_full_help[19] = gengetopt_args_info_detailed_help[20];
+  gengetopt_args_info_full_help[20] = gengetopt_args_info_detailed_help[21];
+  gengetopt_args_info_full_help[21] = gengetopt_args_info_detailed_help[22];
+  gengetopt_args_info_full_help[22] = gengetopt_args_info_detailed_help[23];
+  gengetopt_args_info_full_help[23] = gengetopt_args_info_detailed_help[24];
+  gengetopt_args_info_full_help[24] = gengetopt_args_info_detailed_help[25];
+  gengetopt_args_info_full_help[25] = gengetopt_args_info_detailed_help[26];
+  gengetopt_args_info_full_help[26] = gengetopt_args_info_detailed_help[27];
+  gengetopt_args_info_full_help[27] = gengetopt_args_info_detailed_help[28];
+  gengetopt_args_info_full_help[28] = gengetopt_args_info_detailed_help[29];
+  gengetopt_args_info_full_help[29] = gengetopt_args_info_detailed_help[30];
+  gengetopt_args_info_full_help[30] = gengetopt_args_info_detailed_help[31];
+  gengetopt_args_info_full_help[31] = 0; 
+  
+}
+
+const char *gengetopt_args_info_full_help[32];
 
 static void
 init_help_array(void)
@@ -78,7 +119,7 @@ init_help_array(void)
   gengetopt_args_info_help[5] = gengetopt_args_info_detailed_help[5];
   gengetopt_args_info_help[6] = gengetopt_args_info_detailed_help[6];
   gengetopt_args_info_help[7] = gengetopt_args_info_detailed_help[7];
-  gengetopt_args_info_help[8] = gengetopt_args_info_detailed_help[9];
+  gengetopt_args_info_help[8] = gengetopt_args_info_detailed_help[8];
   gengetopt_args_info_help[9] = gengetopt_args_info_detailed_help[10];
   gengetopt_args_info_help[10] = gengetopt_args_info_detailed_help[11];
   gengetopt_args_info_help[11] = gengetopt_args_info_detailed_help[12];
@@ -99,11 +140,12 @@ init_help_array(void)
   gengetopt_args_info_help[26] = gengetopt_args_info_detailed_help[27];
   gengetopt_args_info_help[27] = gengetopt_args_info_detailed_help[28];
   gengetopt_args_info_help[28] = gengetopt_args_info_detailed_help[29];
-  gengetopt_args_info_help[29] = 0; 
+  gengetopt_args_info_help[29] = gengetopt_args_info_detailed_help[30];
+  gengetopt_args_info_help[30] = 0; 
   
 }
 
-const char *gengetopt_args_info_help[30];
+const char *gengetopt_args_info_help[31];
 
 typedef enum {ARG_NO
   , ARG_FLAG
@@ -158,6 +200,7 @@ void clear_given (struct gengetopt_args_info *args_info)
 {
   args_info->help_given = 0 ;
   args_info->detailed_help_given = 0 ;
+  args_info->full_help_given = 0 ;
   args_info->version_given = 0 ;
   args_info->config_file_given = 0 ;
   args_info->output_file_given = 0 ;
@@ -183,6 +226,7 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->ignitech_sai_low_mv_given = 0 ;
   args_info->ignitech_sai_high_given = 0 ;
   args_info->ignitech_sai_high_mv_given = 0 ;
+  args_info->test_mode_given = 0 ;
 }
 
 static
@@ -226,43 +270,47 @@ void clear_args (struct gengetopt_args_info *args_info)
   args_info->ignitech_sai_low_mv_orig = NULL;
   args_info->ignitech_sai_high_orig = NULL;
   args_info->ignitech_sai_high_mv_orig = NULL;
+  args_info->test_mode_arg = 0;
+  args_info->test_mode_orig = NULL;
   
 }
 
 static
 void init_args_info(struct gengetopt_args_info *args_info)
 {
-
+  init_full_help_array(); 
   init_help_array(); 
   args_info->help_help = gengetopt_args_info_detailed_help[0] ;
   args_info->detailed_help_help = gengetopt_args_info_detailed_help[1] ;
-  args_info->version_help = gengetopt_args_info_detailed_help[2] ;
-  args_info->config_file_help = gengetopt_args_info_detailed_help[3] ;
-  args_info->output_file_help = gengetopt_args_info_detailed_help[4] ;
-  args_info->gpx_file_help = gengetopt_args_info_detailed_help[5] ;
-  args_info->output_file_date_help = gengetopt_args_info_detailed_help[6] ;
-  args_info->output_file_format_help = gengetopt_args_info_detailed_help[7] ;
-  args_info->gear_ratios_help = gengetopt_args_info_detailed_help[9] ;
-  args_info->weight_help = gengetopt_args_info_detailed_help[10] ;
-  args_info->v_help = gengetopt_args_info_detailed_help[11] ;
+  args_info->full_help_help = gengetopt_args_info_detailed_help[2] ;
+  args_info->version_help = gengetopt_args_info_detailed_help[3] ;
+  args_info->config_file_help = gengetopt_args_info_detailed_help[4] ;
+  args_info->output_file_help = gengetopt_args_info_detailed_help[5] ;
+  args_info->gpx_file_help = gengetopt_args_info_detailed_help[6] ;
+  args_info->output_file_date_help = gengetopt_args_info_detailed_help[7] ;
+  args_info->output_file_format_help = gengetopt_args_info_detailed_help[8] ;
+  args_info->gear_ratios_help = gengetopt_args_info_detailed_help[10] ;
+  args_info->weight_help = gengetopt_args_info_detailed_help[11] ;
+  args_info->v_help = gengetopt_args_info_detailed_help[12] ;
   args_info->v_min = 1;
   args_info->v_max = 3;
-  args_info->verbose_help = gengetopt_args_info_detailed_help[12] ;
-  args_info->quiet_help = gengetopt_args_info_detailed_help[13] ;
-  args_info->front_controls_help = gengetopt_args_info_detailed_help[15] ;
-  args_info->ignitech_help = gengetopt_args_info_detailed_help[16] ;
-  args_info->lc2_help = gengetopt_args_info_detailed_help[17] ;
-  args_info->lc2_delay_help = gengetopt_args_info_detailed_help[18] ;
-  args_info->lc2_pin_help = gengetopt_args_info_detailed_help[19] ;
-  args_info->sleepy_help = gengetopt_args_info_detailed_help[20] ;
-  args_info->sleepy_addr_help = gengetopt_args_info_detailed_help[21] ;
-  args_info->can_help = gengetopt_args_info_detailed_help[22] ;
-  args_info->ignitech_dump_file_help = gengetopt_args_info_detailed_help[24] ;
-  args_info->ignitech_servo_as_iap_help = gengetopt_args_info_detailed_help[25] ;
-  args_info->ignitech_sai_low_help = gengetopt_args_info_detailed_help[26] ;
-  args_info->ignitech_sai_low_mv_help = gengetopt_args_info_detailed_help[27] ;
-  args_info->ignitech_sai_high_help = gengetopt_args_info_detailed_help[28] ;
-  args_info->ignitech_sai_high_mv_help = gengetopt_args_info_detailed_help[29] ;
+  args_info->verbose_help = gengetopt_args_info_detailed_help[13] ;
+  args_info->quiet_help = gengetopt_args_info_detailed_help[14] ;
+  args_info->front_controls_help = gengetopt_args_info_detailed_help[16] ;
+  args_info->ignitech_help = gengetopt_args_info_detailed_help[17] ;
+  args_info->lc2_help = gengetopt_args_info_detailed_help[18] ;
+  args_info->lc2_delay_help = gengetopt_args_info_detailed_help[19] ;
+  args_info->lc2_pin_help = gengetopt_args_info_detailed_help[20] ;
+  args_info->sleepy_help = gengetopt_args_info_detailed_help[21] ;
+  args_info->sleepy_addr_help = gengetopt_args_info_detailed_help[22] ;
+  args_info->can_help = gengetopt_args_info_detailed_help[23] ;
+  args_info->ignitech_dump_file_help = gengetopt_args_info_detailed_help[25] ;
+  args_info->ignitech_servo_as_iap_help = gengetopt_args_info_detailed_help[26] ;
+  args_info->ignitech_sai_low_help = gengetopt_args_info_detailed_help[27] ;
+  args_info->ignitech_sai_low_mv_help = gengetopt_args_info_detailed_help[28] ;
+  args_info->ignitech_sai_high_help = gengetopt_args_info_detailed_help[29] ;
+  args_info->ignitech_sai_high_mv_help = gengetopt_args_info_detailed_help[30] ;
+  args_info->test_mode_help = gengetopt_args_info_detailed_help[31] ;
   
 }
 
@@ -305,6 +353,15 @@ cmdline_parser_print_help (void)
   print_help_common();
   while (gengetopt_args_info_help[i])
     printf("%s\n", gengetopt_args_info_help[i++]);
+}
+
+void
+cmdline_parser_print_full_help (void)
+{
+  int i = 0;
+  print_help_common();
+  while (gengetopt_args_info_full_help[i])
+    printf("%s\n", gengetopt_args_info_full_help[i++]);
 }
 
 void
@@ -393,6 +450,7 @@ cmdline_parser_release (struct gengetopt_args_info *args_info)
   free_string_field (&(args_info->ignitech_sai_low_mv_orig));
   free_string_field (&(args_info->ignitech_sai_high_orig));
   free_string_field (&(args_info->ignitech_sai_high_mv_orig));
+  free_string_field (&(args_info->test_mode_orig));
   
   
 
@@ -476,6 +534,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "help", 0, 0 );
   if (args_info->detailed_help_given)
     write_into_file(outfile, "detailed-help", 0, 0 );
+  if (args_info->full_help_given)
+    write_into_file(outfile, "full-help", 0, 0 );
   if (args_info->version_given)
     write_into_file(outfile, "version", 0, 0 );
   if (args_info->config_file_given)
@@ -525,6 +585,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "ignitech-sai-high", args_info->ignitech_sai_high_orig, 0);
   if (args_info->ignitech_sai_high_mv_given)
     write_into_file(outfile, "ignitech-sai-high-mv", args_info->ignitech_sai_high_mv_orig, 0);
+  if (args_info->test_mode_given)
+    write_into_file(outfile, "test-mode", args_info->test_mode_orig, 0);
   
 
   i = EXIT_SUCCESS;
@@ -936,6 +998,7 @@ cmdline_parser_internal (
       static struct option long_options[] = {
         { "help",	0, NULL, 'h' },
         { "detailed-help",	0, NULL, 0 },
+        { "full-help",	0, NULL, 0 },
         { "version",	0, NULL, 'V' },
         { "config-file",	1, NULL, 'c' },
         { "output-file",	1, NULL, 'o' },
@@ -961,6 +1024,7 @@ cmdline_parser_internal (
         { "ignitech-sai-low-mv",	1, NULL, 0 },
         { "ignitech-sai-high",	1, NULL, 0 },
         { "ignitech-sai-high-mv",	1, NULL, 0 },
+        { "test-mode",	1, NULL, 0 },
         { 0,  0, 0, 0 }
       };
 
@@ -1121,6 +1185,12 @@ cmdline_parser_internal (
         case 0:	/* Long option with no short option */
           if (strcmp (long_options[option_index].name, "detailed-help") == 0) {
             cmdline_parser_print_detailed_help ();
+            cmdline_parser_free (&local_args_info);
+            exit (EXIT_SUCCESS);
+          }
+
+          if (strcmp (long_options[option_index].name, "full-help") == 0) {
+            cmdline_parser_print_full_help ();
             cmdline_parser_free (&local_args_info);
             exit (EXIT_SUCCESS);
           }
@@ -1289,6 +1359,20 @@ cmdline_parser_internal (
                 &(local_args_info.ignitech_sai_high_mv_given), optarg, 0, 0, ARG_INT,
                 check_ambiguity, override, 0, 0,
                 "ignitech-sai-high-mv", '-',
+                additional_error))
+              goto failure;
+          
+          }
+          /* Secret test mode. Does not continue running.  */
+          else if (strcmp (long_options[option_index].name, "test-mode") == 0)
+          {
+          
+          
+            if (update_arg( (void *)&(args_info->test_mode_arg), 
+                 &(args_info->test_mode_orig), &(args_info->test_mode_given),
+                &(local_args_info.test_mode_given), optarg, 0, "0", ARG_INT,
+                check_ambiguity, override, 0, 0,
+                "test-mode", '-',
                 additional_error))
               goto failure;
           
