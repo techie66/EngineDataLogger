@@ -205,17 +205,253 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
       case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_00_PI_DS_SUPPORTED_01_20_CHOICE: {
         _status = EXIT_SUCCESS;
         error_message(DEBUG, "OBD2: Supported PIDS");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.parameter_id_service01 = OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_00_PI_DS_SUPPORTED_01_20_CHOICE;
+        _obd2_response.s1_pid_00_pi_ds_supported_01_20 = 0x003C8011;
+        _obd2_response.length = 6u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_0_B_INTAKE_MANI_ABS_PRESS_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: MAP kpa");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.s1_pid_0_b_intake_mani_abs_press = obd2_obd2_s1_pid_0_b_intake_mani_abs_press_encode(log_data.map_kpa);
+        _obd2_response.length = 4u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
+        _obd2_response.parameter_id_service01 = obd2Request.pid;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
       }
       break;
 
       case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_0_C_ENGINE_RPM_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: RPM");
         struct can_frame _response;
         struct obd2_obd2_t _obd2_response;
         _obd2_response.s1_pid_0_c_engine_rpm = obd2_obd2_s1_pid_0_c_engine_rpm_encode(log_data.rpm);
-        _obd2_response.length = 4u; // MODE(1) + PID(1) + Data Bytes (2)
+        _obd2_response.length = 4u; // MODE(1) + PID(1) + Data Bytes
         _obd2_response.response = 4u;  // Every response packet is 4
         _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
         _obd2_response.parameter_id_service01 = OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_0_C_ENGINE_RPM_CHOICE;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_0_D_VEHICLE_SPEED_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: Vehicle Speed");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.parameter_id_service01 = OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_0_D_VEHICLE_SPEED_CHOICE;
+        _obd2_response.s1_pid_0_d_vehicle_speed = obd2_obd2_s1_pid_0_d_vehicle_speed_encode(log_data.speed);
+        _obd2_response.length = 3u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_0_E_TIMING_ADVANCE_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: Timing Advance");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.parameter_id_service01 = OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_0_E_TIMING_ADVANCE_CHOICE;
+        _obd2_response.s1_pid_0_e_timing_advance = obd2_obd2_s1_pid_0_e_timing_advance_encode(log_data.advance1 * 1.0);
+        _obd2_response.length = 3u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_11_THROTTLE_POSITION_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: Throttle Position");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.parameter_id_service01 = OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_11_THROTTLE_POSITION_CHOICE;
+        _obd2_response.s1_pid_11_throttle_position = obd2_obd2_s1_pid_11_throttle_position_encode(log_data.tps_percent);
+        _obd2_response.length = 3u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_1_C_OBD_STANDARD_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: OBD Standard");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.parameter_id_service01 = OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_1_C_OBD_STANDARD_CHOICE;
+        _obd2_response.s1_pid_1_c_obd_standard = OBD2_OBD2_S1_PID_1_C_OBD_STANDARD_NOT_OBD_COMPLIANT_CHOICE;
+        _obd2_response.length = 3u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_20_PI_DS_SUPPORTED_21_40_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: Supported PIDS");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.parameter_id_service01 = obd2Request.pid;
+        _obd2_response.s1_pid_20_pi_ds_supported_21_40 = 0x10000001;
+        _obd2_response.length = 6u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_24_OXY_SENSOR1_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: lambda");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.s1_pid_24_oxy_sensor1_faer = obd2_obd2_s1_pid_24_oxy_sensor1_faer_encode(log_data.lambda);
+        _obd2_response.length = 6u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
+        _obd2_response.parameter_id_service01 = obd2Request.pid;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_40_PI_DS_SUPPORTED_41_60_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: Supported PIDS");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.parameter_id_service01 = obd2Request.pid;
+        _obd2_response.s1_pid_40_pi_ds_supported_41_60 = 0x40000010;
+        _obd2_response.length = 6u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_42_CONTROL_MODULE_VOLT_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: module voltage");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.s1_pid_42_control_module_volt = obd2_obd2_s1_pid_42_control_module_volt_encode(log_data.batteryvoltage);
+        _obd2_response.length = 4u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
+        _obd2_response.parameter_id_service01 = obd2Request.pid;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_5_C_ENGINE_OIL_TEMP_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: Oil Temp");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.s1_pid_5_c_engine_oil_temp = obd2_obd2_s1_pid_5_c_engine_oil_temp_encode(log_data.oil_temp);
+        _obd2_response.length = 3u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
+        _obd2_response.parameter_id_service01 = obd2Request.pid;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_60_PI_DS_SUPPORTED_61_80_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: Supported PIDS");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.parameter_id_service01 = obd2Request.pid;
+        _obd2_response.s1_pid_60_pi_ds_supported_61_80 = 0x00000000;
+        _obd2_response.length = 6u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
         obd2_obd2_pack(_response.data, &_obd2_response, 8);
         _response.can_dlc = 8;
         _response.can_id = OBD2_OBD2_FRAME_ID;

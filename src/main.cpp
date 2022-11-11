@@ -739,7 +739,7 @@ int main(int argc, char *argv[])
     // TODO: option to write flatbuffer to datafile
     // TODO runtime and build-time optional dashboard
     #ifdef FEAT_DASHBOARD
-    EDL::AppBuffer::BikeT bikeobj;
+    static EDL::AppBuffer::BikeT bikeobj;
     flatbuffers::FlatBufferBuilder fbb;
 
     bikeobj.alt_rpm = enData.rpm;
@@ -767,19 +767,21 @@ int main(int argc, char *argv[])
     #endif /* HAVE_LIBISP2 */
 
     #ifdef FEAT_DASHBOARD
-    bikeobj.gear = "?";
-    if ( args_info.gear_ratios_given ) {
-      char gears[5] = {'1', '2', '3', '4', '5'};
-      double current_ratio = 0;
-      if ( bikeobj.speed != 0 ) {
-        current_ratio = bikeobj.rpm / bikeobj.speed;
-      }
-      double smallest_delta = DBL_MAX;
-      for (int i = 0; i < 5; i++) {
-        double delta = fabs(current_ratio - gear_ratios[i]);
-        if ( delta < smallest_delta ) {
-          smallest_delta = delta;
-          bikeobj.gear = gears[i];
+    if ( !log_data.in_neutral ) {
+      bikeobj.gear = "?";
+      if ( args_info.gear_ratios_given ) {
+        char gears[5] = {'1', '2', '3', '4', '5'};
+        double current_ratio = 0;
+        if ( bikeobj.speed != 0 ) {
+          current_ratio = bikeobj.rpm / bikeobj.speed;
+        }
+        double smallest_delta = DBL_MAX;
+        for (int i = 0; i < 5; i++) {
+          double delta = fabs(current_ratio - gear_ratios[i]);
+          if ( delta < smallest_delta ) {
+            smallest_delta = delta;
+            bikeobj.gear = gears[i];
+          }
         }
       }
     }
@@ -899,7 +901,7 @@ int main(int argc, char *argv[])
         for (std::vector<log_fmt_data>::iterator it = log_format.begin() ; it != log_format.end(); ++it) {
           switch (*it) {
             case FMT_RPM:
-              fprintf(fd_log, "%4d,", log_data.ig_rpm);
+              fprintf(fd_log, "%4d,", log_data.rpm);
               break;
             case FMT_ALT_RPM:
               fprintf(fd_log, "%4d,", log_data.alt_rpm);
