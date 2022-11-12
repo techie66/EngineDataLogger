@@ -268,7 +268,7 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         struct can_frame _response;
         struct obd2_obd2_t _obd2_response;
         _obd2_response.parameter_id_service01 = OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_0_D_VEHICLE_SPEED_CHOICE;
-        _obd2_response.s1_pid_0_d_vehicle_speed = obd2_obd2_s1_pid_0_d_vehicle_speed_encode(log_data.speed);
+        _obd2_response.s1_pid_0_d_vehicle_speed = obd2_obd2_s1_pid_0_d_vehicle_speed_encode( (log_data.speed * 1.609344) );
         _obd2_response.length = 3u; // MODE(1) + PID(1) + Data Bytes
         _obd2_response.response = 4u;  // Every response packet is 4
         _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
@@ -427,7 +427,7 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         error_message(DEBUG, "OBD2: Oil Temp");
         struct can_frame _response;
         struct obd2_obd2_t _obd2_response;
-        _obd2_response.s1_pid_5_c_engine_oil_temp = obd2_obd2_s1_pid_5_c_engine_oil_temp_encode(log_data.oil_temp);
+        _obd2_response.s1_pid_5_c_engine_oil_temp = obd2_obd2_s1_pid_5_c_engine_oil_temp_encode( (log_data.oil_temp-32)*5.0/9.0 );
         _obd2_response.length = 3u; // MODE(1) + PID(1) + Data Bytes
         _obd2_response.response = 4u;  // Every response packet is 4
         _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
