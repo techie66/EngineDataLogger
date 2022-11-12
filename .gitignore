@@ -86,6 +86,8 @@ tests/removeblanks
 tests/atconfig
 tests/atlocal
 tests/package.m4
+tests/testsuite.at
+tests/testsuite.dir
 
 # Temporary files
 .version

@@ -205,10 +205,14 @@ int main(int argc, char *argv[])
   #ifdef FEAT_GPX
   GPX gpx;
   if ( args_info.gpx_file_given ) {
-    char * gpx_file;
-
-    std::string s(args_info.gpx_file_orig);
-    gpx.initialize(s);
+    if ( args_info.output_file_date_given ) {
+      std::string s(log_insert_time(NULL, args_info.gpx_file_orig,0));
+      gpx.initialize(s);
+    }
+    else {
+      std::string s(args_info.gpx_file_orig);
+      gpx.initialize(s);
+    }
   }
   #endif /* FEAT_GPX */
 
@@ -359,7 +363,7 @@ int main(int argc, char *argv[])
   #endif /* HAVE_LIBISP2 */
 
   #ifdef FEAT_I2C
-  int	fd_i2c;
+  int	fd_i2c = -1;
   uint8_t engine_data_addr = ENGINE_DATA_ADDR;
   if ( args_info.sleepy_given ) {
     // TODO
@@ -398,6 +402,18 @@ int main(int argc, char *argv[])
 
   if ( args_info.weight_given ) {
     log_data.weight = args_info.weight_arg;
+  }
+
+  if ( args_info.mount_offset_roll_given ) {
+    log_data.roll_offset = args_info.mount_offset_roll_arg;
+  }
+
+  if ( args_info.mount_offset_pitch_given ) {
+    log_data.pitch_offset = args_info.mount_offset_pitch_arg;
+  }
+
+  if ( args_info.roll_pitch_swap_given ) {
+    log_data.roll_pitch_swap = args_info.roll_pitch_swap_flag;
   }
 
   #ifdef HAVE_LIBISP2

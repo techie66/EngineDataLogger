@@ -54,8 +54,13 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
         _status = EXIT_SUCCESS;
         // Physical mounting may require changing up pitch and roll.
         log_data.yaw = imu_can_body_position_yaw_angle_decode(st_body_pos.yaw_angle);
-        log_data.pitch = imu_can_body_position_pitch_angle_decode(st_body_pos.pitch_angle);
-        log_data.roll = imu_can_body_position_roll_angle_decode(st_body_pos.roll_angle);
+        log_data.pitch = log_data.pitch_offset + imu_can_body_position_pitch_angle_decode(st_body_pos.pitch_angle);
+        log_data.roll = log_data.roll_offset + imu_can_body_position_roll_angle_decode(st_body_pos.roll_angle);
+	if (log_data.roll_pitch_swap) {
+          float swap_temp = log_data.pitch;
+	  log_data.pitch = log_data.roll;
+	  log_data.roll = swap_temp;
+	}
       }
       error_message(INFO, "CAN:Body Roll: %f", log_data.roll);
     }

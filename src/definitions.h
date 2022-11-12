@@ -167,6 +167,12 @@ struct	bike_data {
   float pitch;
   /// Roll. Rotation side to side. (ie. "lean angle")
   float roll;
+  /// Mounting Offset. Used to make sensor read 0 when vehicle level.
+  float pitch_offset;
+  /// Mounting Offset. Used to make sensor read 0 when vehicle level.
+  float roll_offset;
+  /// If sensor mounted so that roll and pitch are swapped.
+  bool roll_pitch_swap;
 
   /// Linear Acceleration. Forward and back.
   double acc_forward;
@@ -243,6 +249,9 @@ const struct bike_data BIKE_DATA_DEFAULT = {
   0, // yaw
   0, // pitch
   0, // roll
+  0, // pitch offset
+  0, // roll offset
+  0, // roll-pitch swap
   0, // acc forward
   0, // acc side
   0, // acc vert
