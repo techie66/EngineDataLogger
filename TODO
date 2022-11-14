@@ -1,7 +1,7 @@
 # List of little things that need/want. Some are features, but others are desired behavior.
 Make tests for all local funtions.
 Add option to quit on input device failure? defeats automatic retries.
-Option for "test mode" that quits after a brief, settable time eg '--test 15' quits after 15 seconds
+*Option for "test mode" that quits after a brief, settable time eg '--test 15' quits after 15 seconds
 GPS time -> sync systemtime with adjtime / clock_settime
 *GPS data loggable (all stats?)
 Bluetooth auto pairing

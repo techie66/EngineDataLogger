@@ -28,6 +28,7 @@ int trailing_average_power(bike_data &log_data, int periods)
   struct timeval time_delta;
 
   // TODO Calc power by accelerometer
+  // TODO check units, make test. I think speed needs to get converted.
   // power = force * speed
   // force = accel * mass
   int _power = ( ( log_data.acc_forward * log_data.weight ) * log_data.speed ) / WATTS_PER_HPI;

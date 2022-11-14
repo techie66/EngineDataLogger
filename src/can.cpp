@@ -453,6 +453,46 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         struct can_frame _response;
         struct obd2_obd2_t _obd2_response;
         _obd2_response.parameter_id_service01 = obd2Request.pid;
+        _obd2_response.s1_pid_60_pi_ds_supported_61_80 = 0x00000001;
+        _obd2_response.length = 6u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_80_PI_DS_SUPPORTED_81_A0_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: Supported PIDS");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.parameter_id_service01 = obd2Request.pid;
+        _obd2_response.s1_pid_60_pi_ds_supported_61_80 = 0x00000001;
+        _obd2_response.length = 6u; // MODE(1) + PID(1) + Data Bytes
+        _obd2_response.response = 4u;  // Every response packet is 4
+        _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
+        obd2_obd2_pack(_response.data, &_obd2_response, 8);
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case OBD2_OBD2_PARAMETER_ID_SERVICE01_S1_PID_A0_PI_DS_SUPPORTED_A1_C0_CHOICE: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: Supported PIDS");
+        struct can_frame _response;
+        struct obd2_obd2_t _obd2_response;
+        _obd2_response.parameter_id_service01 = obd2Request.pid;
         _obd2_response.s1_pid_60_pi_ds_supported_61_80 = 0x00000000;
         _obd2_response.length = 6u; // MODE(1) + PID(1) + Data Bytes
         _obd2_response.response = 4u;  // Every response packet is 4
@@ -466,6 +506,9 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         }
       }
       break;
+
+      // TODO PID A6 Odometer
+      // 	TODO Add to DBC file
 
       default:
         error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X", obd2Request.mode, obd2Request.pid);
