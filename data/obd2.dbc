@@ -36,7 +36,7 @@ BS_:
 BU_:
 
 BO_ 2015 OBD2_Request: 8 Vector__XXX
- SG_ MODE : 11|4@0+ (1,0) [0|255] "" Vector_XXX
+ SG_ MODE : 13|6@0+ (1,0) [0|255] "" Vector_XXX
  SG_ PID : 23|8@0+ (1,0) [0|255] "" Vector_XXX
 
 BO_ 2016 OBD2_ISO_TP: 8 Vector__XXX
@@ -214,8 +214,8 @@ BO_ 2024 OBD2: 8 Vector__XXX
  SG_ S2_PID_02_FreezeDTC m2 : 31|16@0+ (1,0) [0|65535] "" Vector__XXX
  SG_ ParameterID_Service01 m1M : 23|8@0+ (1,0) [0|255] "" Vector__XXX
  SG_ ParameterID_Service02 m2M : 23|8@0+ (1,0) [0|255] "" Vector__XXX
- SG_ service M : 11|4@0+ (1,0) [0|15] "" Vector__XXX
- SG_ response : 15|4@0+ (1,0) [0|15] "" Vector__XXX
+ SG_ service M : 13|6@0+ (1,0) [0|15] "" Vector__XXX
+ SG_ response : 15|2@0+ (1,0) [0|15] "" Vector__XXX
  SG_ length : 7|8@0+ (1,0) [0|255] "" Vector__XXX
 
 
