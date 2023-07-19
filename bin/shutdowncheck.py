@@ -5,8 +5,8 @@ import os, time
  
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(24, GPIO.IN)
-GPIO.setup(25, GPIO.OUT)
-GPIO.output(25, GPIO.HIGH)
+#GPIO.setup(25, GPIO.OUT)
+#GPIO.output(25, GPIO.HIGH)
 print ("[Info] Telling Sleepy Pi we are running pin 25")
 
 try:

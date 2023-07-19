@@ -509,6 +509,7 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
 
       // TODO PID A6 Odometer
       // 	TODO Add to DBC file
+      // 	Or not, just implement...
 
       default:
         error_message(WARN, "WARN:Unknown OBD2 MODE:PID: %X:%X", obd2Request.mode, obd2Request.pid);
