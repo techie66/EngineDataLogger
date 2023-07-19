@@ -640,13 +640,21 @@ int main(int argc, char *argv[])
       #ifdef FEAT_CAN
       if (FD_ISSET(can_s, &readset)) {
         error_message (DEBUG, "Select read CAN");
-        int nbytes = read(can_s, &frame, sizeof(struct can_frame));
-        error_message(INFO, "INFO:CAN:Read %d bytes", nbytes);
+	int nbytes = read(can_s, &frame, sizeof(struct can_frame));
+        if ( nbytes < 0 ) {
+          error_message(WARN, "WARNING:CAN: Read error: %s", strerror(errno));
+	}
+        while ( nbytes >= 0 ) {
+          error_message(INFO, "INFO:CAN:Read %d bytes", nbytes);
+          can_parse(frame, log_data, can_s);
+	  nbytes = read(can_s, &frame, sizeof(struct can_frame));
+	}
+        /*error_message(INFO, "INFO:CAN:Read %d bytes", nbytes);
         if ( nbytes < 0 ) {
           error_message(WARN, "WARNING:CAN: Read error: %s", strerror(errno));
         } else {
           can_parse(frame, log_data, can_s);
-        }
+        }*/
 
       }
       #endif /* FEAT_CAN */
