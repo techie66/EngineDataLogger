@@ -372,7 +372,7 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         error_message(DEBUG, "OBD2: lambda");
         struct can_frame _response;
         struct obd2_obd2_t _obd2_response;
-        _obd2_response.s1_pid_24_oxy_sensor1_faer = obd2_obd2_s1_pid_24_oxy_sensor1_faer_encode(log_data.lambda);
+        _obd2_response.s1_pid_24_oxy_sensor1_faer = obd2_obd2_s1_pid_24_oxy_sensor1_faer_encode(log_data.lambda / 100.0);
         _obd2_response.length = 6u; // MODE(1) + PID(1) + Data Bytes
         _obd2_response.response = 1u;  // Every response packet is 1
         _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
@@ -512,7 +512,7 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         error_message(DEBUG, "OBD2: Odometer");
         struct can_frame _response;
         struct obd2_obd2_t _obd2_response;
-        _obd2_response.s1_pid_a6_odometer = obd2_obd2_s1_pid_a6_odometer_encode( log_data.odometer * 1.609344 );
+        _obd2_response.s1_pid_a6_odometer = obd2_obd2_s1_pid_a6_odometer_encode( log_data.odometer * 1.609344 / 100.0 );
         _obd2_response.length = 6u; // MODE(1) + PID(1) + Data Bytes
         _obd2_response.response = 1u;  // Every response packet is 1
         _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
@@ -639,6 +639,11 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
           error_message(ERROR, "OBD2: Response Write failed");
           return EXIT_FAILURE;
         }
+      }
+      break;
+
+      case 3u:{
+        // TODO PID for oil pressure
       }
       break;
 
