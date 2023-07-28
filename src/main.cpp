@@ -796,7 +796,9 @@ int main(int argc, char *argv[])
       log_data.gear = 'N';
     }
     else {
-      log_data.gear = '1';
+      if ( log_data.gear == 'N' ) {
+        log_data.gear = '1';
+      }
     }
     if ( !log_data.clutch_disengaged ) {
       if ( args_info.gear_ratios_given ) {
