@@ -439,6 +439,7 @@ int main(int argc, char *argv[])
 
   bool    __attribute__ ((unused)) engineRunning = false;
   bool    o2_manual = false;
+  // TODO update whole project to use modern time
   struct  timeval log_time_last, gpx_time_last;
   gettimeofday(&log_time_last, NULL);
   gettimeofday(&gpx_time_last, NULL);
@@ -914,7 +915,21 @@ int main(int argc, char *argv[])
     my_time = currtime.tv_sec;
     char time_buf[100];
     strftime(time_buf, 100, "%D %T", localtime(&my_time));
-    // RPM, Speed, sysvoltage, batVoltage, oil temp, oil pressure, running, Time, lambda, IAP(kpa)
+
+    if (args_info.gps_time_given) {
+      if ( (log_data.gpstime > currtime.tv_sec) && (log_data.gpstime - currtime.tv_sec)> args_info.gps_t_offset_arg ) {
+        clockid_t clk_id = CLOCK_REALTIME;
+        struct timespec tp;
+        tp.tv_sec = log_data.gpstime;
+        if ( clock_settime(clk_id, &tp) == 0 ) {
+                error_message(INFO,"GPS Time Sync Successful");
+        } else {
+                error_message(ERROR,"GPS Time Sync Failed: %s",strerror(errno));
+        }
+
+      }
+    }
+
 
     log_data.oil_temp = enData.temp_oil;
     log_data.oil_pres = enData.pres_oil;
