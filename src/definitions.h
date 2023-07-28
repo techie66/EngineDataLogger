@@ -146,7 +146,7 @@ struct	bike_data {
   bool blink_left;
   /// Blinker currently flashing (does not indicate actual lamp status)
   bool blink_right;
-  /// Lambda. Fixed point 0.01 scale (divide by 100 for real value)
+  /// Lambda. Fixed point 0.001 scale (divide by 1000 for real value)
   uint16_t lambda;
   /// Manifold Absolute Pressure. kilo Pascals
   int map_kpa;
