@@ -138,6 +138,8 @@ int detect_time_change(bool first_run = false)
   clock_gettime(CLOCK_REALTIME, &wn);
   double m_diff = difftime(mn.tv_sec,mp.tv_sec);
   double w_diff = difftime(wn.tv_sec,wp.tv_sec);
+  mp.tv_sec = mn.tv_sec;
+  wp.tv_sec = wn.tv_sec;
   if (fabs(w_diff - m_diff) > TIME_JUMP_DETECT) {
     error_message(INFO,"Time-Jump detected");
     return 1;
