@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install libIgnitech
       run: |
         ./install-deps.sh ignitech
@@ -24,16 +24,17 @@ jobs:
     - name: Install Flatbuffers
       run: |
         ./install-deps.sh flatbuffers
-    - name: Install bcm2835lib
-      run: |
-        ./install-deps.sh bcm2835
     - name: configure
-      run: ./configure
+      run: ./configure --disable-extra --without-bcm2835 
     - name: make
       run: make
+    - name: Install utilities for tests
+      run: sudo apt install can-utils
     - name: make check
-      run: make check || true
+      run: |
+        make check
     - name: Archive tests artifacts
+      if: ${{ failure() }}
       uses: actions/upload-artifact@v3
       with:
         name: test-logs
