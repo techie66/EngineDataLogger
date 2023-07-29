@@ -25,7 +25,7 @@ jobs:
       run: |
         ./install-deps.sh flatbuffers
     - name: configure
-      run: ./configure --disable-extra
+      run: ./configure --disable-extra --without-bcm2835 
     - name: make
       run: make
     - name: Install utilities for tests
