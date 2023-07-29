@@ -25,15 +25,14 @@ jobs:
       run: |
         ./install-deps.sh flatbuffers
     - name: configure
-      run: ./configure --disable-can --without-bcm2835
+      run: ./configure --disable-extra
     - name: make
       run: make
     - name: Install utilities for tests
       run: sudo apt install can-utils
     - name: make check
       run: |
-        cd tests
-        make check-TESTS
+        make check
     - name: Archive tests artifacts
       if: ${{ failure() }}
       uses: actions/upload-artifact@v3
