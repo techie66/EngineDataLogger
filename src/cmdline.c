@@ -42,29 +42,20 @@ const char *gengetopt_args_info_detailed_help[] = {
   "  -o, --output-file=filename    Output file for CSV logging\n                                  (default=`/dev/null')",
   "  -G, --gpx-file=filename       Output file for GPX logging\n                                  (default=`/dev/null')",
   "  -d, --output-file-date        Insert date and time into output filename.",
-  "      --output-file-format=format\n                                Format string of output CSV file",
-  "  \n  		Comma-separated list of loggable values. Valid items are:\n  	rpm, ig_rpm, alt_rpm, speed, map_kpa, tps_percent, odometer, trip,\n  	systemvoltage, batteryvoltage, oil_temp, oil_pres, lambda,\n  	enginerunning(bool), blink_left(bool), blink_right(bool), advance1,\n  	advance2, advance3, advance4, yaw, pitch, roll, acc_forward, acc_side,\n  	acc_vert, power, latitude, longitude, altitude, gps_speed, gps_heading,\n  	gpsfix, pdop, hdop, vdop, satellitesInView, satellitesInUse, gpstime(UTC),\n  	gear, and time(current date/time)\n  	",
+  "  -F, --output-file-format=format\n                                Format string of output CSV file",
+  "  \n  		Comma-separated list of loggable values. Valid items are:\n  	rpm, ig_rpm, alt_rpm, speed, map_kpa, tps_percent, odometer, trip,\n  	systemvoltage, batteryvoltage, oil_temp, oil_pres, lambda,\n  	enginerunning(bool), blink_left(bool), blink_right(bool), advance1,\n  	advance2, advance3, advance4, yaw, pitch, roll, acc_forward, acc_side,\n  	acc_vert, power, latitude, longitude, altitude, gps_speed, gps_heading,\n  	gpsfix, pdop, hdop, vdop, satellitesInView, satellitesInUse, gpstime(UTC),\n  	and time(current date/time)\n  	",
   "  -g, --gear-ratios=STRING      RPM/Speed ratios. Comma separated. (Eg. -g\n                                  \"175,122,95,78,67\")",
   "  -W, --weight=kg               Weight of vehicle, in kg, to use for\n                                  calculations.  (default=`300')",
+  "  -T, --gps-time                Sync System time with GPS time",
+  "  -t, --gps-t-offset=sec        Offset between System time and GPS time before\n                                  hard sync  (default=`1800')",
   "  -v, --v                       Verbose output. Specify multiple times for\n                                  increasing verbosity.",
   "      --verbose=VERBOSITY       Set level of verbosity explicitly. \n                                  (Overrides -v)\n                                    (possible values=\"NONE\", \"ERROR\",\n                                  \"WARN\", \"INFO\", \"DEBUG\"\n                                  default=`ERROR')",
   "  -q, --quiet                   Suppress output. Same as --verbose=NONE\n                                  (Overrides both -v and --verbose)",
   "\nDevice Interfaces:",
   "  -f, --front-controls=device   Front controls device",
-  "  -i, --ignitech=device         Ignitech ignition device",
-  "  -l, --lc2=device              Innovate LC-2 device",
-  "      --lc2-delay=seconds       Delay before powering up LC-2.  (default=`15')",
-  "      --lc2-pin=INT             GPIO pin that controls power for LC-2\n                                  (default=`26')",
   "  -s, --sleepy=device           I2C device to communicate with Sleepy Pi.",
   "      --sleepy-addr=0xXX        Address for Sleepy Pi.  (default=`0x04')",
-  "      --can=device              CAN device to bind to. CAN disabled if not set.",
-  "\nIgnitech specific options:",
-  "      --ignitech-dump-file=filename\n                                File to dump raw responses from Ignitech",
-  "      --ignitech-servo-as-iap   Treat servo reading as IAP. Requires\n                                  calibration options.  (default=off)",
-  "      --ignitech-sai-low=INT    Low kpa reading. Eg: 21",
-  "      --ignitech-sai-low-mv=INT Low mv value. Eg: 708",
-  "      --ignitech-sai-high=INT   High kpa reading. Eg: 102",
-  "      --ignitech-sai-high-mv=INT\n                                High mv value. Eg: 4252",
+  "  -C, --can=device              CAN device to bind to. CAN disabled if not set.",
   "\nCAN device tweaks:",
   "      --mount-offset-roll=FLOAT Offset to zero imu reading",
   "      --mount-offset-pitch=FLOAT\n                                Offset to zero imu reading",
@@ -101,20 +92,11 @@ init_full_help_array(void)
   gengetopt_args_info_full_help[23] = gengetopt_args_info_detailed_help[24];
   gengetopt_args_info_full_help[24] = gengetopt_args_info_detailed_help[25];
   gengetopt_args_info_full_help[25] = gengetopt_args_info_detailed_help[26];
-  gengetopt_args_info_full_help[26] = gengetopt_args_info_detailed_help[27];
-  gengetopt_args_info_full_help[27] = gengetopt_args_info_detailed_help[28];
-  gengetopt_args_info_full_help[28] = gengetopt_args_info_detailed_help[29];
-  gengetopt_args_info_full_help[29] = gengetopt_args_info_detailed_help[30];
-  gengetopt_args_info_full_help[30] = gengetopt_args_info_detailed_help[31];
-  gengetopt_args_info_full_help[31] = gengetopt_args_info_detailed_help[32];
-  gengetopt_args_info_full_help[32] = gengetopt_args_info_detailed_help[33];
-  gengetopt_args_info_full_help[33] = gengetopt_args_info_detailed_help[34];
-  gengetopt_args_info_full_help[34] = gengetopt_args_info_detailed_help[35];
-  gengetopt_args_info_full_help[35] = 0; 
+  gengetopt_args_info_full_help[26] = 0; 
   
 }
 
-const char *gengetopt_args_info_full_help[36];
+const char *gengetopt_args_info_full_help[27];
 
 static void
 init_help_array(void)
@@ -144,20 +126,11 @@ init_help_array(void)
   gengetopt_args_info_help[22] = gengetopt_args_info_detailed_help[23];
   gengetopt_args_info_help[23] = gengetopt_args_info_detailed_help[24];
   gengetopt_args_info_help[24] = gengetopt_args_info_detailed_help[25];
-  gengetopt_args_info_help[25] = gengetopt_args_info_detailed_help[26];
-  gengetopt_args_info_help[26] = gengetopt_args_info_detailed_help[27];
-  gengetopt_args_info_help[27] = gengetopt_args_info_detailed_help[28];
-  gengetopt_args_info_help[28] = gengetopt_args_info_detailed_help[29];
-  gengetopt_args_info_help[29] = gengetopt_args_info_detailed_help[30];
-  gengetopt_args_info_help[30] = gengetopt_args_info_detailed_help[31];
-  gengetopt_args_info_help[31] = gengetopt_args_info_detailed_help[32];
-  gengetopt_args_info_help[32] = gengetopt_args_info_detailed_help[33];
-  gengetopt_args_info_help[33] = gengetopt_args_info_detailed_help[34];
-  gengetopt_args_info_help[34] = 0; 
+  gengetopt_args_info_help[25] = 0; 
   
 }
 
-const char *gengetopt_args_info_help[35];
+const char *gengetopt_args_info_help[26];
 
 typedef enum {ARG_NO
   , ARG_FLAG
@@ -222,23 +195,15 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->output_file_format_given = 0 ;
   args_info->gear_ratios_given = 0 ;
   args_info->weight_given = 0 ;
+  args_info->gps_time_given = 0 ;
+  args_info->gps_t_offset_given = 0 ;
   args_info->v_given = 0 ;
   args_info->verbose_given = 0 ;
   args_info->quiet_given = 0 ;
   args_info->front_controls_given = 0 ;
-  args_info->ignitech_given = 0 ;
-  args_info->lc2_given = 0 ;
-  args_info->lc2_delay_given = 0 ;
-  args_info->lc2_pin_given = 0 ;
   args_info->sleepy_given = 0 ;
   args_info->sleepy_addr_given = 0 ;
   args_info->can_given = 0 ;
-  args_info->ignitech_dump_file_given = 0 ;
-  args_info->ignitech_servo_as_iap_given = 0 ;
-  args_info->ignitech_sai_low_given = 0 ;
-  args_info->ignitech_sai_low_mv_given = 0 ;
-  args_info->ignitech_sai_high_given = 0 ;
-  args_info->ignitech_sai_high_mv_given = 0 ;
   args_info->mount_offset_roll_given = 0 ;
   args_info->mount_offset_pitch_given = 0 ;
   args_info->roll_pitch_swap_given = 0 ;
@@ -261,31 +226,18 @@ void clear_args (struct gengetopt_args_info *args_info)
   args_info->gear_ratios_orig = NULL;
   args_info->weight_arg = 300;
   args_info->weight_orig = NULL;
+  args_info->gps_t_offset_arg = 1800;
+  args_info->gps_t_offset_orig = NULL;
   args_info->verbose_arg = verbose_arg_ERROR;
   args_info->verbose_orig = NULL;
   args_info->front_controls_arg = NULL;
   args_info->front_controls_orig = NULL;
-  args_info->ignitech_arg = NULL;
-  args_info->ignitech_orig = NULL;
-  args_info->lc2_arg = NULL;
-  args_info->lc2_orig = NULL;
-  args_info->lc2_delay_arg = 15;
-  args_info->lc2_delay_orig = NULL;
-  args_info->lc2_pin_arg = 26;
-  args_info->lc2_pin_orig = NULL;
   args_info->sleepy_arg = NULL;
   args_info->sleepy_orig = NULL;
   args_info->sleepy_addr_arg = gengetopt_strdup ("0x04");
   args_info->sleepy_addr_orig = NULL;
   args_info->can_arg = NULL;
   args_info->can_orig = NULL;
-  args_info->ignitech_dump_file_arg = NULL;
-  args_info->ignitech_dump_file_orig = NULL;
-  args_info->ignitech_servo_as_iap_flag = 0;
-  args_info->ignitech_sai_low_orig = NULL;
-  args_info->ignitech_sai_low_mv_orig = NULL;
-  args_info->ignitech_sai_high_orig = NULL;
-  args_info->ignitech_sai_high_mv_orig = NULL;
   args_info->mount_offset_roll_orig = NULL;
   args_info->mount_offset_pitch_orig = NULL;
   args_info->roll_pitch_swap_flag = 0;
@@ -310,29 +262,21 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->output_file_format_help = gengetopt_args_info_detailed_help[8] ;
   args_info->gear_ratios_help = gengetopt_args_info_detailed_help[10] ;
   args_info->weight_help = gengetopt_args_info_detailed_help[11] ;
-  args_info->v_help = gengetopt_args_info_detailed_help[12] ;
+  args_info->gps_time_help = gengetopt_args_info_detailed_help[12] ;
+  args_info->gps_t_offset_help = gengetopt_args_info_detailed_help[13] ;
+  args_info->v_help = gengetopt_args_info_detailed_help[14] ;
   args_info->v_min = 1;
   args_info->v_max = 3;
-  args_info->verbose_help = gengetopt_args_info_detailed_help[13] ;
-  args_info->quiet_help = gengetopt_args_info_detailed_help[14] ;
-  args_info->front_controls_help = gengetopt_args_info_detailed_help[16] ;
-  args_info->ignitech_help = gengetopt_args_info_detailed_help[17] ;
-  args_info->lc2_help = gengetopt_args_info_detailed_help[18] ;
-  args_info->lc2_delay_help = gengetopt_args_info_detailed_help[19] ;
-  args_info->lc2_pin_help = gengetopt_args_info_detailed_help[20] ;
-  args_info->sleepy_help = gengetopt_args_info_detailed_help[21] ;
-  args_info->sleepy_addr_help = gengetopt_args_info_detailed_help[22] ;
-  args_info->can_help = gengetopt_args_info_detailed_help[23] ;
-  args_info->ignitech_dump_file_help = gengetopt_args_info_detailed_help[25] ;
-  args_info->ignitech_servo_as_iap_help = gengetopt_args_info_detailed_help[26] ;
-  args_info->ignitech_sai_low_help = gengetopt_args_info_detailed_help[27] ;
-  args_info->ignitech_sai_low_mv_help = gengetopt_args_info_detailed_help[28] ;
-  args_info->ignitech_sai_high_help = gengetopt_args_info_detailed_help[29] ;
-  args_info->ignitech_sai_high_mv_help = gengetopt_args_info_detailed_help[30] ;
-  args_info->mount_offset_roll_help = gengetopt_args_info_detailed_help[32] ;
-  args_info->mount_offset_pitch_help = gengetopt_args_info_detailed_help[33] ;
-  args_info->roll_pitch_swap_help = gengetopt_args_info_detailed_help[34] ;
-  args_info->test_mode_help = gengetopt_args_info_detailed_help[35] ;
+  args_info->verbose_help = gengetopt_args_info_detailed_help[15] ;
+  args_info->quiet_help = gengetopt_args_info_detailed_help[16] ;
+  args_info->front_controls_help = gengetopt_args_info_detailed_help[18] ;
+  args_info->sleepy_help = gengetopt_args_info_detailed_help[19] ;
+  args_info->sleepy_addr_help = gengetopt_args_info_detailed_help[20] ;
+  args_info->can_help = gengetopt_args_info_detailed_help[21] ;
+  args_info->mount_offset_roll_help = gengetopt_args_info_detailed_help[23] ;
+  args_info->mount_offset_pitch_help = gengetopt_args_info_detailed_help[24] ;
+  args_info->roll_pitch_swap_help = gengetopt_args_info_detailed_help[25] ;
+  args_info->test_mode_help = gengetopt_args_info_detailed_help[26] ;
   
 }
 
@@ -451,27 +395,16 @@ cmdline_parser_release (struct gengetopt_args_info *args_info)
   free_string_field (&(args_info->gear_ratios_arg));
   free_string_field (&(args_info->gear_ratios_orig));
   free_string_field (&(args_info->weight_orig));
+  free_string_field (&(args_info->gps_t_offset_orig));
   free_string_field (&(args_info->verbose_orig));
   free_string_field (&(args_info->front_controls_arg));
   free_string_field (&(args_info->front_controls_orig));
-  free_string_field (&(args_info->ignitech_arg));
-  free_string_field (&(args_info->ignitech_orig));
-  free_string_field (&(args_info->lc2_arg));
-  free_string_field (&(args_info->lc2_orig));
-  free_string_field (&(args_info->lc2_delay_orig));
-  free_string_field (&(args_info->lc2_pin_orig));
   free_string_field (&(args_info->sleepy_arg));
   free_string_field (&(args_info->sleepy_orig));
   free_string_field (&(args_info->sleepy_addr_arg));
   free_string_field (&(args_info->sleepy_addr_orig));
   free_string_field (&(args_info->can_arg));
   free_string_field (&(args_info->can_orig));
-  free_string_field (&(args_info->ignitech_dump_file_arg));
-  free_string_field (&(args_info->ignitech_dump_file_orig));
-  free_string_field (&(args_info->ignitech_sai_low_orig));
-  free_string_field (&(args_info->ignitech_sai_low_mv_orig));
-  free_string_field (&(args_info->ignitech_sai_high_orig));
-  free_string_field (&(args_info->ignitech_sai_high_mv_orig));
   free_string_field (&(args_info->mount_offset_roll_orig));
   free_string_field (&(args_info->mount_offset_pitch_orig));
   free_string_field (&(args_info->test_mode_orig));
@@ -576,6 +509,10 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "gear-ratios", args_info->gear_ratios_orig, 0);
   if (args_info->weight_given)
     write_into_file(outfile, "weight", args_info->weight_orig, 0);
+  if (args_info->gps_time_given)
+    write_into_file(outfile, "gps-time", 0, 0 );
+  if (args_info->gps_t_offset_given)
+    write_into_file(outfile, "gps-t-offset", args_info->gps_t_offset_orig, 0);
   write_multiple_into_file(outfile, args_info->v_given, "v", 0, 0);
   if (args_info->verbose_given)
     write_into_file(outfile, "verbose", args_info->verbose_orig, cmdline_parser_verbose_values);
@@ -583,32 +520,12 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "quiet", 0, 0 );
   if (args_info->front_controls_given)
     write_into_file(outfile, "front-controls", args_info->front_controls_orig, 0);
-  if (args_info->ignitech_given)
-    write_into_file(outfile, "ignitech", args_info->ignitech_orig, 0);
-  if (args_info->lc2_given)
-    write_into_file(outfile, "lc2", args_info->lc2_orig, 0);
-  if (args_info->lc2_delay_given)
-    write_into_file(outfile, "lc2-delay", args_info->lc2_delay_orig, 0);
-  if (args_info->lc2_pin_given)
-    write_into_file(outfile, "lc2-pin", args_info->lc2_pin_orig, 0);
   if (args_info->sleepy_given)
     write_into_file(outfile, "sleepy", args_info->sleepy_orig, 0);
   if (args_info->sleepy_addr_given)
     write_into_file(outfile, "sleepy-addr", args_info->sleepy_addr_orig, 0);
   if (args_info->can_given)
     write_into_file(outfile, "can", args_info->can_orig, 0);
-  if (args_info->ignitech_dump_file_given)
-    write_into_file(outfile, "ignitech-dump-file", args_info->ignitech_dump_file_orig, 0);
-  if (args_info->ignitech_servo_as_iap_given)
-    write_into_file(outfile, "ignitech-servo-as-iap", 0, 0 );
-  if (args_info->ignitech_sai_low_given)
-    write_into_file(outfile, "ignitech-sai-low", args_info->ignitech_sai_low_orig, 0);
-  if (args_info->ignitech_sai_low_mv_given)
-    write_into_file(outfile, "ignitech-sai-low-mv", args_info->ignitech_sai_low_mv_orig, 0);
-  if (args_info->ignitech_sai_high_given)
-    write_into_file(outfile, "ignitech-sai-high", args_info->ignitech_sai_high_orig, 0);
-  if (args_info->ignitech_sai_high_mv_given)
-    write_into_file(outfile, "ignitech-sai-high-mv", args_info->ignitech_sai_high_mv_orig, 0);
   if (args_info->mount_offset_roll_given)
     write_into_file(outfile, "mount-offset-roll", args_info->mount_offset_roll_orig, 0);
   if (args_info->mount_offset_pitch_given)
@@ -800,52 +717,17 @@ cmdline_parser_required2 (struct gengetopt_args_info *args_info, const char *pro
     }
   if (args_info->output_file_format_given && ! args_info->output_file_given)
     {
-      fprintf (stderr, "%s: '--output-file-format' option depends on option 'output-file'%s\n", prog_name, (additional_error ? additional_error : ""));
+      fprintf (stderr, "%s: '--output-file-format' ('-F') option depends on option 'output-file'%s\n", prog_name, (additional_error ? additional_error : ""));
       error_occurred = 1;
     }
-  if (args_info->lc2_delay_given && ! args_info->lc2_given)
+  if (args_info->gps_t_offset_given && ! args_info->gps_time_given)
     {
-      fprintf (stderr, "%s: '--lc2-delay' option depends on option 'lc2'%s\n", prog_name, (additional_error ? additional_error : ""));
-      error_occurred = 1;
-    }
-  if (args_info->lc2_pin_given && ! args_info->lc2_given)
-    {
-      fprintf (stderr, "%s: '--lc2-pin' option depends on option 'lc2'%s\n", prog_name, (additional_error ? additional_error : ""));
+      fprintf (stderr, "%s: '--gps-t-offset' ('-t') option depends on option 'gps-time'%s\n", prog_name, (additional_error ? additional_error : ""));
       error_occurred = 1;
     }
   if (args_info->sleepy_addr_given && ! args_info->sleepy_given)
     {
       fprintf (stderr, "%s: '--sleepy-addr' option depends on option 'sleepy'%s\n", prog_name, (additional_error ? additional_error : ""));
-      error_occurred = 1;
-    }
-  if (args_info->ignitech_dump_file_given && ! args_info->ignitech_given)
-    {
-      fprintf (stderr, "%s: '--ignitech-dump-file' option depends on option 'ignitech'%s\n", prog_name, (additional_error ? additional_error : ""));
-      error_occurred = 1;
-    }
-  if (args_info->ignitech_servo_as_iap_given && ! args_info->ignitech_sai_low_given)
-    {
-      fprintf (stderr, "%s: '--ignitech-servo-as-iap' option depends on option 'ignitech-sai-low'%s\n", prog_name, (additional_error ? additional_error : ""));
-      error_occurred = 1;
-    }
-  if (args_info->ignitech_sai_low_given && ! args_info->ignitech_sai_low_mv_given)
-    {
-      fprintf (stderr, "%s: '--ignitech-sai-low' option depends on option 'ignitech-sai-low-mv'%s\n", prog_name, (additional_error ? additional_error : ""));
-      error_occurred = 1;
-    }
-  if (args_info->ignitech_sai_low_mv_given && ! args_info->ignitech_sai_high_given)
-    {
-      fprintf (stderr, "%s: '--ignitech-sai-low-mv' option depends on option 'ignitech-sai-high'%s\n", prog_name, (additional_error ? additional_error : ""));
-      error_occurred = 1;
-    }
-  if (args_info->ignitech_sai_high_given && ! args_info->ignitech_sai_high_mv_given)
-    {
-      fprintf (stderr, "%s: '--ignitech-sai-high' option depends on option 'ignitech-sai-high-mv'%s\n", prog_name, (additional_error ? additional_error : ""));
-      error_occurred = 1;
-    }
-  if (args_info->ignitech_sai_high_mv_given && ! args_info->ignitech_given)
-    {
-      fprintf (stderr, "%s: '--ignitech-sai-high-mv' option depends on option 'ignitech'%s\n", prog_name, (additional_error ? additional_error : ""));
       error_occurred = 1;
     }
   if (args_info->mount_offset_roll_given && ! args_info->can_given)
@@ -1053,26 +935,18 @@ cmdline_parser_internal (
         { "output-file",	1, NULL, 'o' },
         { "gpx-file",	1, NULL, 'G' },
         { "output-file-date",	0, NULL, 'd' },
-        { "output-file-format",	1, NULL, 0 },
+        { "output-file-format",	1, NULL, 'F' },
         { "gear-ratios",	1, NULL, 'g' },
         { "weight",	1, NULL, 'W' },
+        { "gps-time",	0, NULL, 'T' },
+        { "gps-t-offset",	1, NULL, 't' },
         { "v",	0, NULL, 'v' },
         { "verbose",	1, NULL, 0 },
         { "quiet",	0, NULL, 'q' },
         { "front-controls",	1, NULL, 'f' },
-        { "ignitech",	1, NULL, 'i' },
-        { "lc2",	1, NULL, 'l' },
-        { "lc2-delay",	1, NULL, 0 },
-        { "lc2-pin",	1, NULL, 0 },
         { "sleepy",	1, NULL, 's' },
         { "sleepy-addr",	1, NULL, 0 },
-        { "can",	1, NULL, 0 },
-        { "ignitech-dump-file",	1, NULL, 0 },
-        { "ignitech-servo-as-iap",	0, NULL, 0 },
-        { "ignitech-sai-low",	1, NULL, 0 },
-        { "ignitech-sai-low-mv",	1, NULL, 0 },
-        { "ignitech-sai-high",	1, NULL, 0 },
-        { "ignitech-sai-high-mv",	1, NULL, 0 },
+        { "can",	1, NULL, 'C' },
         { "mount-offset-roll",	1, NULL, 0 },
         { "mount-offset-pitch",	1, NULL, 0 },
         { "roll-pitch-swap",	0, NULL, 0 },
@@ -1080,7 +954,7 @@ cmdline_parser_internal (
         { 0,  0, 0, 0 }
       };
 
-      c = getopt_long (argc, argv, "hVc:o:G:dg:W:vqf:i:l:s:", long_options, &option_index);
+      c = getopt_long (argc, argv, "hVc:o:G:dF:g:W:Tt:vqf:s:C:", long_options, &option_index);
 
       if (c == -1) break;	/* Exit from `while (1)' loop.  */
 
@@ -1144,6 +1018,18 @@ cmdline_parser_internal (
             goto failure;
         
           break;
+        case 'F':	/* Format string of output CSV file.  */
+        
+        
+          if (update_arg( (void *)&(args_info->output_file_format_arg), 
+               &(args_info->output_file_format_orig), &(args_info->output_file_format_given),
+              &(local_args_info.output_file_format_given), optarg, 0, 0, ARG_STRING,
+              check_ambiguity, override, 0, 0,
+              "output-file-format", 'F',
+              additional_error))
+            goto failure;
+        
+          break;
         case 'g':	/* RPM/Speed ratios. Comma separated. (Eg. -g \"175,122,95,78,67\").  */
         
         
@@ -1164,6 +1050,30 @@ cmdline_parser_internal (
               &(local_args_info.weight_given), optarg, 0, "300", ARG_INT,
               check_ambiguity, override, 0, 0,
               "weight", 'W',
+              additional_error))
+            goto failure;
+        
+          break;
+        case 'T':	/* Sync System time with GPS time.  */
+        
+        
+          if (update_arg( 0 , 
+               0 , &(args_info->gps_time_given),
+              &(local_args_info.gps_time_given), optarg, 0, 0, ARG_NO,
+              check_ambiguity, override, 0, 0,
+              "gps-time", 'T',
+              additional_error))
+            goto failure;
+        
+          break;
+        case 't':	/* Offset between System time and GPS time before hard sync.  */
+        
+        
+          if (update_arg( (void *)&(args_info->gps_t_offset_arg), 
+               &(args_info->gps_t_offset_orig), &(args_info->gps_t_offset_given),
+              &(local_args_info.gps_t_offset_given), optarg, 0, "1800", ARG_INT,
+              check_ambiguity, override, 0, 0,
+              "gps-t-offset", 't',
               additional_error))
             goto failure;
         
@@ -1197,30 +1107,6 @@ cmdline_parser_internal (
             goto failure;
         
           break;
-        case 'i':	/* Ignitech ignition device.  */
-        
-        
-          if (update_arg( (void *)&(args_info->ignitech_arg), 
-               &(args_info->ignitech_orig), &(args_info->ignitech_given),
-              &(local_args_info.ignitech_given), optarg, 0, 0, ARG_STRING,
-              check_ambiguity, override, 0, 0,
-              "ignitech", 'i',
-              additional_error))
-            goto failure;
-        
-          break;
-        case 'l':	/* Innovate LC-2 device.  */
-        
-        
-          if (update_arg( (void *)&(args_info->lc2_arg), 
-               &(args_info->lc2_orig), &(args_info->lc2_given),
-              &(local_args_info.lc2_given), optarg, 0, 0, ARG_STRING,
-              check_ambiguity, override, 0, 0,
-              "lc2", 'l',
-              additional_error))
-            goto failure;
-        
-          break;
         case 's':	/* I2C device to communicate with Sleepy Pi..  */
         
         
@@ -1229,6 +1115,18 @@ cmdline_parser_internal (
               &(local_args_info.sleepy_given), optarg, 0, 0, ARG_STRING,
               check_ambiguity, override, 0, 0,
               "sleepy", 's',
+              additional_error))
+            goto failure;
+        
+          break;
+        case 'C':	/* CAN device to bind to. CAN disabled if not set..  */
+        
+        
+          if (update_arg( (void *)&(args_info->can_arg), 
+               &(args_info->can_orig), &(args_info->can_given),
+              &(local_args_info.can_given), optarg, 0, 0, ARG_STRING,
+              check_ambiguity, override, 0, 0,
+              "can", 'C',
               additional_error))
             goto failure;
         
@@ -1247,24 +1145,10 @@ cmdline_parser_internal (
             exit (EXIT_SUCCESS);
           }
 
-          /* Format string of output CSV file.  */
-          if (strcmp (long_options[option_index].name, "output-file-format") == 0)
-          {
-          
-          
-            if (update_arg( (void *)&(args_info->output_file_format_arg), 
-                 &(args_info->output_file_format_orig), &(args_info->output_file_format_given),
-                &(local_args_info.output_file_format_given), optarg, 0, 0, ARG_STRING,
-                check_ambiguity, override, 0, 0,
-                "output-file-format", '-',
-                additional_error))
-              goto failure;
-          
-          }
           /* Set level of verbosity explicitly. 
           (Overrides -v)
 .  */
-          else if (strcmp (long_options[option_index].name, "verbose") == 0)
+          if (strcmp (long_options[option_index].name, "verbose") == 0)
           {
           
           
@@ -1273,34 +1157,6 @@ cmdline_parser_internal (
                 &(local_args_info.verbose_given), optarg, cmdline_parser_verbose_values, "ERROR", ARG_ENUM,
                 check_ambiguity, override, 0, 0,
                 "verbose", '-',
-                additional_error))
-              goto failure;
-          
-          }
-          /* Delay before powering up LC-2..  */
-          else if (strcmp (long_options[option_index].name, "lc2-delay") == 0)
-          {
-          
-          
-            if (update_arg( (void *)&(args_info->lc2_delay_arg), 
-                 &(args_info->lc2_delay_orig), &(args_info->lc2_delay_given),
-                &(local_args_info.lc2_delay_given), optarg, 0, "15", ARG_INT,
-                check_ambiguity, override, 0, 0,
-                "lc2-delay", '-',
-                additional_error))
-              goto failure;
-          
-          }
-          /* GPIO pin that controls power for LC-2.  */
-          else if (strcmp (long_options[option_index].name, "lc2-pin") == 0)
-          {
-          
-          
-            if (update_arg( (void *)&(args_info->lc2_pin_arg), 
-                 &(args_info->lc2_pin_orig), &(args_info->lc2_pin_given),
-                &(local_args_info.lc2_pin_given), optarg, 0, "26", ARG_INT,
-                check_ambiguity, override, 0, 0,
-                "lc2-pin", '-',
                 additional_error))
               goto failure;
           
@@ -1315,102 +1171,6 @@ cmdline_parser_internal (
                 &(local_args_info.sleepy_addr_given), optarg, 0, "0x04", ARG_STRING,
                 check_ambiguity, override, 0, 0,
                 "sleepy-addr", '-',
-                additional_error))
-              goto failure;
-          
-          }
-          /* CAN device to bind to. CAN disabled if not set..  */
-          else if (strcmp (long_options[option_index].name, "can") == 0)
-          {
-          
-          
-            if (update_arg( (void *)&(args_info->can_arg), 
-                 &(args_info->can_orig), &(args_info->can_given),
-                &(local_args_info.can_given), optarg, 0, 0, ARG_STRING,
-                check_ambiguity, override, 0, 0,
-                "can", '-',
-                additional_error))
-              goto failure;
-          
-          }
-          /* File to dump raw responses from Ignitech.  */
-          else if (strcmp (long_options[option_index].name, "ignitech-dump-file") == 0)
-          {
-          
-          
-            if (update_arg( (void *)&(args_info->ignitech_dump_file_arg), 
-                 &(args_info->ignitech_dump_file_orig), &(args_info->ignitech_dump_file_given),
-                &(local_args_info.ignitech_dump_file_given), optarg, 0, 0, ARG_STRING,
-                check_ambiguity, override, 0, 0,
-                "ignitech-dump-file", '-',
-                additional_error))
-              goto failure;
-          
-          }
-          /* Treat servo reading as IAP. Requires calibration options..  */
-          else if (strcmp (long_options[option_index].name, "ignitech-servo-as-iap") == 0)
-          {
-          
-          
-            if (update_arg((void *)&(args_info->ignitech_servo_as_iap_flag), 0, &(args_info->ignitech_servo_as_iap_given),
-                &(local_args_info.ignitech_servo_as_iap_given), optarg, 0, 0, ARG_FLAG,
-                check_ambiguity, override, 1, 0, "ignitech-servo-as-iap", '-',
-                additional_error))
-              goto failure;
-          
-          }
-          /* Low kpa reading. Eg: 21.  */
-          else if (strcmp (long_options[option_index].name, "ignitech-sai-low") == 0)
-          {
-          
-          
-            if (update_arg( (void *)&(args_info->ignitech_sai_low_arg), 
-                 &(args_info->ignitech_sai_low_orig), &(args_info->ignitech_sai_low_given),
-                &(local_args_info.ignitech_sai_low_given), optarg, 0, 0, ARG_INT,
-                check_ambiguity, override, 0, 0,
-                "ignitech-sai-low", '-',
-                additional_error))
-              goto failure;
-          
-          }
-          /* Low mv value. Eg: 708.  */
-          else if (strcmp (long_options[option_index].name, "ignitech-sai-low-mv") == 0)
-          {
-          
-          
-            if (update_arg( (void *)&(args_info->ignitech_sai_low_mv_arg), 
-                 &(args_info->ignitech_sai_low_mv_orig), &(args_info->ignitech_sai_low_mv_given),
-                &(local_args_info.ignitech_sai_low_mv_given), optarg, 0, 0, ARG_INT,
-                check_ambiguity, override, 0, 0,
-                "ignitech-sai-low-mv", '-',
-                additional_error))
-              goto failure;
-          
-          }
-          /* High kpa reading. Eg: 102.  */
-          else if (strcmp (long_options[option_index].name, "ignitech-sai-high") == 0)
-          {
-          
-          
-            if (update_arg( (void *)&(args_info->ignitech_sai_high_arg), 
-                 &(args_info->ignitech_sai_high_orig), &(args_info->ignitech_sai_high_given),
-                &(local_args_info.ignitech_sai_high_given), optarg, 0, 0, ARG_INT,
-                check_ambiguity, override, 0, 0,
-                "ignitech-sai-high", '-',
-                additional_error))
-              goto failure;
-          
-          }
-          /* High mv value. Eg: 4252.  */
-          else if (strcmp (long_options[option_index].name, "ignitech-sai-high-mv") == 0)
-          {
-          
-          
-            if (update_arg( (void *)&(args_info->ignitech_sai_high_mv_arg), 
-                 &(args_info->ignitech_sai_high_mv_orig), &(args_info->ignitech_sai_high_mv_given),
-                &(local_args_info.ignitech_sai_high_mv_given), optarg, 0, 0, ARG_INT,
-                check_ambiguity, override, 0, 0,
-                "ignitech-sai-high-mv", '-',
                 additional_error))
               goto failure;
           

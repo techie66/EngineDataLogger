@@ -66,6 +66,10 @@ struct gengetopt_args_info
   int weight_arg;	/**< @brief Weight of vehicle, in kg, to use for calculations. (default='300').  */
   char * weight_orig;	/**< @brief Weight of vehicle, in kg, to use for calculations. original value given at command line.  */
   const char *weight_help; /**< @brief Weight of vehicle, in kg, to use for calculations. help description.  */
+  const char *gps_time_help; /**< @brief Sync System time with GPS time help description.  */
+  int gps_t_offset_arg;	/**< @brief Offset between System time and GPS time before hard sync (default='1800').  */
+  char * gps_t_offset_orig;	/**< @brief Offset between System time and GPS time before hard sync original value given at command line.  */
+  const char *gps_t_offset_help; /**< @brief Offset between System time and GPS time before hard sync help description.  */
   unsigned int v_min; /**< @brief Verbose output. Specify multiple times for increasing verbosity.'s minimum occurreces */
   unsigned int v_max; /**< @brief Verbose output. Specify multiple times for increasing verbosity.'s maximum occurreces */
   const char *v_help; /**< @brief Verbose output. Specify multiple times for increasing verbosity. help description.  */
@@ -82,18 +86,6 @@ struct gengetopt_args_info
   char * front_controls_arg;	/**< @brief Front controls device.  */
   char * front_controls_orig;	/**< @brief Front controls device original value given at command line.  */
   const char *front_controls_help; /**< @brief Front controls device help description.  */
-  char * ignitech_arg;	/**< @brief Ignitech ignition device.  */
-  char * ignitech_orig;	/**< @brief Ignitech ignition device original value given at command line.  */
-  const char *ignitech_help; /**< @brief Ignitech ignition device help description.  */
-  char * lc2_arg;	/**< @brief Innovate LC-2 device.  */
-  char * lc2_orig;	/**< @brief Innovate LC-2 device original value given at command line.  */
-  const char *lc2_help; /**< @brief Innovate LC-2 device help description.  */
-  int lc2_delay_arg;	/**< @brief Delay before powering up LC-2. (default='15').  */
-  char * lc2_delay_orig;	/**< @brief Delay before powering up LC-2. original value given at command line.  */
-  const char *lc2_delay_help; /**< @brief Delay before powering up LC-2. help description.  */
-  int lc2_pin_arg;	/**< @brief GPIO pin that controls power for LC-2 (default='26').  */
-  char * lc2_pin_orig;	/**< @brief GPIO pin that controls power for LC-2 original value given at command line.  */
-  const char *lc2_pin_help; /**< @brief GPIO pin that controls power for LC-2 help description.  */
   char * sleepy_arg;	/**< @brief I2C device to communicate with Sleepy Pi..  */
   char * sleepy_orig;	/**< @brief I2C device to communicate with Sleepy Pi. original value given at command line.  */
   const char *sleepy_help; /**< @brief I2C device to communicate with Sleepy Pi. help description.  */
@@ -103,23 +95,6 @@ struct gengetopt_args_info
   char * can_arg;	/**< @brief CAN device to bind to. CAN disabled if not set..  */
   char * can_orig;	/**< @brief CAN device to bind to. CAN disabled if not set. original value given at command line.  */
   const char *can_help; /**< @brief CAN device to bind to. CAN disabled if not set. help description.  */
-  char * ignitech_dump_file_arg;	/**< @brief File to dump raw responses from Ignitech.  */
-  char * ignitech_dump_file_orig;	/**< @brief File to dump raw responses from Ignitech original value given at command line.  */
-  const char *ignitech_dump_file_help; /**< @brief File to dump raw responses from Ignitech help description.  */
-  int ignitech_servo_as_iap_flag;	/**< @brief Treat servo reading as IAP. Requires calibration options. (default=off).  */
-  const char *ignitech_servo_as_iap_help; /**< @brief Treat servo reading as IAP. Requires calibration options. help description.  */
-  int ignitech_sai_low_arg;	/**< @brief Low kpa reading. Eg: 21.  */
-  char * ignitech_sai_low_orig;	/**< @brief Low kpa reading. Eg: 21 original value given at command line.  */
-  const char *ignitech_sai_low_help; /**< @brief Low kpa reading. Eg: 21 help description.  */
-  int ignitech_sai_low_mv_arg;	/**< @brief Low mv value. Eg: 708.  */
-  char * ignitech_sai_low_mv_orig;	/**< @brief Low mv value. Eg: 708 original value given at command line.  */
-  const char *ignitech_sai_low_mv_help; /**< @brief Low mv value. Eg: 708 help description.  */
-  int ignitech_sai_high_arg;	/**< @brief High kpa reading. Eg: 102.  */
-  char * ignitech_sai_high_orig;	/**< @brief High kpa reading. Eg: 102 original value given at command line.  */
-  const char *ignitech_sai_high_help; /**< @brief High kpa reading. Eg: 102 help description.  */
-  int ignitech_sai_high_mv_arg;	/**< @brief High mv value. Eg: 4252.  */
-  char * ignitech_sai_high_mv_orig;	/**< @brief High mv value. Eg: 4252 original value given at command line.  */
-  const char *ignitech_sai_high_mv_help; /**< @brief High mv value. Eg: 4252 help description.  */
   float mount_offset_roll_arg;	/**< @brief Offset to zero imu reading.  */
   char * mount_offset_roll_orig;	/**< @brief Offset to zero imu reading original value given at command line.  */
   const char *mount_offset_roll_help; /**< @brief Offset to zero imu reading help description.  */
@@ -143,23 +118,15 @@ struct gengetopt_args_info
   unsigned int output_file_format_given ;	/**< @brief Whether output-file-format was given.  */
   unsigned int gear_ratios_given ;	/**< @brief Whether gear-ratios was given.  */
   unsigned int weight_given ;	/**< @brief Whether weight was given.  */
+  unsigned int gps_time_given ;	/**< @brief Whether gps-time was given.  */
+  unsigned int gps_t_offset_given ;	/**< @brief Whether gps-t-offset was given.  */
   unsigned int v_given ;	/**< @brief Whether v was given.  */
   unsigned int verbose_given ;	/**< @brief Whether verbose was given.  */
   unsigned int quiet_given ;	/**< @brief Whether quiet was given.  */
   unsigned int front_controls_given ;	/**< @brief Whether front-controls was given.  */
-  unsigned int ignitech_given ;	/**< @brief Whether ignitech was given.  */
-  unsigned int lc2_given ;	/**< @brief Whether lc2 was given.  */
-  unsigned int lc2_delay_given ;	/**< @brief Whether lc2-delay was given.  */
-  unsigned int lc2_pin_given ;	/**< @brief Whether lc2-pin was given.  */
   unsigned int sleepy_given ;	/**< @brief Whether sleepy was given.  */
   unsigned int sleepy_addr_given ;	/**< @brief Whether sleepy-addr was given.  */
   unsigned int can_given ;	/**< @brief Whether can was given.  */
-  unsigned int ignitech_dump_file_given ;	/**< @brief Whether ignitech-dump-file was given.  */
-  unsigned int ignitech_servo_as_iap_given ;	/**< @brief Whether ignitech-servo-as-iap was given.  */
-  unsigned int ignitech_sai_low_given ;	/**< @brief Whether ignitech-sai-low was given.  */
-  unsigned int ignitech_sai_low_mv_given ;	/**< @brief Whether ignitech-sai-low-mv was given.  */
-  unsigned int ignitech_sai_high_given ;	/**< @brief Whether ignitech-sai-high was given.  */
-  unsigned int ignitech_sai_high_mv_given ;	/**< @brief Whether ignitech-sai-high-mv was given.  */
   unsigned int mount_offset_roll_given ;	/**< @brief Whether mount-offset-roll was given.  */
   unsigned int mount_offset_pitch_given ;	/**< @brief Whether mount-offset-pitch was given.  */
   unsigned int roll_pitch_swap_given ;	/**< @brief Whether roll-pitch-swap was given.  */
