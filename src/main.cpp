@@ -109,6 +109,44 @@ int lc2_open(const char *filename)
   return fd;
 }
 
+/*
+ * detect_time_change(bool first_run = false)
+ *
+ * @brief Detect if Wall time has made a jump
+ *
+ * @param[in] designate if this is initial call
+ *            must be called once at beginning
+ *
+ * @return -1 if first_run never set true
+ *         0  if no jump detected
+ *         1  if jump detected
+ */
+
+int detect_time_change(bool first_run = false)
+{
+  const int TIME_JUMP_DETECT = 1800;
+  static struct timespec mp,wp; // for Monotonic and Wall previous
+  static bool initialized = false;
+  if ( first_run ) {
+    initialized = true;
+    clock_gettime(CLOCK_MONOTONIC, &mp);
+    clock_gettime(CLOCK_REALTIME, &wp);
+  }
+  if ( !initialized ) {return -1;}
+  struct timespec mn,wn; // for Monotonic and Wall now
+  clock_gettime(CLOCK_MONOTONIC, &mn);
+  clock_gettime(CLOCK_REALTIME, &wn);
+  double m_diff = difftime(mn.tv_sec,mp.tv_sec);
+  double w_diff = difftime(wn.tv_sec,wp.tv_sec);
+  if (fabs(w_diff - m_diff) > TIME_JUMP_DETECT) {
+    error_message(INFO,"Time-Jump detected");
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
 int main(int argc, char *argv[])
 {
   // Set default Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
@@ -443,6 +481,7 @@ int main(int argc, char *argv[])
   struct  timeval log_time_last, gpx_time_last;
   gettimeofday(&log_time_last, NULL);
   gettimeofday(&gpx_time_last, NULL);
+  detect_time_change(true); // initialize
   while (!time_to_quit) { // time_to_quit defined error_handling.c
     if ( args_info.test_mode_arg > 0 ) {
       error_message (DEBUG, "TESTMODE: %d ", args_info.test_mode_arg);
@@ -454,6 +493,9 @@ int main(int argc, char *argv[])
 
     int	length;
     // Check if restarting logfile
+    if ( detect_time_change() == 1 ) {
+      restart_log = true;
+    }
     if ( restart_log == true ) {
       restart_log = false;
       if ( args_info.output_file_given ) {
@@ -1131,4 +1173,5 @@ int main(int argc, char *argv[])
   // Return 0 for clean exit
   return 0;
 }
+
 
