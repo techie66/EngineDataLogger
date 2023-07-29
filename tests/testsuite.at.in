@@ -2,5 +2,5 @@ AT_INIT
 m4_include(example.at)
 m4_include(cat.at)
 AT_BANNER([Regression test lambda])
-@ISP2_TRUE@m4_include(lambda1.at)
-@CANBUS_TRUE@m4_include(lambda2.at)
+@EXTRACHECKS_TRUE@@ISP2_TRUE@m4_include(lambda1.at)
+@EXTRACHECKS_TRUE@@CANBUS_TRUE@m4_include(lambda2.at)

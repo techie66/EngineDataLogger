@@ -19,6 +19,24 @@ AC_PROG_CC
 
 AX_CXX_COMPILE_STDCXX_11
 # Checks for libraries. Based on enabled features.
+
+AC_ARG_ENABLE([extra],
+	[AS_HELP_STRING([--disable-extra],
+		[Disable support for make check extra checks])],
+	[],
+	[enable_extra=yes])
+
+AS_IF([test "x$enable_extra" != xno],
+	[
+   extras=true
+])
+AS_IF([test "x$extras" = "xtrue"],
+  [
+   AC_DEFINE([EXTRA_CHECKS],[1],[make check does extra checks])
+  ])
+
+AM_CONDITIONAL([EXTRACHECKS], [test "x$extras" = xtrue])
+
 AC_ARG_ENABLE([can],
 	[AS_HELP_STRING([--disable-can],
 		[Disable support for CAN Bus])],
