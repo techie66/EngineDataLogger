@@ -918,13 +918,17 @@ int main(int argc, char *argv[])
 
     if (args_info.gps_time_given) {
       if ( (log_data.gpstime > currtime.tv_sec) && (log_data.gpstime - currtime.tv_sec)> args_info.gps_t_offset_arg ) {
+        char timeString[sizeof("yyyy-mm-ddThh:mm:ssZ")];
+        strftime(timeString, sizeof(timeString),
+          "%FT%TZ", gmtime(&log_data.gpstime));
+        error_message(WARN,"GPS-Time System time behind GPS by %ds. Updating time to %s",log_data.gpstime - currtime.tv_sec,timeString);
         clockid_t clk_id = CLOCK_REALTIME;
         struct timespec tp;
         tp.tv_sec = log_data.gpstime;
         if ( clock_settime(clk_id, &tp) == 0 ) {
-                error_message(INFO,"GPS Time Sync Successful");
+                error_message(INFO,"GPS-Time Sync Successful");
         } else {
-                error_message(ERROR,"GPS Time Sync Failed: %s",strerror(errno));
+                error_message(ERROR,"GPS-Time Sync Failed: %s\ntp.tv_sec=%ld",strerror(errno),tp.tv_sec);
         }
 
       }

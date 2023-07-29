@@ -43,6 +43,14 @@ verbose = WARN
 #  Comma-separated list of rpm/speed ratios from 1-5
 #gear-ratios = "175,122,95,78,67"
 
+# Sync time with GPS time when available, uncomment to enable
+#gps-time
+
+# gps-t-offset is the number of seconds that the system clock must be behind GPS
+#  time before system time is re-synced
+#gps-t-offset = 1800
+
+
 ## Innovate LC-2 device settings
 # set 'lc2' to the serial port the LC-2 is connected to
 #lc2 = /dev/ttyAMA0
