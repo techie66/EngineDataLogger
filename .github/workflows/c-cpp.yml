@@ -35,14 +35,10 @@ jobs:
       run: sudo apt install can-utils
     - name: make check
       run: sudo make check
-    - uses: actions/upload-artifact@v3
-      with:
-        name: test-logs
-        path: tests/*.log
     - name: Archive tests artifacts
       uses: actions/upload-artifact@v3
       with:
         name: test-logs
         path: |
-          *.log
-          tests/*.log
+          EngineDataLogger/*.log
+          EngineDataLogger/tests/*.log
