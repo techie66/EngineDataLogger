@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install libIgnitech
       run: |
         ./install-deps.sh ignitech
@@ -36,9 +36,10 @@ jobs:
     - name: make check
       run: sudo make check
     - name: Archive tests artifacts
+      if: ${{ failure() }}
       uses: actions/upload-artifact@v3
       with:
         name: test-logs
         path: |
-          EngineDataLogger/*.log
-          EngineDataLogger/tests/*.log
+          *.log
+          tests/*.log
