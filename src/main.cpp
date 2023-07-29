@@ -197,6 +197,8 @@ int main(int argc, char *argv[])
   if ( args_info.can_given ) {
     active_can = true;
     can_sock_good = can_sock_connect(can_s, args_info.can_arg);
+    if (can_sock_good) 
+      fcntl(can_s, F_SETFL, O_NONBLOCK);
   }
   #endif /* FEAT_CAN */
 
@@ -233,6 +235,8 @@ int main(int argc, char *argv[])
         log_format.push_back(FMT_ALT_RPM);
       else if ( strcmp(pt, "speed") == 0 )
         log_format.push_back(FMT_SPEED);
+      else if ( strcmp(pt, "gear") == 0 )
+        log_format.push_back(FMT_GEAR);
       else if ( strcmp(pt, "odometer") == 0 )
         log_format.push_back(FMT_ODOMETER);
       else if ( strcmp(pt, "trip") == 0 )
@@ -576,6 +580,8 @@ int main(int argc, char *argv[])
         max_fd = (max_fd > can_s) ? max_fd : can_s;
       } else {
         can_sock_good = can_sock_connect(can_s, args_info.can_arg);
+        if (can_sock_good) 
+          fcntl(can_s, F_SETFL, O_NONBLOCK);
       }
     }
     #endif /* FEAT_CAN */
@@ -641,11 +647,16 @@ int main(int argc, char *argv[])
       if (FD_ISSET(can_s, &readset)) {
         error_message (DEBUG, "Select read CAN");
         int nbytes = read(can_s, &frame, sizeof(struct can_frame));
-        error_message(INFO, "INFO:CAN:Read %d bytes", nbytes);
         if ( nbytes < 0 ) {
           error_message(WARN, "WARNING:CAN: Read error: %s", strerror(errno));
-        } else {
+        }
+        int i = 0;
+        while ( nbytes > 0 ) {
+          error_message(INFO, "INFO:CAN:Read %d bytes", nbytes);
           can_parse(frame, log_data, can_s);
+          nbytes = read(can_s, &frame, sizeof(struct can_frame));
+          i++;
+          if (i>100) break;
         }
 
       }
@@ -781,31 +792,33 @@ int main(int argc, char *argv[])
       log_data.lambda = lc2_data.lambda;
     }
     #endif /* HAVE_LIBISP2 */
-
-    #ifdef FEAT_DASHBOARD
-    if ( !log_data.in_neutral ) {
-      bikeobj.gear = "?";
-      if ( args_info.gear_ratios_given ) {
-        char gears[5] = {'1', '2', '3', '4', '5'};
-        double current_ratio = 0;
-        if ( bikeobj.speed != 0 ) {
-          current_ratio = bikeobj.rpm / bikeobj.speed;
-        }
-        double smallest_delta = DBL_MAX;
-        for (int i = 0; i < 5; i++) {
-          double delta = fabs(current_ratio - gear_ratios[i]);
-          if ( delta < smallest_delta ) {
-            smallest_delta = delta;
-            bikeobj.gear = gears[i];
+    if (log_data.in_neutral) {
+      log_data.gear = 'N';
+    }
+    else {
+      if ( log_data.gear == 'N' ) {
+        log_data.gear = '1';
+      }
+      if ( !log_data.clutch_disengaged ) {
+        if ( args_info.gear_ratios_given ) {
+          if ( enData.speed != 0 ) {
+            char gears[5] = {'1', '2', '3', '4', '5'};
+            double current_ratio = 0;
+            current_ratio = log_data.rpm / enData.speed;
+            double smallest_delta = DBL_MAX;
+            for (int i = 0; i < 5; i++) {
+              double delta = fabs(current_ratio - gear_ratios[i]);
+              if ( delta < smallest_delta ) {
+                smallest_delta = delta;
+                log_data.gear = gears[i];
+              }
+            }
           }
         }
       }
     }
-    #ifdef FEAT_FRONTCONTROLS
-    if (log_data.in_neutral) {
-      bikeobj.gear = "N";
-    }
-    #endif /* FEAT_FRONTCONTROLS */
+    #ifdef FEAT_DASHBOARD
+    bikeobj.gear = log_data.gear;
 
     // Serialize into new flatbuffer.
     fbb.Finish(EDL::AppBuffer::Bike::Pack(fbb, &bikeobj));
@@ -845,6 +858,8 @@ int main(int argc, char *argv[])
         max_fd = (max_fd > can_s) ? max_fd : can_s;
       } else {
         can_sock_good = can_sock_connect(can_s, args_info.can_arg);
+        if (can_sock_good) 
+          fcntl(can_s, F_SETFL, O_NONBLOCK);
       }
     }
     #endif /* FEAT_CAN */
@@ -907,6 +922,8 @@ int main(int argc, char *argv[])
     log_data.oil_pres = enData.pres_oil;
     log_data.alt_rpm = enData.rpm;
     log_data.speed = enData.speed;
+    log_data.odometer = enData.odometer;
+    log_data.trip = enData.trip;
 //    log_data.systemvoltage = fcData.systemVoltage;
     log_data.batteryvoltage = enData.batteryVoltage;
     log_data.power = trailing_average_power(log_data);
@@ -927,6 +944,9 @@ int main(int argc, char *argv[])
               break;
             case FMT_SPEED:
               fprintf(fd_log, "%6.2f,", log_data.speed);
+              break;
+            case FMT_GEAR:
+              fprintf(fd_log, "%c,", log_data.gear);
               break;
             case FMT_ODOMETER:
               fprintf(fd_log, "%d,", log_data.odometer);

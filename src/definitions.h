@@ -102,6 +102,8 @@ struct	bike_data {
   int32_t alt_rpm;
   /// Vehicle Speed
   float speed;
+  /// Gear
+  char gear;
   /// Odometer. Fixed point 0.01 scale (divide by 100 for real value)
   uint32_t odometer;
   /// Resettable Trip Distance. Fixed point 0.01 scale (divide by 100 for real value)
@@ -217,6 +219,7 @@ const struct bike_data BIKE_DATA_DEFAULT = {
   0, // ig_rpm
   0, // alt_rpm
   0, // speed
+  0, // gear
   0, // odometer
   0, // trip
   0, // sys volt
@@ -277,6 +280,7 @@ typedef enum {
   FMT_IG_RPM,
   FMT_ALT_RPM,
   FMT_SPEED,
+  FMT_GEAR,
   FMT_ODOMETER,
   FMT_TRIP,
   FMT_SYSTEMVOLTAGE,
