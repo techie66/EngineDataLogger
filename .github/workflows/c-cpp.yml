@@ -34,7 +34,7 @@ jobs:
     - name: Install utilities for tests
       run: sudo apt install can-utils
     - name: make check
-      run: sudo make check
+      run: sudo make check-TESTS
     - name: Archive tests artifacts
       if: ${{ failure() }}
       uses: actions/upload-artifact@v3
