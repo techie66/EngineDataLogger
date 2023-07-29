@@ -38,7 +38,7 @@ char *log_insert_time(char *buf1, const char *path, time_t tod);
 char *filter_chars(const char *filter, char *str);
 char *copyout(char *buf1, const char *path, int pathlen, const char *base,
               const char *ext, int inslen, const char *ins_string);
-void prep_path_insert(const char *path, int *pathlen, const char **base, const char **ext);
+void prep_path_insert(const char *path, ptrdiff_t *pathlen, const char **base, const char **ext);
 void log_open(char const **log_file, FILE **fd_log, char const *filename, _Bool file_date, char const *format);
 void log_restart(char const **log_file, FILE **fd_log, char const *filename, _Bool file_date, char const *format);
 

@@ -60,7 +60,7 @@ char *log_insert_str(char *buf1, const char *path, const char *str)
 
 }
 
-void prep_path_insert(const char *path, int *pathlen, const char **base, const char **ext)
+void prep_path_insert(const char *path, ptrdiff_t *pathlen, const char **base, const char **ext)
 {
   // find "base.ext" and ".ext" in "/dir/base.ext"
   const char *src = path;
