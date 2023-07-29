@@ -28,13 +28,13 @@ jobs:
       run: |
         ./install-deps.sh bcm2835
     - name: configure
-      run: ./configure
+      run: ./configure --disable-can --without-bcm2835
     - name: make
       run: make
     - name: Install utilities for tests
       run: sudo apt install can-utils
     - name: make check
-      run: sudo make check-TESTS
+      run: sudo make check
     - name: Archive tests artifacts
       if: ${{ failure() }}
       uses: actions/upload-artifact@v3
