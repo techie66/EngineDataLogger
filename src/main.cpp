@@ -837,24 +837,26 @@ int main(int argc, char *argv[])
       log_data.lambda = lc2_data.lambda;
     }
     #endif /* HAVE_LIBISP2 */
-    if ( !log_data.clutch_disengaged ) {
-      if (log_data.in_neutral) {
-        log_data.gear = 'N';
+    if (log_data.in_neutral) {
+      log_data.gear = 'N';
+    }
+    else {
+      if ( log_data.gear == 'N' ) {
+        log_data.gear = '1';
       }
-      else {
-        log_data.gear = '?';
+      if ( !log_data.clutch_disengaged ) {
         if ( args_info.gear_ratios_given ) {
-          char gears[5] = {'1', '2', '3', '4', '5'};
-          double current_ratio = 0;
           if ( enData.speed != 0 ) {
+            char gears[5] = {'1', '2', '3', '4', '5'};
+            double current_ratio = 0;
             current_ratio = log_data.rpm / enData.speed;
-          }
-          double smallest_delta = DBL_MAX;
-          for (int i = 0; i < 5; i++) {
-            double delta = fabs(current_ratio - gear_ratios[i]);
-            if ( delta < smallest_delta ) {
-              smallest_delta = delta;
-              log_data.gear = gears[i];
+            double smallest_delta = DBL_MAX;
+            for (int i = 0; i < 5; i++) {
+              double delta = fabs(current_ratio - gear_ratios[i]);
+              if ( delta < smallest_delta ) {
+                smallest_delta = delta;
+                log_data.gear = gears[i];
+              }
             }
           }
         }

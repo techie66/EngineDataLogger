@@ -38,7 +38,7 @@ int main(int argc,char *argv[])
     "./.path.dir./.xxx/log-20220722063727.csv",
     "./.path.dir./.xxx/.log-20220722063727.csv"
   };
-  printf("Test Size: %d\n", sizeof(inputs)/sizeof(inputs[0]));
+  printf("Test Size: %ld\n", sizeof(inputs)/sizeof(inputs[0]));
   for ( int i=0 ; i<sizeof(inputs)/sizeof(inputs[0]) ; i++ )
   {
     char buf1[1000] = {0};
