@@ -605,7 +605,8 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         _response.data[1]= 0x75; // Custon Service
         _response.data[2]= 1u; // Custom PID
         _response.data[3]= 0x00;
-        _response.data[4]= log_data.blink_left | (log_data.blink_right << 1);
+        _response.data[4]= log_data.blink_left | (log_data.blink_right << 1) |
+          (log_data.high_on << 2);
         _response.data[5]= 0x00;
         _response.data[6]= 0x00;
         _response.can_dlc = 8;

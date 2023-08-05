@@ -107,3 +107,12 @@ Requires RealDash version 1.5.8 or newer
   </rotation>
 </OBD2>
 
+="(V>>2)"> </value> <!-- High beams -->
+      </values>
+    </command>
+    <command send="01A6" skipCount="60" replyLength="4" targetId="310" units="km" conversion="V/10"></command> <!-- odometer -->
+    <command send="3502" skipCount="10" replyLength="1" targetId="200" conversion="V"></command> <!-- gear -->
+    <command send="3503" skipCount="10" replyLength="4" targetId="151" units="psi" conversion="(B0*256+B1)"></command> 
+  </rotation>
+</OBD2>
+
