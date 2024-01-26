@@ -62,7 +62,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
 	  log_data.roll = swap_temp;
 	}
       }
-      error_message(INFO, "CAN:Body Roll: %f", log_data.roll);
+      error_message(DEBUG, "CAN:Body Roll: %f", log_data.roll);
     }
     break;
 
@@ -77,7 +77,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
         log_data.acc_side = imu_can_body_accel_acc_y_decode(st_body_acc.acc_y);
         log_data.acc_vert = imu_can_body_accel_acc_z_decode(st_body_acc.acc_z);
       }
-      error_message(INFO, "CAN:IMU X Accel: %f", log_data.acc_forward);
+      error_message(DEBUG, "CAN:IMU X Accel: %f", log_data.acc_forward);
     }
     break;
 
@@ -605,7 +605,8 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         _response.data[1]= 0x75; // Custon Service
         _response.data[2]= 1u; // Custom PID
         _response.data[3]= 0x00;
-        _response.data[4]= log_data.blink_left | (log_data.blink_right << 1);
+        _response.data[4]= log_data.blink_left | (log_data.blink_right << 1) | 
+          (log_data.high_on << 2);
         _response.data[5]= 0x00;
         _response.data[6]= 0x00;
         _response.can_dlc = 8;
@@ -643,7 +644,6 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
       break;
 
       case 3u:{
-        // TODO PID for oil pressure
         _status = EXIT_SUCCESS;
         error_message(DEBUG, "OBD2: Custom Service: Oil Pressure");
         struct can_frame _response;

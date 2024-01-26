@@ -683,7 +683,7 @@ int main(int argc, char *argv[])
         if (FD_ISSET(fd_lc2, &readset)) {
           error_message (DEBUG, "DEBUG:Select read LC-2");
           ISP2::isp2_read(fd_lc2, lc2_data);
-          error_message(INFO, "INFO:Status: %d Lambda: %d", lc2_data.status, lc2_data.lambda);
+          error_message(DEBUG, "DEBUG:Status: %d Lambda: %d", lc2_data.status, lc2_data.lambda);
         }
       }
       #endif /* HAVE_LIBISP2 */
@@ -697,7 +697,7 @@ int main(int argc, char *argv[])
         }
         int i = 0;
         while ( nbytes > 0 ) {
-          error_message(INFO, "INFO:CAN:Read %d bytes", nbytes);
+          error_message(DEBUG, "DEBUG:CAN:Read %d bytes", nbytes);
           can_parse(frame, log_data, can_s);
           nbytes = read(can_s, &frame, sizeof(struct can_frame));
           i++;
@@ -1137,6 +1137,9 @@ int main(int argc, char *argv[])
         }
         fprintf(fd_log, "\n");
         fflush(fd_log);
+        if ( ferror(fd_log) ) {
+           error_message(ERROR,"ERROR: Output file errno=%d : %s\n", errno, strerror (errno));
+        }
       }
     }
 
