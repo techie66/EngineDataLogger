@@ -595,7 +595,7 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
     }
   }
 
-  else if ( obd2Request.mode == 53u ) { // Custom Service
+  else if ( obd2Request.mode == 0x35 ) { // Custom Service
     switch (obd2Request.pid) {
       case 1u: {
         _status = EXIT_SUCCESS;
@@ -655,6 +655,27 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         _response.data[4]= fixed_pres;
         _response.data[5]= 0x00;
         _response.data[6]= 0x00;
+        _response.can_dlc = 8;
+        _response.can_id = OBD2_OBD2_FRAME_ID;
+        if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+          error_message(ERROR, "OBD2: Response Write failed");
+          return EXIT_FAILURE;
+        }
+      }
+      break;
+
+      case 4u: {
+        _status = EXIT_SUCCESS;
+        error_message(DEBUG, "OBD2: Trip A");
+        struct can_frame _response;
+        uint32_t fixed_trip ( log_data.trip * 1.609344 / 100.0 );
+        _response.data[0]= 4u;
+        _response.data[1]= 0x75; // Custom Service
+        _response.data[2]= 4u; // Custom PID
+        _response.data[3]= fixed_trip >> 24 ;
+        _response.data[4]= fixed_trip >> 16 ;
+        _response.data[5]= fixed_trip >> 8 ;
+        _response.data[6]= fixed_trip ;
         _response.can_dlc = 8;
         _response.can_id = OBD2_OBD2_FRAME_ID;
         if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
