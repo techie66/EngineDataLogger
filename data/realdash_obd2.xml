@@ -102,12 +102,7 @@ Requires RealDash version 1.5.8 or newer
       <values>
         <value targetId="160" units="bit" conversion="V"> </value> <!-- Left Turn Signal -->
         <value targetId="161" units="bit" conversion="(V>>1)"> </value> <!-- Right Turn Signal -->
-      </values>
-    </command>
-  </rotation>
-</OBD2>
-
-="(V>>2)"> </value> <!-- High beams -->
+        <value targetId="157" units="bit" conversion="(V>>2)"> </value> <!-- High beams -->
       </values>
     </command>
     <command send="01A6" skipCount="60" replyLength="4" targetId="310" units="km" conversion="V/10"></command> <!-- odometer -->
