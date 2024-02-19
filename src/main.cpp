@@ -109,6 +109,46 @@ int lc2_open(const char *filename)
   return fd;
 }
 
+/*
+ * detect_time_change(bool first_run = false)
+ *
+ * @brief Detect if Wall time has made a jump
+ *
+ * @param[in] designate if this is initial call
+ *            must be called once at beginning
+ *
+ * @return -1 if first_run never set true
+ *         0  if no jump detected
+ *         1  if jump detected
+ */
+
+int detect_time_change(bool first_run = false)
+{
+  const int TIME_JUMP_DETECT = 1800;
+  static struct timespec mp,wp; // for Monotonic and Wall previous
+  static bool initialized = false;
+  if ( first_run ) {
+    initialized = true;
+    clock_gettime(CLOCK_MONOTONIC, &mp);
+    clock_gettime(CLOCK_REALTIME, &wp);
+  }
+  if ( !initialized ) {return -1;}
+  struct timespec mn,wn; // for Monotonic and Wall now
+  clock_gettime(CLOCK_MONOTONIC, &mn);
+  clock_gettime(CLOCK_REALTIME, &wn);
+  double m_diff = difftime(mn.tv_sec,mp.tv_sec);
+  double w_diff = difftime(wn.tv_sec,wp.tv_sec);
+  mp.tv_sec = mn.tv_sec;
+  wp.tv_sec = wn.tv_sec;
+  if (fabs(w_diff - m_diff) > TIME_JUMP_DETECT) {
+    error_message(INFO,"Time-Jump detected");
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
 int main(int argc, char *argv[])
 {
   // Set default Debug Level Here NONE,ERROR,WARN,INFO,DEBUG
@@ -439,9 +479,11 @@ int main(int argc, char *argv[])
 
   bool    __attribute__ ((unused)) engineRunning = false;
   bool    o2_manual = false;
+  // TODO update whole project to use modern time
   struct  timeval log_time_last, gpx_time_last;
   gettimeofday(&log_time_last, NULL);
   gettimeofday(&gpx_time_last, NULL);
+  detect_time_change(true); // initialize
   while (!time_to_quit) { // time_to_quit defined error_handling.c
     if ( args_info.test_mode_arg > 0 ) {
       error_message (DEBUG, "TESTMODE: %d ", args_info.test_mode_arg);
@@ -453,6 +495,9 @@ int main(int argc, char *argv[])
 
     int	length;
     // Check if restarting logfile
+    if ( detect_time_change() == 1 ) {
+      restart_log = true;
+    }
     if ( restart_log == true ) {
       restart_log = false;
       if ( args_info.output_file_given ) {
@@ -638,7 +683,7 @@ int main(int argc, char *argv[])
         if (FD_ISSET(fd_lc2, &readset)) {
           error_message (DEBUG, "DEBUG:Select read LC-2");
           ISP2::isp2_read(fd_lc2, lc2_data);
-          error_message(INFO, "INFO:Status: %d Lambda: %d", lc2_data.status, lc2_data.lambda);
+          error_message(DEBUG, "DEBUG:Status: %d Lambda: %d", lc2_data.status, lc2_data.lambda);
         }
       }
       #endif /* HAVE_LIBISP2 */
@@ -652,7 +697,7 @@ int main(int argc, char *argv[])
         }
         int i = 0;
         while ( nbytes > 0 ) {
-          error_message(INFO, "INFO:CAN:Read %d bytes", nbytes);
+          error_message(DEBUG, "DEBUG:CAN:Read %d bytes", nbytes);
           can_parse(frame, log_data, can_s);
           nbytes = read(can_s, &frame, sizeof(struct can_frame));
           i++;
@@ -916,7 +961,25 @@ int main(int argc, char *argv[])
     my_time = currtime.tv_sec;
     char time_buf[100];
     strftime(time_buf, 100, "%D %T", localtime(&my_time));
-    // RPM, Speed, sysvoltage, batVoltage, oil temp, oil pressure, running, Time, lambda, IAP(kpa)
+
+    if (args_info.gps_time_given) {
+      if ( (log_data.gpstime > currtime.tv_sec) && (log_data.gpstime - currtime.tv_sec)> args_info.gps_t_offset_arg ) {
+        char timeString[sizeof("yyyy-mm-ddThh:mm:ssZ")];
+        strftime(timeString, sizeof(timeString),
+          "%FT%TZ", gmtime(&log_data.gpstime));
+        error_message(WARN,"GPS-Time System time behind GPS by %ds. Updating time to %s",log_data.gpstime - currtime.tv_sec,timeString);
+        clockid_t clk_id = CLOCK_REALTIME;
+        struct timespec tp;
+        tp.tv_sec = log_data.gpstime;
+        if ( clock_settime(clk_id, &tp) == 0 ) {
+                error_message(INFO,"GPS-Time Sync Successful");
+        } else {
+                error_message(ERROR,"GPS-Time Sync Failed: %s\ntp.tv_sec=%ld",strerror(errno),tp.tv_sec);
+        }
+
+      }
+    }
+
 
     log_data.oil_temp = enData.temp_oil;
     log_data.oil_pres = enData.pres_oil;
@@ -1074,6 +1137,9 @@ int main(int argc, char *argv[])
         }
         fprintf(fd_log, "\n");
         fflush(fd_log);
+        if ( ferror(fd_log) ) {
+           error_message(ERROR,"ERROR: Output file errno=%d : %s\n", errno, strerror (errno));
+        }
       }
     }
 
@@ -1114,4 +1180,5 @@ int main(int argc, char *argv[])
   // Return 0 for clean exit
   return 0;
 }
+
 
