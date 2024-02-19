@@ -986,7 +986,7 @@ int main(int argc, char *argv[])
     log_data.alt_rpm = enData.rpm;
     log_data.speed = enData.speed;
     log_data.odometer = enData.odometer;
-    log_data.trip = enData.trip;
+    log_data.trip = (log_data.odometer - enData.trip) ; //enData.trip marks trip reset
 //    log_data.systemvoltage = fcData.systemVoltage;
     log_data.batteryvoltage = enData.batteryVoltage;
     log_data.power = trailing_average_power(log_data);

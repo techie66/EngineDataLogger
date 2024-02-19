@@ -668,8 +668,8 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         _status = EXIT_SUCCESS;
         error_message(DEBUG, "OBD2: Trip A");
         struct can_frame _response;
-        uint32_t fixed_trip ( log_data.trip * 1.609344 / 100.0 );
-        _response.data[0]= 4u;
+        uint32_t fixed_trip ( log_data.trip * 1.609344 / 10.0 ); // convert to tenths (0.1)
+        _response.data[0]= 6u;
         _response.data[1]= 0x75; // Custom Service
         _response.data[2]= 4u; // Custom PID
         _response.data[3]= fixed_trip >> 24 ;
