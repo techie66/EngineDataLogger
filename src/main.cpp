@@ -125,7 +125,7 @@ int lc2_open(const char *filename)
 int detect_time_change(bool first_run = false)
 {
   const int TIME_JUMP_DETECT = 1800;
-  static struct timespec mp,wp; // for Monotonic and Wall previous
+  static struct timespec mp, wp; // for Monotonic and Wall previous
   static bool initialized = false;
   if ( first_run ) {
     initialized = true;
@@ -133,18 +133,17 @@ int detect_time_change(bool first_run = false)
     clock_gettime(CLOCK_REALTIME, &wp);
   }
   if ( !initialized ) {return -1;}
-  struct timespec mn,wn; // for Monotonic and Wall now
+  struct timespec mn, wn; // for Monotonic and Wall now
   clock_gettime(CLOCK_MONOTONIC, &mn);
   clock_gettime(CLOCK_REALTIME, &wn);
-  double m_diff = difftime(mn.tv_sec,mp.tv_sec);
-  double w_diff = difftime(wn.tv_sec,wp.tv_sec);
+  double m_diff = difftime(mn.tv_sec, mp.tv_sec);
+  double w_diff = difftime(wn.tv_sec, wp.tv_sec);
   mp.tv_sec = mn.tv_sec;
   wp.tv_sec = wn.tv_sec;
   if (fabs(w_diff - m_diff) > TIME_JUMP_DETECT) {
-    error_message(INFO,"Time-Jump detected");
+    error_message(INFO, "Time-Jump detected");
     return 1;
-  }
-  else {
+  } else {
     return 0;
   }
 }
@@ -237,7 +236,7 @@ int main(int argc, char *argv[])
   if ( args_info.can_given ) {
     active_can = true;
     can_sock_good = can_sock_connect(can_s, args_info.can_arg);
-    if (can_sock_good) 
+    if (can_sock_good)
       fcntl(can_s, F_SETFL, O_NONBLOCK);
   }
   #endif /* FEAT_CAN */
@@ -248,10 +247,9 @@ int main(int argc, char *argv[])
   GPX gpx;
   if ( args_info.gpx_file_given ) {
     if ( args_info.output_file_date_given ) {
-      std::string s(log_insert_time(NULL, args_info.gpx_file_orig,0));
+      std::string s(log_insert_time(NULL, args_info.gpx_file_orig, 0));
       gpx.initialize(s);
-    }
-    else {
+    } else {
       std::string s(args_info.gpx_file_orig);
       gpx.initialize(s);
     }
@@ -625,7 +623,7 @@ int main(int argc, char *argv[])
         max_fd = (max_fd > can_s) ? max_fd : can_s;
       } else {
         can_sock_good = can_sock_connect(can_s, args_info.can_arg);
-        if (can_sock_good) 
+        if (can_sock_good)
           fcntl(can_s, F_SETFL, O_NONBLOCK);
       }
     }
@@ -662,7 +660,7 @@ int main(int argc, char *argv[])
 
 
       #ifdef FEAT_FRONTCONTROLS
-      if (fd_front_controls>0 && FD_ISSET(fd_front_controls, &readset)) {
+      if (fd_front_controls > 0 && FD_ISSET(fd_front_controls, &readset)) {
         error_message (DEBUG, "DEBUG:Select read front controls");
         readFC(fd_front_controls, log_data);
       }
@@ -701,7 +699,7 @@ int main(int argc, char *argv[])
           can_parse(frame, log_data, can_s);
           nbytes = read(can_s, &frame, sizeof(struct can_frame));
           i++;
-          if (i>100) break;
+          if (i > 100) break;
         }
 
       }
@@ -839,8 +837,7 @@ int main(int argc, char *argv[])
     #endif /* HAVE_LIBISP2 */
     if (log_data.in_neutral) {
       log_data.gear = 'N';
-    }
-    else {
+    } else {
       if ( log_data.gear == 'N' ) {
         log_data.gear = '1';
       }
@@ -903,7 +900,7 @@ int main(int argc, char *argv[])
         max_fd = (max_fd > can_s) ? max_fd : can_s;
       } else {
         can_sock_good = can_sock_connect(can_s, args_info.can_arg);
-        if (can_sock_good) 
+        if (can_sock_good)
           fcntl(can_s, F_SETFL, O_NONBLOCK);
       }
     }
@@ -925,7 +922,7 @@ int main(int argc, char *argv[])
       // #Dontcare
     } else if (select_result > 0) {
       #ifdef FEAT_FRONTCONTROLS
-      if (fd_front_controls>0 && FD_ISSET(fd_front_controls, &writeset)) {
+      if (fd_front_controls > 0 && FD_ISSET(fd_front_controls, &writeset)) {
         // Front controls accepts commands
         writeFC(fd_front_controls, log_data);
       }
@@ -963,18 +960,18 @@ int main(int argc, char *argv[])
     strftime(time_buf, 100, "%D %T", localtime(&my_time));
 
     if (args_info.gps_time_given) {
-      if ( (log_data.gpstime > currtime.tv_sec) && (log_data.gpstime - currtime.tv_sec)> args_info.gps_t_offset_arg ) {
+      if ( (log_data.gpstime > currtime.tv_sec) && (log_data.gpstime - currtime.tv_sec) > args_info.gps_t_offset_arg ) {
         char timeString[sizeof("yyyy-mm-ddThh:mm:ssZ")];
         strftime(timeString, sizeof(timeString),
-          "%FT%TZ", gmtime(&log_data.gpstime));
-        error_message(WARN,"GPS-Time System time behind GPS by %ds. Updating time to %s",log_data.gpstime - currtime.tv_sec,timeString);
+                 "%FT%TZ", gmtime(&log_data.gpstime));
+        error_message(WARN, "GPS-Time System time behind GPS by %ds. Updating time to %s", log_data.gpstime - currtime.tv_sec, timeString);
         clockid_t clk_id = CLOCK_REALTIME;
         struct timespec tp;
         tp.tv_sec = log_data.gpstime;
         if ( clock_settime(clk_id, &tp) == 0 ) {
-                error_message(INFO,"GPS-Time Sync Successful");
+          error_message(INFO, "GPS-Time Sync Successful");
         } else {
-                error_message(ERROR,"GPS-Time Sync Failed: %s\ntp.tv_sec=%ld",strerror(errno),tp.tv_sec);
+          error_message(ERROR, "GPS-Time Sync Failed: %s\ntp.tv_sec=%ld", strerror(errno), tp.tv_sec);
         }
 
       }
@@ -1099,8 +1096,7 @@ int main(int argc, char *argv[])
               fprintf(fd_log, "%6.1f,", log_data.gps_heading);
               break;
             case FMT_GPS_FIX:
-              switch (log_data.gpsfix)
-              {
+              switch (log_data.gpsfix) {
                 case GPS_NO_FIX:
                   fprintf(fd_log, " NO FIX,");
                   break;
@@ -1138,7 +1134,7 @@ int main(int argc, char *argv[])
         fprintf(fd_log, "\n");
         fflush(fd_log);
         if ( ferror(fd_log) ) {
-           error_message(ERROR,"ERROR: Output file errno=%d : %s\n", errno, strerror (errno));
+          error_message(ERROR, "ERROR: Output file errno=%d : %s\n", errno, strerror (errno));
         }
       }
     }
@@ -1146,17 +1142,17 @@ int main(int argc, char *argv[])
     #ifdef FEAT_GPX
     // GPX Logging
     if ( args_info.gpx_file_given ) {
-      if ( ( (currtime.tv_sec - gpx_time_last.tv_sec) * 1000000 + currtime.tv_usec - gpx_time_last.tv_usec ) > GPX_INTERVAL 
-		      && log_data.gpsfix > GPS_NO_FIX ) {
+      if ( ( (currtime.tv_sec - gpx_time_last.tv_sec) * 1000000 + currtime.tv_usec - gpx_time_last.tv_usec ) > GPX_INTERVAL
+           && log_data.gpsfix > GPS_NO_FIX ) {
         gpx_time_last.tv_sec = currtime.tv_sec;
         gpx_time_last.tv_usec = currtime.tv_usec;
         strftime(time_buf, 100, "%FT%TZ", localtime(&log_data.gpstime));
         std::string s(time_buf);
-        gpx.startTrkPt(log_data.lat,log_data.lon,log_data.altitude,s);
+        gpx.startTrkPt(log_data.lat, log_data.lon, log_data.altitude, s);
         for (std::vector<log_fmt_data>::iterator it = log_format.begin() ; it != log_format.end(); ++it) {
           switch (*it) {
             case FMT_RPM:
-              gpx.addExtension("rpm",std::to_string(log_data.rpm));
+              gpx.addExtension("rpm", std::to_string(log_data.rpm));
               break;
           }
         }

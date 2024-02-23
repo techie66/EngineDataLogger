@@ -49,18 +49,17 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
     case IMU_CAN_BODY_POSITION_FRAME_ID: {
       struct imu_can_body_position_t st_body_pos;
       int status_unpack = imu_can_body_position_unpack(&st_body_pos, frame.data, sizeof(frame.data));
-      if ( status_unpack == 0 )
-      {
+      if ( status_unpack == 0 ) {
         _status = EXIT_SUCCESS;
         // Physical mounting may require changing up pitch and roll.
         log_data.yaw = imu_can_body_position_yaw_angle_decode(st_body_pos.yaw_angle);
         log_data.pitch = log_data.pitch_offset + imu_can_body_position_pitch_angle_decode(st_body_pos.pitch_angle);
         log_data.roll = log_data.roll_offset + imu_can_body_position_roll_angle_decode(st_body_pos.roll_angle);
-	if (log_data.roll_pitch_swap) {
+        if (log_data.roll_pitch_swap) {
           float swap_temp = log_data.pitch;
-	  log_data.pitch = log_data.roll;
-	  log_data.roll = swap_temp;
-	}
+          log_data.pitch = log_data.roll;
+          log_data.roll = swap_temp;
+        }
       }
       error_message(DEBUG, "CAN:Body Roll: %f", log_data.roll);
     }
@@ -69,8 +68,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
     case IMU_CAN_BODY_ACCEL_FRAME_ID: {
       struct imu_can_body_accel_t st_body_acc;
       int status_unpack = imu_can_body_accel_unpack(&st_body_acc, frame.data, sizeof(frame.data));
-      if ( status_unpack == 0 )
-      {
+      if ( status_unpack == 0 ) {
         _status = EXIT_SUCCESS;
         // Physical mounting may require changing up x and y
         log_data.acc_forward = imu_can_body_accel_acc_x_decode(st_body_acc.acc_x);
@@ -84,8 +82,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
     case IGNITECH_CAN_IGNITECH_WB_2_FRAME_ID: {
       struct ignitech_can_ignitech_wb_2_t st_wb2;
       int status_unpack = ignitech_can_ignitech_wb_2_unpack(&st_wb2, frame.data, sizeof(frame.data));
-      if ( status_unpack == 0 )
-      {
+      if ( status_unpack == 0 ) {
         _status = EXIT_SUCCESS;
         log_data.lambda = st_wb2.lambda * 10 ; // Convert scaled by 0.01 to 0.001
       }
@@ -103,8 +100,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
       error_message(DEBUG, "CAN:GPS Location Frame");
       struct gps_gps_loc_t st_gps_loc;
       int status_unpack = gps_gps_loc_unpack(&st_gps_loc, frame.data, sizeof(frame.data));
-      if ( status_unpack == 0 )
-      {
+      if ( status_unpack == 0 ) {
         _status = EXIT_SUCCESS;
         log_data.lat = gps_gps_loc_lat_decimal_degrees_decode(st_gps_loc.lat_decimal_degrees);
         log_data.lon = gps_gps_loc_long_decimal_degrees_decode(st_gps_loc.long_decimal_degrees);
@@ -116,8 +112,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
       error_message(DEBUG, "CAN:GPS Navigation Frame");
       struct gps_gps_nav_t st_gps_nav;
       int status_unpack = gps_gps_nav_unpack(&st_gps_nav, frame.data, sizeof(frame.data));
-      if ( status_unpack == 0 )
-      {
+      if ( status_unpack == 0 ) {
         _status = EXIT_SUCCESS;
         log_data.altitude = gps_gps_nav_altitude_decode(st_gps_nav.altitude);
         log_data.gps_speed = gps_gps_nav_speed_decode(st_gps_nav.speed);
@@ -130,8 +125,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
       error_message(DEBUG, "CAN:GPS Stats Frame");
       struct gps_gps_stat_t st_gps_stat;
       int status_unpack = gps_gps_stat_unpack(&st_gps_stat, frame.data, sizeof(frame.data));
-      if ( status_unpack == 0 )
-      {
+      if ( status_unpack == 0 ) {
         _status = EXIT_SUCCESS;
         log_data.satV = st_gps_stat.visible_satellites;
         log_data.satU = st_gps_stat.active_satellites;
@@ -147,8 +141,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
       error_message(DEBUG, "CAN:GPS Time Frame");
       struct gps_gps_time_t st_gps_time;
       int status_unpack = gps_gps_time_unpack(&st_gps_time, frame.data, sizeof(frame.data));
-      if ( status_unpack == 0 )
-      {
+      if ( status_unpack == 0 ) {
         _status = EXIT_SUCCESS;
         struct tm tm_gps_time;
         tm_gps_time.tm_year = st_gps_time.year - 1900;
@@ -167,8 +160,7 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s)
       error_message(DEBUG, "CAN:Front Controls Frame");
       struct fc_front_controls_t st_front_controls;
       int status_unpack = fc_front_controls_unpack(&st_front_controls, frame.data, sizeof(frame.data));
-      if ( status_unpack == 0 )
-      {
+      if ( status_unpack == 0 ) {
         _status = EXIT_SUCCESS;
         log_data.brake_on = st_front_controls.brake;
         log_data.horn_on = st_front_controls.horn;
@@ -432,7 +424,7 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         error_message(DEBUG, "OBD2: Oil Temp");
         struct can_frame _response;
         struct obd2_obd2_t _obd2_response;
-        _obd2_response.s1_pid_5_c_engine_oil_temp = obd2_obd2_s1_pid_5_c_engine_oil_temp_encode( (log_data.oil_temp-32)*5.0/9.0 );
+        _obd2_response.s1_pid_5_c_engine_oil_temp = obd2_obd2_s1_pid_5_c_engine_oil_temp_encode( (log_data.oil_temp - 32) * 5.0 / 9.0 );
         _obd2_response.length = 3u; // MODE(1) + PID(1) + Data Bytes
         _obd2_response.response = 1u;  // Every response packet is 1
         _obd2_response.service = OBD2_OBD2_SERVICE_SHOW_CURRENT_DATA__CHOICE;
@@ -601,14 +593,14 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         _status = EXIT_SUCCESS;
         error_message(DEBUG, "OBD2: Custom Service: Blinkers");
         struct can_frame _response;
-        _response.data[0]= 4u;
-        _response.data[1]= 0x75; // Custon Service
-        _response.data[2]= 1u; // Custom PID
-        _response.data[3]= 0x00;
-        _response.data[4]= log_data.blink_left | (log_data.blink_right << 1) | 
-          (log_data.high_on << 2);
-        _response.data[5]= 0x00;
-        _response.data[6]= 0x00;
+        _response.data[0] = 4u;
+        _response.data[1] = 0x75; // Custon Service
+        _response.data[2] = 1u; // Custom PID
+        _response.data[3] = 0x00;
+        _response.data[4] = log_data.blink_left | (log_data.blink_right << 1) |
+                            (log_data.high_on << 2);
+        _response.data[5] = 0x00;
+        _response.data[6] = 0x00;
         _response.can_dlc = 8;
         _response.can_id = OBD2_OBD2_FRAME_ID;
         if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
@@ -622,18 +614,18 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         _status = EXIT_SUCCESS;
         error_message(DEBUG, "OBD2: Custom Service: Gear");
         struct can_frame _response;
-        _response.data[0]= 4u;
-        _response.data[1]= 0x75; // Custom Service
-        _response.data[2]= 2u; // Custom PID
-        _response.data[3]= 0x00;
+        _response.data[0] = 4u;
+        _response.data[1] = 0x75; // Custom Service
+        _response.data[2] = 2u; // Custom PID
+        _response.data[3] = 0x00;
         if ( log_data.gear == 'N' )
-          _response.data[4]= 0;
+          _response.data[4] = 0;
         else if ( log_data.gear == '?' )
-          _response.data[4]= -1;
+          _response.data[4] = -1;
         else
-          _response.data[4]= log_data.gear - 48; // Convert from 'char' to actual number
-        _response.data[5]= 0x00;
-        _response.data[6]= 0x00;
+          _response.data[4] = log_data.gear - 48; // Convert from 'char' to actual number
+        _response.data[5] = 0x00;
+        _response.data[6] = 0x00;
         _response.can_dlc = 8;
         _response.can_id = OBD2_OBD2_FRAME_ID;
         if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
@@ -643,18 +635,18 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
       }
       break;
 
-      case 3u:{
+      case 3u: {
         _status = EXIT_SUCCESS;
         error_message(DEBUG, "OBD2: Custom Service: Oil Pressure");
         struct can_frame _response;
         uint16_t fixed_pres = log_data.oil_pres;
-        _response.data[0]= 4u;
-        _response.data[1]= 0x75; // Custom Service
-        _response.data[2]= 3u; // Custom PID
-        _response.data[3]= fixed_pres >> 8 ;
-        _response.data[4]= fixed_pres;
-        _response.data[5]= 0x00;
-        _response.data[6]= 0x00;
+        _response.data[0] = 4u;
+        _response.data[1] = 0x75; // Custom Service
+        _response.data[2] = 3u; // Custom PID
+        _response.data[3] = fixed_pres >> 8 ;
+        _response.data[4] = fixed_pres;
+        _response.data[5] = 0x00;
+        _response.data[6] = 0x00;
         _response.can_dlc = 8;
         _response.can_id = OBD2_OBD2_FRAME_ID;
         if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
@@ -669,13 +661,13 @@ int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s)
         error_message(DEBUG, "OBD2: Trip A");
         struct can_frame _response;
         uint32_t fixed_trip ( log_data.trip * 1.609344 / 10.0 ); // convert to tenths (0.1)
-        _response.data[0]= 6u;
-        _response.data[1]= 0x75; // Custom Service
-        _response.data[2]= 4u; // Custom PID
-        _response.data[3]= fixed_trip >> 24 ;
-        _response.data[4]= fixed_trip >> 16 ;
-        _response.data[5]= fixed_trip >> 8 ;
-        _response.data[6]= fixed_trip ;
+        _response.data[0] = 6u;
+        _response.data[1] = 0x75; // Custom Service
+        _response.data[2] = 4u; // Custom PID
+        _response.data[3] = fixed_trip >> 24 ;
+        _response.data[4] = fixed_trip >> 16 ;
+        _response.data[5] = fixed_trip >> 8 ;
+        _response.data[6] = fixed_trip ;
         _response.can_dlc = 8;
         _response.can_id = OBD2_OBD2_FRAME_ID;
         if (write(can_s, &_response, sizeof(struct can_frame)) != sizeof(struct can_frame)) {

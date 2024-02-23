@@ -33,249 +33,249 @@
 #include "fc.h"
 
 static inline uint8_t pack_left_shift_u8(
-    uint8_t value,
-    uint8_t shift,
-    uint8_t mask)
+  uint8_t value,
+  uint8_t shift,
+  uint8_t mask)
 {
-    return (uint8_t)((uint8_t)(value << shift) & mask);
+  return (uint8_t)((uint8_t)(value << shift) & mask);
 }
 
 static inline uint8_t pack_left_shift_u16(
-    uint16_t value,
-    uint8_t shift,
-    uint8_t mask)
+  uint16_t value,
+  uint8_t shift,
+  uint8_t mask)
 {
-    return (uint8_t)((uint8_t)(value << shift) & mask);
+  return (uint8_t)((uint8_t)(value << shift) & mask);
 }
 
 static inline uint8_t pack_right_shift_u16(
-    uint16_t value,
-    uint8_t shift,
-    uint8_t mask)
+  uint16_t value,
+  uint8_t shift,
+  uint8_t mask)
 {
-    return (uint8_t)((uint8_t)(value >> shift) & mask);
+  return (uint8_t)((uint8_t)(value >> shift) & mask);
 }
 
 static inline uint16_t unpack_left_shift_u16(
-    uint8_t value,
-    uint8_t shift,
-    uint8_t mask)
+  uint8_t value,
+  uint8_t shift,
+  uint8_t mask)
 {
-    return (uint16_t)((uint16_t)(value & mask) << shift);
+  return (uint16_t)((uint16_t)(value & mask) << shift);
 }
 
 static inline uint8_t unpack_right_shift_u8(
-    uint8_t value,
-    uint8_t shift,
-    uint8_t mask)
+  uint8_t value,
+  uint8_t shift,
+  uint8_t mask)
 {
-    return (uint8_t)((uint8_t)(value & mask) >> shift);
+  return (uint8_t)((uint8_t)(value & mask) >> shift);
 }
 
 static inline uint16_t unpack_right_shift_u16(
-    uint8_t value,
-    uint8_t shift,
-    uint8_t mask)
+  uint8_t value,
+  uint8_t shift,
+  uint8_t mask)
 {
-    return (uint16_t)((uint16_t)(value & mask) >> shift);
+  return (uint16_t)((uint16_t)(value & mask) >> shift);
 }
 
 int fc_front_controls_pack(
-    uint8_t *dst_p,
-    const struct fc_front_controls_t *src_p,
-    size_t size)
+  uint8_t *dst_p,
+  const struct fc_front_controls_t *src_p,
+  size_t size)
 {
-    if (size < 4u) {
-        return (-EINVAL);
-    }
+  if (size < 4u) {
+    return (-EINVAL);
+  }
 
-    memset(&dst_p[0], 0, 4);
+  memset(&dst_p[0], 0, 4);
 
-    dst_p[0] |= pack_left_shift_u8(src_p->brake, 2u, 0x04u);
-    dst_p[0] |= pack_left_shift_u8(src_p->horn, 3u, 0x08u);
-    dst_p[0] |= pack_left_shift_u8(src_p->left, 4u, 0x10u);
-    dst_p[0] |= pack_left_shift_u8(src_p->right, 5u, 0x20u);
-    dst_p[0] |= pack_left_shift_u8(src_p->high, 6u, 0x40u);
-    dst_p[0] |= pack_left_shift_u8(src_p->kill, 7u, 0x80u);
-    dst_p[1] |= pack_left_shift_u8(src_p->clutch, 2u, 0x04u);
-    dst_p[1] |= pack_left_shift_u8(src_p->kickstand, 3u, 0x08u);
-    dst_p[1] |= pack_left_shift_u8(src_p->neutral, 4u, 0x10u);
-    dst_p[2] |= pack_left_shift_u16(src_p->voltage, 0u, 0xffu);
-    dst_p[3] |= pack_right_shift_u16(src_p->voltage, 8u, 0xffu);
+  dst_p[0] |= pack_left_shift_u8(src_p->brake, 2u, 0x04u);
+  dst_p[0] |= pack_left_shift_u8(src_p->horn, 3u, 0x08u);
+  dst_p[0] |= pack_left_shift_u8(src_p->left, 4u, 0x10u);
+  dst_p[0] |= pack_left_shift_u8(src_p->right, 5u, 0x20u);
+  dst_p[0] |= pack_left_shift_u8(src_p->high, 6u, 0x40u);
+  dst_p[0] |= pack_left_shift_u8(src_p->kill, 7u, 0x80u);
+  dst_p[1] |= pack_left_shift_u8(src_p->clutch, 2u, 0x04u);
+  dst_p[1] |= pack_left_shift_u8(src_p->kickstand, 3u, 0x08u);
+  dst_p[1] |= pack_left_shift_u8(src_p->neutral, 4u, 0x10u);
+  dst_p[2] |= pack_left_shift_u16(src_p->voltage, 0u, 0xffu);
+  dst_p[3] |= pack_right_shift_u16(src_p->voltage, 8u, 0xffu);
 
-    return (4);
+  return (4);
 }
 
 int fc_front_controls_unpack(
-    struct fc_front_controls_t *dst_p,
-    const uint8_t *src_p,
-    size_t size)
+  struct fc_front_controls_t *dst_p,
+  const uint8_t *src_p,
+  size_t size)
 {
-    if (size < 4u) {
-        return (-EINVAL);
-    }
+  if (size < 4u) {
+    return (-EINVAL);
+  }
 
-    dst_p->brake = unpack_right_shift_u8(src_p[0], 2u, 0x04u);
-    dst_p->horn = unpack_right_shift_u8(src_p[0], 3u, 0x08u);
-    dst_p->left = unpack_right_shift_u8(src_p[0], 4u, 0x10u);
-    dst_p->right = unpack_right_shift_u8(src_p[0], 5u, 0x20u);
-    dst_p->high = unpack_right_shift_u8(src_p[0], 6u, 0x40u);
-    dst_p->kill = unpack_right_shift_u8(src_p[0], 7u, 0x80u);
-    dst_p->clutch = unpack_right_shift_u8(src_p[1], 2u, 0x04u);
-    dst_p->kickstand = unpack_right_shift_u8(src_p[1], 3u, 0x08u);
-    dst_p->neutral = unpack_right_shift_u8(src_p[1], 4u, 0x10u);
-    dst_p->voltage = unpack_right_shift_u16(src_p[2], 0u, 0xffu);
-    dst_p->voltage |= unpack_left_shift_u16(src_p[3], 8u, 0xffu);
+  dst_p->brake = unpack_right_shift_u8(src_p[0], 2u, 0x04u);
+  dst_p->horn = unpack_right_shift_u8(src_p[0], 3u, 0x08u);
+  dst_p->left = unpack_right_shift_u8(src_p[0], 4u, 0x10u);
+  dst_p->right = unpack_right_shift_u8(src_p[0], 5u, 0x20u);
+  dst_p->high = unpack_right_shift_u8(src_p[0], 6u, 0x40u);
+  dst_p->kill = unpack_right_shift_u8(src_p[0], 7u, 0x80u);
+  dst_p->clutch = unpack_right_shift_u8(src_p[1], 2u, 0x04u);
+  dst_p->kickstand = unpack_right_shift_u8(src_p[1], 3u, 0x08u);
+  dst_p->neutral = unpack_right_shift_u8(src_p[1], 4u, 0x10u);
+  dst_p->voltage = unpack_right_shift_u16(src_p[2], 0u, 0xffu);
+  dst_p->voltage |= unpack_left_shift_u16(src_p[3], 8u, 0xffu);
 
-    return (0);
+  return (0);
 }
 
 uint8_t fc_front_controls_brake_encode(double value)
 {
-    return (uint8_t)(value);
+  return (uint8_t)(value);
 }
 
 double fc_front_controls_brake_decode(uint8_t value)
 {
-    return ((double)value);
+  return ((double)value);
 }
 
 bool fc_front_controls_brake_is_in_range(uint8_t value)
 {
-    return (value <= 1u);
+  return (value <= 1u);
 }
 
 uint8_t fc_front_controls_horn_encode(double value)
 {
-    return (uint8_t)(value);
+  return (uint8_t)(value);
 }
 
 double fc_front_controls_horn_decode(uint8_t value)
 {
-    return ((double)value);
+  return ((double)value);
 }
 
 bool fc_front_controls_horn_is_in_range(uint8_t value)
 {
-    return (value <= 1u);
+  return (value <= 1u);
 }
 
 uint8_t fc_front_controls_left_encode(double value)
 {
-    return (uint8_t)(value);
+  return (uint8_t)(value);
 }
 
 double fc_front_controls_left_decode(uint8_t value)
 {
-    return ((double)value);
+  return ((double)value);
 }
 
 bool fc_front_controls_left_is_in_range(uint8_t value)
 {
-    return (value <= 1u);
+  return (value <= 1u);
 }
 
 uint8_t fc_front_controls_right_encode(double value)
 {
-    return (uint8_t)(value);
+  return (uint8_t)(value);
 }
 
 double fc_front_controls_right_decode(uint8_t value)
 {
-    return ((double)value);
+  return ((double)value);
 }
 
 bool fc_front_controls_right_is_in_range(uint8_t value)
 {
-    return (value <= 1u);
+  return (value <= 1u);
 }
 
 uint8_t fc_front_controls_high_encode(double value)
 {
-    return (uint8_t)(value);
+  return (uint8_t)(value);
 }
 
 double fc_front_controls_high_decode(uint8_t value)
 {
-    return ((double)value);
+  return ((double)value);
 }
 
 bool fc_front_controls_high_is_in_range(uint8_t value)
 {
-    return (value <= 1u);
+  return (value <= 1u);
 }
 
 uint8_t fc_front_controls_kill_encode(double value)
 {
-    return (uint8_t)(value);
+  return (uint8_t)(value);
 }
 
 double fc_front_controls_kill_decode(uint8_t value)
 {
-    return ((double)value);
+  return ((double)value);
 }
 
 bool fc_front_controls_kill_is_in_range(uint8_t value)
 {
-    return (value <= 1u);
+  return (value <= 1u);
 }
 
 uint8_t fc_front_controls_clutch_encode(double value)
 {
-    return (uint8_t)(value);
+  return (uint8_t)(value);
 }
 
 double fc_front_controls_clutch_decode(uint8_t value)
 {
-    return ((double)value);
+  return ((double)value);
 }
 
 bool fc_front_controls_clutch_is_in_range(uint8_t value)
 {
-    return (value <= 1u);
+  return (value <= 1u);
 }
 
 uint8_t fc_front_controls_kickstand_encode(double value)
 {
-    return (uint8_t)(value);
+  return (uint8_t)(value);
 }
 
 double fc_front_controls_kickstand_decode(uint8_t value)
 {
-    return ((double)value);
+  return ((double)value);
 }
 
 bool fc_front_controls_kickstand_is_in_range(uint8_t value)
 {
-    return (value <= 1u);
+  return (value <= 1u);
 }
 
 uint8_t fc_front_controls_neutral_encode(double value)
 {
-    return (uint8_t)(value);
+  return (uint8_t)(value);
 }
 
 double fc_front_controls_neutral_decode(uint8_t value)
 {
-    return ((double)value);
+  return ((double)value);
 }
 
 bool fc_front_controls_neutral_is_in_range(uint8_t value)
 {
-    return (value <= 1u);
+  return (value <= 1u);
 }
 
 uint16_t fc_front_controls_voltage_encode(double value)
 {
-    return (uint16_t)(value / 0.01);
+  return (uint16_t)(value / 0.01);
 }
 
 double fc_front_controls_voltage_decode(uint16_t value)
 {
-    return ((double)value * 0.01);
+  return ((double)value * 0.01);
 }
 
 bool fc_front_controls_voltage_is_in_range(uint16_t value)
 {
-    return (value <= 20000u);
+  return (value <= 20000u);
 }

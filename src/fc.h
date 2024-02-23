@@ -64,75 +64,75 @@ extern "C" {
  * All signal values are as on the CAN bus.
  */
 struct fc_front_controls_t {
-    /**
-     * Range: 0..1 (0..1 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t brake;
+  /**
+   * Range: 0..1 (0..1 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t brake;
 
-    /**
-     * Range: 0..1 (0..1 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t horn;
+  /**
+   * Range: 0..1 (0..1 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t horn;
 
-    /**
-     * Range: 0..1 (0..1 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t left;
+  /**
+   * Range: 0..1 (0..1 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t left;
 
-    /**
-     * Range: 0..1 (0..1 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t right;
+  /**
+   * Range: 0..1 (0..1 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t right;
 
-    /**
-     * Range: 0..1 (0..1 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t high;
+  /**
+   * Range: 0..1 (0..1 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t high;
 
-    /**
-     * Range: 0..1 (0..1 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t kill;
+  /**
+   * Range: 0..1 (0..1 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t kill;
 
-    /**
-     * Range: 0..1 (0..1 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t clutch;
+  /**
+   * Range: 0..1 (0..1 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t clutch;
 
-    /**
-     * Range: 0..1 (0..1 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t kickstand;
+  /**
+   * Range: 0..1 (0..1 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t kickstand;
 
-    /**
-     * Range: 0..1 (0..1 -)
-     * Scale: 1
-     * Offset: 0
-     */
-    uint8_t neutral;
+  /**
+   * Range: 0..1 (0..1 -)
+   * Scale: 1
+   * Offset: 0
+   */
+  uint8_t neutral;
 
-    /**
-     * Range: 0..20000 (0..200 -)
-     * Scale: 0.01
-     * Offset: 0
-     */
-    uint16_t voltage;
+  /**
+   * Range: 0..20000 (0..200 -)
+   * Scale: 0.01
+   * Offset: 0
+   */
+  uint16_t voltage;
 };
 
 /**
@@ -145,9 +145,9 @@ struct fc_front_controls_t {
  * @return Size of packed data, or negative error code.
  */
 int fc_front_controls_pack(
-    uint8_t *dst_p,
-    const struct fc_front_controls_t *src_p,
-    size_t size);
+  uint8_t *dst_p,
+  const struct fc_front_controls_t *src_p,
+  size_t size);
 
 /**
  * Unpack message FRONT_CONTROLS.
@@ -159,9 +159,9 @@ int fc_front_controls_pack(
  * @return zero(0) or negative error code.
  */
 int fc_front_controls_unpack(
-    struct fc_front_controls_t *dst_p,
-    const uint8_t *src_p,
-    size_t size);
+  struct fc_front_controls_t *dst_p,
+  const uint8_t *src_p,
+  size_t size);
 
 /**
  * Encode given signal by applying scaling and offset.
