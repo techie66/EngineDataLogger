@@ -227,6 +227,10 @@ BO_ 2024 OBD2: 8 Vector__XXX
 VAL_ 2024 ParameterID_Service35 1 "S35_PID_01_Blinkers_Highbeams" 2 "S35_PID_02_Gear" 3 "S35_PID_03_Oil_Pressure" 4 "S35_PID_04_Tripmeter";
 
 
+CM_ SG_ 2024 S35_PID_01_Blinkers_Highbeams "TODO: Split into individual bit values"
+CM_ SG_ 2024 S35_PID_02_Gear "TODO:Create enum to cover unknown and neutral"
+CM_ SG_ 2024 S35_PID_03_Oil_Pressure "TODO: figure out scaling/offset factors"
+
 CM_ BO_ 2024 "OBD2 DBC developed by canmatrix & CSS Electronics - for questions contact us at www.csselectronics.com";
 CM_ SG_ 2024 S1_PID_00_PIDsSupported_01_20 "PIDs supported [01 - 20] - Bit encoded [A7..D0] == [PID $01..PID $20]. See OBD-II PIDs on Wikipedia";
 CM_ SG_ 2024 S1_PID_01_MonitorStatus "Monitor status since DTCs cleared (includes malfunction indicator lamp (MIL) status and number of DTCs) ";
