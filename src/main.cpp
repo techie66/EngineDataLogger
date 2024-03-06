@@ -79,6 +79,87 @@
 #include "definitions.h"
 #include "error_handling.h"
 
+const uint8_t		BRAKE_ON = 1 << 2,
+                HORN_ON = 1 << 3,
+                LEFT_ON = 1 << 4,
+                RIGHT_ON = 1 << 5,
+                HIGH_BEAMS_ON = 1 << 6,
+                KILL_ON = 1 << 7;
+const uint8_t		ENGINE_RUNNING = 1 << 7;
+const uint8_t		CLUTCH_DISENGAGED = 1 << 2,
+                KICKSTAND_UP = 1 << 3,
+                IN_NEUTRAL = 1 << 4;
+
+const struct engine_data ENGINE_DATA_DEFAULT = {
+  0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0,
+  0
+};
+
+const struct bike_data BIKE_DATA_DEFAULT = {
+  0, // rpm
+  0, // ig_rpm
+  0, // alt_rpm
+  0, // speed
+  0, // gear
+  0, // odometer
+  0, // trip
+  0, // sys volt
+  0, // batt volt
+  0, // oil temp
+  0, // oil pres
+  0, // serialCmdD
+  0, // serialCmdB
+  0, // serialCmdC
+  0, // serialCmdA
+  0, // inputCmdD
+  0, // inputCmdC
+  0, // brake_on
+  0, // horn_on
+  0, // high_on
+  0, // kill_on
+  0, // clutch_disengaged
+  0, // kickstand_up
+  0, // in_neutral
+  0, // blink left
+  0, // blink right
+  0, // lambda
+  0, // map
+  0, // tps
+  0, // running
+  0, // advance 1
+  0, // advance 2
+  0, // advance 3
+  0, // advance 4
+  0, // yaw
+  0, // pitch
+  0, // roll
+  0, // pitch offset
+  0, // roll offset
+  0, // roll-pitch swap
+  0, // acc forward
+  0, // acc side
+  0, // acc vert
+  0, // power
+  0, // weight
+  0, // lat
+  0, // lon
+  0, // altitude
+  0, // gps speed
+  0, // gps heading
+  GPS_NO_FIX, // gps fix type
+  0, // pdop
+  0, // hdop
+  0, // vdop
+  0, // satV
+  0, // satU
+  0 // gpstime
+};
+
 int fc_open(const char *filename)
 {
   int fd;
@@ -696,7 +777,7 @@ int main(int argc, char *argv[])
         int i = 0;
         while ( nbytes > 0 ) {
           error_message(DEBUG, "DEBUG:CAN:Read %d bytes", nbytes);
-          can_parse(frame, log_data, can_s);
+          can_parse(&frame, &log_data, can_s);
           nbytes = read(can_s, &frame, sizeof(struct can_frame));
           i++;
           if (i > 100) break;
@@ -937,18 +1018,7 @@ int main(int argc, char *argv[])
       #ifdef FEAT_CAN
       if (FD_ISSET(can_s, &writeset)) {
         error_message (DEBUG, "Select write CAN");
-        //int nbytes = read(can_s, &frame, sizeof(struct can_frame));
-        //can_send();
-        struct can_frame _serial_commands;
-        _serial_commands.can_dlc = 4;
-        _serial_commands.can_id = 0x226;
-        _serial_commands.data[0] = 0;
-        _serial_commands.data[1] = 0;
-        _serial_commands.data[2] = 0;
-        _serial_commands.data[3] = log_data.serialCmdA;
-        if (write(can_s, &_serial_commands, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-          error_message(ERROR, "CAN: SerialCMD Write failed");
-        }
+        can_send(&log_data, can_s);
       }
       #endif /* FEAT_CAN */
     }

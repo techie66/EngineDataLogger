@@ -25,6 +25,10 @@
 #ifndef CAN_H
 #define CAN_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <net/if.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
@@ -40,6 +44,7 @@
 #include "obd2.h"
 #include "gps.h"
 #include "fc.h"
+#include "edl.h"
 
 // 3rd-Party Libraries
 
@@ -76,7 +81,7 @@ bool can_sock_connect( int can_s, char const *can_arg);
  * \retval        ERR_SUCCESS    The function is successfully executed
  * \retval        ERR_FAILURE    An error occurred
  */
-void can_parse(const can_frame &frame, bike_data &log_data, const int can_s);
+void can_parse(const struct can_frame *frame, struct bike_data *log_data, const int can_s);
 
 /**
  * \brief   Handle all OBD2 exchanges
@@ -84,7 +89,22 @@ void can_parse(const can_frame &frame, bike_data &log_data, const int can_s);
  * \param[in]     frame     A can_frame struct (linux/can.h) that already contains a valid recieved frame.
  * \param[in]     log_data  A structure to store parsed data into.
  * \param[in]     can_s     Socket file-descriptor for CANSock interface
+ * \return        Non-zero on error
  */
-int obd2_process(const can_frame &frame, bike_data &log_data, const int can_s);
+int obd2_process(const struct can_frame *frame, struct bike_data *log_data, const int can_s);
+
+/**
+ * \brief   Send periodic CAN frames
+ *
+ * \param[in]     log_data  A structure that contains data items.
+ * \param[in]     can_s     Socket file-descriptor for CANSock interface
+ * \return        Non-zero on error
+ */
+int can_send(struct bike_data *log_data, const int can_s);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

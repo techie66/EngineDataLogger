@@ -60,6 +60,7 @@ libtool
 autom4te.cache
 .depend
 .dirstamp
+*.Po
 
 # generated config files
 etc/enginedatalogger.conf.dist

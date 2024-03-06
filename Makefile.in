@@ -92,7 +92,7 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = enginedatalogger$(EXEEXT)
 @CANBUS_TRUE@am__append_1 = \
-@CANBUS_TRUE@		    src/can.cpp \
+@CANBUS_TRUE@		    src/can.c \
 @CANBUS_TRUE@		    src/can.h \
 @CANBUS_TRUE@		    src/imu_can.c \
 @CANBUS_TRUE@		    src/imu_can.h \
@@ -102,6 +102,8 @@ bin_PROGRAMS = enginedatalogger$(EXEEXT)
 @CANBUS_TRUE@		    src/fc.h \
 @CANBUS_TRUE@		    src/gps.c \
 @CANBUS_TRUE@		    src/gps.h \
+@CANBUS_TRUE@		    src/edl.c \
+@CANBUS_TRUE@		    src/edl.h \
 @CANBUS_TRUE@		    src/obd2.c \
 @CANBUS_TRUE@		    src/obd2.h
 
@@ -149,17 +151,18 @@ PROGRAMS = $(bin_PROGRAMS)
 am__enginedatalogger_SOURCES_DIST = src/main.cpp src/hexconvert.cpp \
 	src/serial.cpp src/serial.h src/error_handling.c \
 	src/error_handling.h src/cmdline.c src/cmdline.h src/logfile.c \
-	src/logfile.h src/definitions.h src/can.cpp src/can.h \
+	src/logfile.h src/definitions.h src/can.c src/can.h \
 	src/imu_can.c src/imu_can.h src/ignitech_can.c \
 	src/ignitech_can.h src/fc.c src/fc.h src/gps.c src/gps.h \
-	src/obd2.c src/obd2.h src/bluetooth.cpp \
+	src/edl.c src/edl.h src/obd2.c src/obd2.h src/bluetooth.cpp \
 	src/cb1100f-app_generated.h src/bluetooth.h src/gpx.cpp \
 	src/gpx.h src/powercalc.cpp src/powercalc.h \
 	src/front_controls.cpp src/front_controls.h
 am__dirstamp = $(am__leading_dot)dirstamp
 @CANBUS_TRUE@am__objects_1 = src/can.$(OBJEXT) src/imu_can.$(OBJEXT) \
 @CANBUS_TRUE@	src/ignitech_can.$(OBJEXT) src/fc.$(OBJEXT) \
-@CANBUS_TRUE@	src/gps.$(OBJEXT) src/obd2.$(OBJEXT)
+@CANBUS_TRUE@	src/gps.$(OBJEXT) src/edl.$(OBJEXT) \
+@CANBUS_TRUE@	src/obd2.$(OBJEXT)
 @DASHBOARD_TRUE@am__objects_2 = src/bluetooth.$(OBJEXT)
 @GPX_TRUE@am__objects_3 = src/gpx.$(OBJEXT)
 @POWERCALC_TRUE@am__objects_4 = src/powercalc.$(OBJEXT)
@@ -215,13 +218,14 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = src/$(DEPDIR)/bluetooth.Po src/$(DEPDIR)/can.Po \
-	src/$(DEPDIR)/cmdline.Po src/$(DEPDIR)/error_handling.Po \
-	src/$(DEPDIR)/fc.Po src/$(DEPDIR)/front_controls.Po \
-	src/$(DEPDIR)/gps.Po src/$(DEPDIR)/gpx.Po \
-	src/$(DEPDIR)/hexconvert.Po src/$(DEPDIR)/ignitech_can.Po \
-	src/$(DEPDIR)/imu_can.Po src/$(DEPDIR)/logfile.Po \
-	src/$(DEPDIR)/main.Po src/$(DEPDIR)/obd2.Po \
-	src/$(DEPDIR)/powercalc.Po src/$(DEPDIR)/serial.Po
+	src/$(DEPDIR)/cmdline.Po src/$(DEPDIR)/edl.Po \
+	src/$(DEPDIR)/error_handling.Po src/$(DEPDIR)/fc.Po \
+	src/$(DEPDIR)/front_controls.Po src/$(DEPDIR)/gps.Po \
+	src/$(DEPDIR)/gpx.Po src/$(DEPDIR)/hexconvert.Po \
+	src/$(DEPDIR)/ignitech_can.Po src/$(DEPDIR)/imu_can.Po \
+	src/$(DEPDIR)/logfile.Po src/$(DEPDIR)/main.Po \
+	src/$(DEPDIR)/obd2.Po src/$(DEPDIR)/powercalc.Po \
+	src/$(DEPDIR)/serial.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -389,6 +393,9 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PKG_CONFIG = @PKG_CONFIG@
+PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
+PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 RANLIB = @RANLIB@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -599,6 +606,7 @@ src/ignitech_can.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/fc.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/gps.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/edl.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/obd2.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/bluetooth.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
@@ -657,6 +665,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/bluetooth.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/can.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cmdline.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/edl.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/error_handling.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/front_controls.Po@am__quote@ # am--include-marker
@@ -1111,6 +1120,7 @@ distclean: distclean-recursive
 		-rm -f src/$(DEPDIR)/bluetooth.Po
 	-rm -f src/$(DEPDIR)/can.Po
 	-rm -f src/$(DEPDIR)/cmdline.Po
+	-rm -f src/$(DEPDIR)/edl.Po
 	-rm -f src/$(DEPDIR)/error_handling.Po
 	-rm -f src/$(DEPDIR)/fc.Po
 	-rm -f src/$(DEPDIR)/front_controls.Po
@@ -1176,6 +1186,7 @@ maintainer-clean: maintainer-clean-recursive
 		-rm -f src/$(DEPDIR)/bluetooth.Po
 	-rm -f src/$(DEPDIR)/can.Po
 	-rm -f src/$(DEPDIR)/cmdline.Po
+	-rm -f src/$(DEPDIR)/edl.Po
 	-rm -f src/$(DEPDIR)/error_handling.Po
 	-rm -f src/$(DEPDIR)/fc.Po
 	-rm -f src/$(DEPDIR)/front_controls.Po

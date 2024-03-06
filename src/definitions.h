@@ -20,6 +20,10 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h> // C99 Bool Support
 #include <time.h>
@@ -40,41 +44,32 @@
 #define _DEFAULT_WEIGHT 300
 
 // CmdD flags
-const uint8_t		BRAKE_ON = 1 << 2,
-                HORN_ON = 1 << 3,
-                LEFT_ON = 1 << 4,
-                RIGHT_ON = 1 << 5,
-                HIGH_BEAMS_ON = 1 << 6,
-                KILL_ON = 1 << 7;
+extern const uint8_t  BRAKE_ON,
+       HORN_ON,
+       LEFT_ON,
+       RIGHT_ON,
+       HIGH_BEAMS_ON,
+       KILL_ON;
 
 // CmdC flags
-const uint8_t		CLUTCH_DISENGAGED = 1 << 2,
-                KICKSTAND_UP = 1 << 3,
-                IN_NEUTRAL = 1 << 4;
+extern const uint8_t  CLUTCH_DISENGAGED,
+       KICKSTAND_UP,
+       IN_NEUTRAL;
 
 // CmdA flags
-const uint8_t		ENGINE_RUNNING = 1 << 7;
+extern const uint8_t		ENGINE_RUNNING;
 
-struct			engine_data {
-  uint16_t	rpm;
-  float		batteryVoltage,
-          temp_oil, // divide by 100 for actual temp
-          pres_oil, // divide by 100 for actual pressure
-          speed; // divide by 100 for actual speed
+struct      engine_data {
+  uint16_t  rpm;
+  float     batteryVoltage,
+            temp_oil, // divide by 100 for actual temp
+            pres_oil, // divide by 100 for actual pressure
+            speed; // divide by 100 for actual speed
   uint32_t	odometer;
   uint32_t	trip;
 };
 
-const struct engine_data ENGINE_DATA_DEFAULT = {
-  0,
-  0.0,
-  0.0,
-  0.0,
-  0.0,
-  0,
-  0
-};
-
+extern const struct engine_data ENGINE_DATA_DEFAULT;
 
 enum System_CMD {
   NO_CMD,
@@ -85,21 +80,21 @@ enum System_CMD {
 };
 
 typedef enum {
-  GPS_NO_FIX=1,
+  GPS_NO_FIX = 1,
   GPS_2D_FIX,
   GPS_3D_FIX
-}gps_fixtype;
+} gps_fixtype;
 
 /*
  * @brief Loggable data
  */
-struct	bike_data {
+struct bike_data {
   /// RPM. Best of available sources.
-  int rpm;
+  uint16_t rpm;
   /// RPM. From Ignitech TCIP-4
-  int ig_rpm;
+  uint16_t ig_rpm;
   /// RPM. From EngineData device.
-  int32_t alt_rpm;
+  uint16_t alt_rpm;
   /// Vehicle Speed
   float speed;
   /// Gear
@@ -123,7 +118,7 @@ struct	bike_data {
           /// Sent to Front Controls,
           serialCmdC,
           /// Sent to Front Controls, bit 7 indicates engine is running
-          serialCmdA, 
+          serialCmdA,
           /// Raw data byte when reading front controls over USB/Serial
           inputCmdD,
           /// Raw data byte when reading front controls over USB/Serial
@@ -133,7 +128,7 @@ struct	bike_data {
   /// From Front Controls
   bool  horn_on;
   /// From Front Controls
-  bool  high_on; 
+  bool  high_on;
   /// From Front Controls
   bool  kill_on;
   /// From Front Controls
@@ -214,65 +209,7 @@ struct	bike_data {
   /// GPS Time (UTC)
   time_t gpstime;
 };
-const struct bike_data BIKE_DATA_DEFAULT = {
-  0, // rpm
-  0, // ig_rpm
-  0, // alt_rpm
-  0, // speed
-  0, // gear
-  0, // odometer
-  0, // trip
-  0, // sys volt
-  0, // batt volt
-  0, // oil temp
-  0, // oil pres
-  0, // serialCmdD
-  0, // serialCmdB
-  0, // serialCmdC
-  0, // serialCmdA
-  0, // inputCmdD
-  0, // inputCmdC
-  0, // brake_on
-  0, // horn_on
-  0, // high_on
-  0, // kill_on
-  0, // clutch_disengaged
-  0, // kickstand_up
-  0, // in_neutral
-  0, // blink left
-  0, // blink right
-  0, // lambda
-  0, // map
-  0, // tps
-  0, // running
-  0, // advance 1
-  0, // advance 2
-  0, // advance 3
-  0, // advance 4
-  0, // yaw
-  0, // pitch
-  0, // roll
-  0, // pitch offset
-  0, // roll offset
-  0, // roll-pitch swap
-  0, // acc forward
-  0, // acc side
-  0, // acc vert
-  0, // power
-  0, // weight
-  0, // lat 
-  0, // lon
-  0, // altitude
-  0, // gps speed
-  0, // gps heading
-  GPS_NO_FIX, // gps fix type
-  0, // pdop
-  0, // hdop
-  0, // vdop
-  0, // satV
-  0, // satU
-  0 // gpstime
-};
+extern const struct bike_data BIKE_DATA_DEFAULT;
 
 /// Enumeration of loggable data. These get pushed into a vector to represent user choice in order.
 typedef enum {
@@ -318,4 +255,9 @@ typedef enum {
   FMT_SAT_INUSE,
   FMT_GPS_TIME,
 } log_fmt_data;
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

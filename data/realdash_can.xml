@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RealDashCAN version="2">
+  <frames>
+    <frame canId="0x226" endianess="big">
+      <value name="FrontControls Command" offset="3" length="1"></value>
+      <value targetId="56" offset="3" startbit="7" bitcount="1"></value>
+    </frame>
+    <frame canId="0x267" endianess="big" writeInterval="10000" size="8">
+      <value name="Unlock Code0" offset="0" length="1" initialValue="0x13">0x13AFB322878EBC1F</value>
+      <value name="Unlock Code1" offset="1" length="1" initialValue="0xAF"></value>
+      <value name="Unlock Code2" offset="2" length="1" initialValue="0xB3"></value>
+      <value name="Unlock Code3" offset="3" length="1" initialValue="0x22"></value>
+      <value name="Unlock Code4" offset="4" length="1" initialValue="0x87"></value>
+      <value name="Unlock Code5" offset="5" length="1" initialValue="0x8E"></value>
+      <value name="Unlock Code6" offset="6" length="1" initialValue="0xBC"></value>
+      <value name="Unlock Code7" offset="7" length="1" initialValue="0x00"></value>
+    </frame>
+    <frame canId="0x260" endianess="little"> <!--   -->
+			<value targetId="230" units="bit" startbit="2" bitcount="1"></value><!--brake bit-->
+			<value name="FRONT_CONTROLS_Horn" units="bit" startbit="3" bitcount="1"></value><!--horn-->
+			<value targetId="160" units="bit" startbit="4" bitcount="1"></value><!--left turn signal-->
+			<value targetId="161" units="bit" startbit="5" bitcount="1"></value><!--right turn signal-->
+			<value targetId="157" units="bit" startbit="6" bitcount="1"></value><!--high beams-->
+			<value name="FRONT_CONTROLS_Kill" units="bit" startbit="7" bitcount="1"></value><!--kill switch-->
+			<value name="FRONT_CONTROLS_Clutch" units="bit" startbit="10" bitcount="1"></value><!--clutch disengaged-->
+			<value name="FRONT_CONTROLS_Kickstand" units="bit" startbit="11" bitcount="1"></value><!--kickstand up-->
+			<value name="FRONT_CONTROLS_Neutral" units="bit" startbit="12" bitcount="1"></value><!--in neutral-->
+			<value name="FRONT_CONTROLS_Voltage" startbit="16" bitcount="16" units="None" endianess="little" signed="false" rangeMin="0" rangeMax="200" conversion="V/100.0"></value><!--Comment=None-->
+    </frame>
+  </frames>
+</RealDashCAN>

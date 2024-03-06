@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- File created by DBCtoRDXML Converter https://github.com/wjcloudy/DBCtoRDXML -->
+<RealDashCAN version="2">
+	<frames>
+		<frame canId="0x260" endianess="little">  <!--FRONT_CONTROLS-->
+			<value name="FRONT_CONTROLS_Brake" units="bit" startbit="2" bitcount="1"></value><!--Comment=None-->
+			<value name="FRONT_CONTROLS_Horn" units="bit" startbit="3" bitcount="1"></value><!--Comment=None-->
+			<value name="FRONT_CONTROLS_Left" units="bit" startbit="4" bitcount="1"></value><!--Comment=None-->
+			<value name="FRONT_CONTROLS_Right" units="bit" startbit="5" bitcount="1"></value><!--Comment=None-->
+			<value name="FRONT_CONTROLS_High" units="bit" startbit="6" bitcount="1"></value><!--Comment=None-->
+			<value name="FRONT_CONTROLS_Kill" units="bit" startbit="7" bitcount="1"></value><!--Comment=None-->
+			<value name="FRONT_CONTROLS_Clutch" units="bit" startbit="10" bitcount="1"></value><!--Comment=None-->
+			<value name="FRONT_CONTROLS_Kickstand" units="bit" startbit="11" bitcount="1"></value><!--Comment=None-->
+			<value name="FRONT_CONTROLS_Neutral" units="bit" startbit="12" bitcount="1"></value><!--Comment=None-->
+			<value name="FRONT_CONTROLS_Voltage" startbit="16" bitcount="16" units="None" endianess="little" signed="false" rangeMin="0" rangeMax="200" conversion="V/100.0"></value><!--Comment=None-->
+		</frame>
+	</frames>
+</RealDashCAN>

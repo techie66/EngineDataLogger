@@ -17,7 +17,7 @@ enginedatalogger_SOURCES= \
 
 if CANBUS
 enginedatalogger_SOURCES += \
-		    src/can.cpp \
+		    src/can.c \
 		    src/can.h \
 		    src/imu_can.c \
 		    src/imu_can.h \
@@ -27,6 +27,8 @@ enginedatalogger_SOURCES += \
 		    src/fc.h \
 		    src/gps.c \
 		    src/gps.h \
+		    src/edl.c \
+		    src/edl.h \
 		    src/obd2.c \
 		    src/obd2.h
 endif

@@ -1,0 +1,83 @@
+VERSION "Created by Jacob Geigle"
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_:
+
+
+BO_ 550 EDL: 4 FC
+ SG_ cmd_A : 24|8@1+ (1,0) [0|255] "" FC
+
+BO_ 551 ENGINE1: 8 EDL
+ SG_ RPM : 0|14@1+ (1,0) [0|65535] "rpm" FC
+ SG_ SPEED_MPH : 14|8@1+ (1,0) [0|255] "MPH" FC
+ SG_ TPS : 22|7@1+ (1,0) [0|100] "%" FC
+ SG_ OIL_TEMP : 29|9@1+ (1,-50) [-50|450] "F" FC
+ SG_ OIL_PRES : 38|8@1+ (1,0) [0|255] "psi" FC
+ SG_ IAP : 46|8@1+ (1,0) [0|255] "kpa" FC
+ SG_ VOLTAGE : 54|8@1+ (0.1,0) [0|25.5] "V" FC
+
+CM_ BO_ 551 "EDL Engine Frame 1";
+CM_ SG_ 551 RPM "RPM";
+CM_ SG_ 551 SPEED_MPH "Speed (MPH)";
+CM_ SG_ 551 TPS "Throttle position (%)";
+CM_ SG_ 551 OIL_TEMP "Engine oil temp (Fahrenheit)";
+CM_ SG_ 551 OIL_PRES "Engine oil pressure (psi)";
+CM_ SG_ 551 IAP "Intake absolute pressure (kpa)";
+CM_ SG_ 551 VOLTAGE "System Voltage (0.1 V)";
+
+BO_ 552 ENGINE2: 8 EDL
+ SG_ ODO : 0|24@1+ (0.1,0) [0|1677721.0] "mi" FC
+ SG_ TRIP : 24|20@1+ (0.1,0) [0|104857.0] "mi" FC
+ SG_ LAMBDA : 44|11@1+ (0.001,0) [0|2.048] "" FC
+ SG_ GEAR : 56|8@1+ (1,0) [0|255] "char" FC
+
+CM_ BO_ 552 "EDL Engine Frame 2";
+CM_ SG_ 552 ODO "Odometer (0.1 mi)";
+CM_ SG_ 552 TRIP "Tripmeter (0.1 mi)";
+CM_ SG_ 552 LAMBDA "Lambda";
+CM_ SG_ 552 GEAR "character representing current gear";
+
+BO_ 553 ENGINE3: 8 EDL
+ SG_ ADV : 0|8@1+ (1,0) [0|255] "deg" FC
+ SG_ Roll_angle : 8|12@1+ (0.1,-180) [-180|180] "deg" GYRO
+ SG_ Pitch_angle : 20|12@1+ (0.1,-180) [-180|180] "deg" GYRO
+ SG_ Yaw_angle : 32|13@1+ (0.1,-360) [-360|360] "deg" GYRO
+
+CM_ BO_ 553 "EDL Engine Frame 3";
+CM_ SG_ 553 ADV "Ignition advance";
+CM_ SG_ 553 Roll_angle "Body roll angle (deg)";
+CM_ SG_ 553 Pitch_angle "Body pitch angle (deg)";
+CM_ SG_ 553 Yaw_angle "Body yaw angle (deg)";
+
