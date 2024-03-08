@@ -739,7 +739,12 @@ int can_send(struct bike_data *log_data, const int can_s)
   _edl_engine2.odo = edl_engine2_odo_encode(log_data->odometer / 100.0);
   _edl_engine2.trip = edl_engine2_trip_encode(log_data->trip / 100.0);
   _edl_engine2.lambda = edl_engine2_lambda_encode(log_data->lambda / 1000.0);
-  _edl_engine2.gear = log_data->gear;
+  if ( log_data->gear == 'N' )
+    _edl_engine2.gear = 0;
+  else if ( log_data->gear == '?' )
+    _edl_engine2.gear = -1;
+  else
+    _edl_engine2.gear = log_data->gear - 48; // Convert from 'char' to actual number
   edl_engine2_pack(_engine2_frame.data, &_edl_engine2, sizeof(struct can_frame));
   _engine2_frame.can_dlc = EDL_ENGINE2_LENGTH;
   _engine2_frame.can_id = EDL_ENGINE2_FRAME_ID;

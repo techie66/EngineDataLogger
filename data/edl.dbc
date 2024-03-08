@@ -61,7 +61,7 @@ BO_ 552 ENGINE2: 8 EDL
  SG_ ODO : 0|24@1+ (0.1,0) [0|1677721.0] "mi" FC
  SG_ TRIP : 24|20@1+ (0.1,0) [0|104857.0] "mi" FC
  SG_ LAMBDA : 44|11@1+ (0.001,0) [0|2.048] "" FC
- SG_ GEAR : 56|8@1+ (1,0) [0|255] "char" FC
+ SG_ GEAR : 56|8@1+ (1,0) [0|255] "" FC
 
 CM_ BO_ 552 "EDL Engine Frame 2";
 CM_ SG_ 552 ODO "Odometer (0.1 mi)";

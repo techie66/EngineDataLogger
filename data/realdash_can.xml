@@ -40,7 +40,7 @@
 			<value targetId="310" startbit="0" bitcount="24" units="mi" endianess="little" signed="false" rangeMin="0" rangeMax="1677721.0" conversion="V/10.0"></value><!--Comment=Odometer (0.1 mi)-->
 			<value targetId="311" startbit="24" bitcount="20" units="mi" endianess="little" signed="false" rangeMin="0" rangeMax="104857.0" conversion="V/10.0"></value><!--Comment=Tripmeter (0.1 mi)-->
 			<value targetId="0" startbit="44" bitcount="11" units="None" endianess="little" signed="false" rangeMin="0" rangeMax="2.048" conversion="V/1000.0"></value><!--Comment=Lambda-->
-			<value targetId="200" startbit="56" bitcount="8" units="char" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=character representing current gear-->
+			<value targetId="200" startbit="56" bitcount="8" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=character representing current gear-->
 		</frame>
 		<frame canId="0x229" endianess="little">  <!--ENGINE3-->
 			<value targetId="38" startbit="0" bitcount="8" units="deg" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=Ignition advance-->
