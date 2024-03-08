@@ -23,6 +23,7 @@
  */
 
 #include "config.h"
+#include <assert.h>
 #include <time.h>
 #include <string.h>
 #include <float.h>
@@ -227,6 +228,19 @@ int detect_time_change(bool first_run = false)
   } else {
     return 0;
   }
+}
+
+struct timespec diff_timespec(const struct timespec *time1,
+    const struct timespec *time0) {
+  assert(time1);
+  assert(time0);
+  struct timespec diff = {.tv_sec = time1->tv_sec - time0->tv_sec, //
+      .tv_nsec = time1->tv_nsec - time0->tv_nsec};
+  if (diff.tv_nsec < 0) {
+    diff.tv_nsec += 1000000000; // nsec/sec
+    diff.tv_sec--;
+  }
+  return diff;
 }
 
 int main(int argc, char *argv[])
@@ -559,6 +573,7 @@ int main(int argc, char *argv[])
   bool    __attribute__ ((unused)) engineRunning = false;
   bool    o2_manual = false;
   // TODO update whole project to use modern time
+  // ie struct timespec;clock_gettime(CLOCK_MONOTONIC, &mp); double m_diff = difftime(mn.tv_sec, mp.tv_sec);
   struct  timeval log_time_last, gpx_time_last;
   gettimeofday(&log_time_last, NULL);
   gettimeofday(&gpx_time_last, NULL);
@@ -1017,8 +1032,15 @@ int main(int argc, char *argv[])
 
       #ifdef FEAT_CAN
       if (FD_ISSET(can_s, &writeset)) {
-        error_message (DEBUG, "Select write CAN");
-        can_send(&log_data, can_s);
+        static struct timespec previous_time = {0};
+        struct timespec current_time;
+        clock_gettime(CLOCK_MONOTONIC, &current_time);
+        struct timespec difference_time = diff_timespec(&current_time, &previous_time);
+        if (difference_time.tv_sec > 1 || difference_time.tv_nsec > CAN_RATE_LIMIT_NSEC) {
+          error_message (DEBUG, "Select write CAN");
+          can_send(&log_data, can_s);
+          clock_gettime(CLOCK_MONOTONIC, &previous_time);
+        }
       }
       #endif /* FEAT_CAN */
     }

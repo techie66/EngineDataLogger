@@ -3,9 +3,9 @@
   <frames>
     <frame canId="0x226" endianess="big">
       <value name="FrontControls Command" offset="3" length="1"></value>
-      <value targetId="56" offset="3" startbit="7" bitcount="1"></value>
+			<value targetId="56" startbit="31" bitcount="1" units="bit" endianess="little" signed="false" ></value><!--Comment=None-->
     </frame>
-    <frame canId="0x267" endianess="big" writeInterval="10000" size="8">
+    <frame canId="0x267" endianess="big" writeInterval="300000" size="8">
       <value name="Unlock Code0" offset="0" length="1" initialValue="0x13">0x13AFB322878EBC1F</value>
       <value name="Unlock Code1" offset="1" length="1" initialValue="0xAF"></value>
       <value name="Unlock Code2" offset="2" length="1" initialValue="0xB3"></value>
@@ -27,5 +27,26 @@
 			<value name="FRONT_CONTROLS_Neutral" units="bit" startbit="12" bitcount="1"></value><!--in neutral-->
 			<value name="FRONT_CONTROLS_Voltage" startbit="16" bitcount="16" units="None" endianess="little" signed="false" rangeMin="0" rangeMax="200" conversion="V/100.0"></value><!--Comment=None-->
     </frame>
+		<frame canId="0x227" endianess="little">  <!--ENGINE1-->
+			<value targetId="37" startbit="0" bitcount="14" units="rpm" endianess="little" signed="false" rangeMin="0" rangeMax="65535" ></value><!--Comment=RPM-->
+			<value targetId="81" startbit="14" bitcount="8" units="MPH" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=Speed (MPH)-->
+			<value targetId="42" startbit="22" bitcount="7" endianess="little" signed="false" rangeMin="0" rangeMax="100" ></value><!--Comment=Throttle position (%)-->
+			<value targetId="152" startbit="29" bitcount="9" units="F" endianess="little" signed="false" rangeMin="-50" rangeMax="450" conversion="V-50"></value><!--Comment=Engine oil temp (Fahrenheit)-->
+			<value targetId="151" startbit="38" bitcount="8" units="psi" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=Engine oil pressure (psi)-->
+			<value targetId="31" startbit="46" bitcount="8" units="kpa" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=Intake absolute pressure (kpa)-->
+			<value targetId="12" startbit="54" bitcount="8" units="V" endianess="little" signed="false" rangeMin="0" rangeMax="25.5" conversion="V/10.0"></value><!--Comment=System Voltage (0.1 V)-->
+		</frame>
+		<frame canId="0x228" endianess="little">  <!--ENGINE2-->
+			<value targetId="310" startbit="0" bitcount="24" units="mi" endianess="little" signed="false" rangeMin="0" rangeMax="1677721.0" conversion="V/10.0"></value><!--Comment=Odometer (0.1 mi)-->
+			<value targetId="311" startbit="24" bitcount="20" units="mi" endianess="little" signed="false" rangeMin="0" rangeMax="104857.0" conversion="V/10.0"></value><!--Comment=Tripmeter (0.1 mi)-->
+			<value targetId="0" startbit="44" bitcount="11" units="None" endianess="little" signed="false" rangeMin="0" rangeMax="2.048" conversion="V/1000.0"></value><!--Comment=Lambda-->
+			<value targetId="200" startbit="56" bitcount="8" units="char" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=character representing current gear-->
+		</frame>
+		<frame canId="0x229" endianess="little">  <!--ENGINE3-->
+			<value targetId="38" startbit="0" bitcount="8" units="deg" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=Ignition advance-->
+			<value name="ENGINE3_Roll_angle" startbit="8" bitcount="12" units="deg" endianess="little" signed="false" rangeMin="-180" rangeMax="180" conversion="V/10.0-180"></value><!--Comment=Body roll angle (deg)-->
+			<value name="ENGINE3_Pitch_angle" startbit="20" bitcount="12" units="deg" endianess="little" signed="false" rangeMin="-180" rangeMax="180" conversion="V/10.0-180"></value><!--Comment=Body pitch angle (deg)-->
+			<value name="ENGINE3_Yaw_angle" startbit="32" bitcount="13" units="deg" endianess="little" signed="false" rangeMin="-360" rangeMax="360" conversion="V/10.0-360"></value><!--Comment=Body yaw angle (deg)-->
+		</frame>
   </frames>
 </RealDashCAN>
