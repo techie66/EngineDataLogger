@@ -687,19 +687,6 @@ int obd2_process(const struct can_frame *frame, struct bike_data *log_data, cons
 int can_send(struct bike_data *log_data, const int can_s)
 {
   int _status = EXIT_SUCCESS;
-  error_message(DEBUG, "CAN: Send EDL1");
-  struct can_frame _serial_commands;
-  _serial_commands.can_dlc = EDL_EDL_LENGTH;
-  _serial_commands.can_id = EDL_EDL_FRAME_ID;
-  _serial_commands.data[0] = 0;
-  _serial_commands.data[1] = 0;
-  _serial_commands.data[2] = 0;
-  _serial_commands.data[3] = log_data->serialCmdA;
-  if (write(can_s, &_serial_commands, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-    error_message(ERROR, "CAN: EDL Write failed");
-    _status = EXIT_FAILURE;
-  }
-
   /* 0x227
   * RPM uint16 0-25000
   * SPEED float mph max 65 :)
@@ -734,6 +721,19 @@ int can_send(struct bike_data *log_data, const int can_s)
   static uint8_t call_count = 0;
   call_count++;
   if (call_count >= 5) {
+    error_message(DEBUG, "CAN: Send EDL1");
+    struct can_frame _serial_commands;
+    _serial_commands.can_dlc = EDL_EDL_LENGTH;
+    _serial_commands.can_id = EDL_EDL_FRAME_ID;
+    _serial_commands.data[0] = 0;
+    _serial_commands.data[1] = 0;
+    _serial_commands.data[2] = 0;
+    _serial_commands.data[3] = log_data->serialCmdA;
+    if (write(can_s, &_serial_commands, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+      error_message(ERROR, "CAN: EDL Write failed");
+      _status = EXIT_FAILURE;
+    }
+
     /* 0x228
     * odometer uint32 km 0.01 scale
     * trip uint32  (max 1000? convert to tenths)
