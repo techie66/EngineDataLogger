@@ -106,7 +106,7 @@ const struct bike_data BIKE_DATA_DEFAULT = {
   0, // ig_rpm
   0, // alt_rpm
   0, // speed
-  0, // gear
+  'N', // gear
   0, // odometer
   0, // trip
   0, // sys volt
@@ -231,11 +231,13 @@ int detect_time_change(bool first_run = false)
 }
 
 struct timespec diff_timespec(const struct timespec *time1,
-    const struct timespec *time0) {
+                              const struct timespec *time0)
+{
   assert(time1);
   assert(time0);
   struct timespec diff = {.tv_sec = time1->tv_sec - time0->tv_sec, //
-      .tv_nsec = time1->tv_nsec - time0->tv_nsec};
+           .tv_nsec = time1->tv_nsec - time0->tv_nsec
+  };
   if (diff.tv_nsec < 0) {
     diff.tv_nsec += 1000000000; // nsec/sec
     diff.tv_sec--;

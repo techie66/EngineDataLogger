@@ -715,10 +715,14 @@ int can_send(struct bike_data *log_data, const int can_s)
   _edl_engine1.rpm = log_data->rpm;
   _edl_engine1.speed_mph = edl_engine1_speed_mph_encode(log_data->speed);
   _edl_engine1.tps = log_data->tps_percent;
-  _edl_engine1.oil_temp = edl_engine1_oil_temp_encode(log_data->oil_temp);
   _edl_engine1.oil_pres = edl_engine1_oil_pres_encode(log_data->oil_pres);
   _edl_engine1.iap = log_data->map_kpa;
-  _edl_engine1.voltage = edl_engine1_voltage_encode(log_data->batteryvoltage);
+  if ( log_data->gear == 'N' )
+    _edl_engine1.gear = 0;
+  else if ( log_data->gear == '?' )
+    _edl_engine1.gear = -1;
+  else
+    _edl_engine1.gear = log_data->gear - 48; // Convert from 'char' to actual number
   edl_engine1_pack(_engine1_frame.data, &_edl_engine1, sizeof(struct can_frame));
   _engine1_frame.can_dlc = EDL_ENGINE1_LENGTH;
   _engine1_frame.can_id = EDL_ENGINE1_FRAME_ID;
@@ -727,51 +731,46 @@ int can_send(struct bike_data *log_data, const int can_s)
     _status = EXIT_FAILURE;
   }
 
-  /* 0x228
-  * odometer uint32 miles 0.01 scale
-  * trip uint32  (max 1000? convert to tenths)
-  * Lambda uint16 0.001 scale
-  * gear char enum?
-  */
-  error_message(DEBUG, "CAN: Send ENGINE2");
-  struct edl_engine2_t _edl_engine2;
-  struct can_frame _engine2_frame;
-  _edl_engine2.odo = edl_engine2_odo_encode(log_data->odometer / 100.0);
-  _edl_engine2.trip = edl_engine2_trip_encode(log_data->trip / 100.0);
-  _edl_engine2.lambda = edl_engine2_lambda_encode(log_data->lambda / 1000.0);
-  if ( log_data->gear == 'N' )
-    _edl_engine2.gear = 0;
-  else if ( log_data->gear == '?' )
-    _edl_engine2.gear = -1;
-  else
-    _edl_engine2.gear = log_data->gear - 48; // Convert from 'char' to actual number
-  edl_engine2_pack(_engine2_frame.data, &_edl_engine2, sizeof(struct can_frame));
-  _engine2_frame.can_dlc = EDL_ENGINE2_LENGTH;
-  _engine2_frame.can_id = EDL_ENGINE2_FRAME_ID;
-  if (write(can_s, &_engine2_frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-    error_message(ERROR, "CAN: ENGINE2 Write failed");
-    _status = EXIT_FAILURE;
-  }
+  static uint8_t call_count = 0;
+  call_count++;
+  if (call_count >= 5) {
+    /* 0x228
+    * odometer uint32 km 0.01 scale
+    * trip uint32  (max 1000? convert to tenths)
+    * Lambda uint16 0.001 scale
+    * gear char enum?
+    */
+    error_message(DEBUG, "CAN: Send ENGINE2");
+    struct edl_engine2_t _edl_engine2;
+    struct can_frame _engine2_frame;
+    _edl_engine2.odo = edl_engine2_odo_encode(log_data->odometer * 1.609344 / 100.0);
+    _edl_engine2.trip = edl_engine2_trip_encode(log_data->trip * 1.609344 / 100.0);
+    _edl_engine2.lambda = edl_engine2_lambda_encode(log_data->lambda / 1000.0);
+    edl_engine2_pack(_engine2_frame.data, &_edl_engine2, sizeof(struct can_frame));
+    _engine2_frame.can_dlc = EDL_ENGINE2_LENGTH;
+    _engine2_frame.can_id = EDL_ENGINE2_FRAME_ID;
+    if (write(can_s, &_engine2_frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+      error_message(ERROR, "CAN: ENGINE2 Write failed");
+      _status = EXIT_FAILURE;
+    }
 
-  /* 0x229
-  * ADVANCE 0-255
-  * roll -180 - 180
-  * pitch -180 - 180
-  * yaw -360 - 360
-  */
-  error_message(DEBUG, "CAN: Send ENGINE3");
-  struct edl_engine3_t _edl_engine3;
-  struct can_frame _engine3_frame;
-  _edl_engine3.adv = edl_engine3_adv_encode(log_data->advance1);
-  _edl_engine3.roll_angle = edl_engine3_roll_angle_encode(log_data->roll) ;
-  _edl_engine3.pitch_angle = edl_engine3_pitch_angle_encode(log_data->pitch);
-  _edl_engine3.yaw_angle = edl_engine3_yaw_angle_encode(log_data->yaw);
-  edl_engine3_pack(_engine3_frame.data, &_edl_engine3, sizeof(struct can_frame));
-  _engine3_frame.can_dlc = EDL_ENGINE3_LENGTH;
-  _engine3_frame.can_id = EDL_ENGINE3_FRAME_ID;
-  if (write(can_s, &_engine3_frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-    error_message(ERROR, "CAN: ENGINE3 Write failed");
-    _status = EXIT_FAILURE;
+    /* 0x229
+    * ADVANCE 0-255
+    */
+    error_message(DEBUG, "CAN: Send ENGINE3");
+    struct edl_engine3_t _edl_engine3;
+    struct can_frame _engine3_frame;
+    _edl_engine3.adv = edl_engine3_adv_encode(log_data->advance1);
+    _edl_engine3.oil_temp = edl_engine3_oil_temp_encode(log_data->oil_temp);
+    _edl_engine3.voltage = edl_engine3_voltage_encode(log_data->batteryvoltage);
+    edl_engine3_pack(_engine3_frame.data, &_edl_engine3, sizeof(struct can_frame));
+    _engine3_frame.can_dlc = EDL_ENGINE3_LENGTH;
+    _engine3_frame.can_id = EDL_ENGINE3_FRAME_ID;
+    if (write(can_s, &_engine3_frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+      error_message(ERROR, "CAN: ENGINE3 Write failed");
+      _status = EXIT_FAILURE;
+    }
+    call_count = 0;
   }
 
   return _status;
