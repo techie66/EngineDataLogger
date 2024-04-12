@@ -989,7 +989,7 @@ cmdline_parser_internal (
   int argc, char **argv, struct gengetopt_args_info *args_info,
   struct cmdline_parser_params *params, const char *additional_error)
 {
-  int c;	/* Character of the parsed option.  */
+  int c;  /* Character of the parsed option.  */
 
   int error_occurred = 0;
   struct gengetopt_args_info local_args_info;
@@ -1026,59 +1026,59 @@ cmdline_parser_internal (
     int option_index = 0;
 
     static struct option long_options[] = {
-      { "help",	0, NULL, 'h' },
-      { "detailed-help",	0, NULL, 0 },
-      { "full-help",	0, NULL, 0 },
-      { "version",	0, NULL, 'V' },
-      { "config-file",	1, NULL, 'c' },
-      { "output-file",	1, NULL, 'o' },
-      { "gpx-file",	1, NULL, 'G' },
-      { "output-file-date",	0, NULL, 'd' },
-      { "output-file-format",	1, NULL, 'F' },
-      { "gear-ratios",	1, NULL, 'g' },
-      { "weight",	1, NULL, 'W' },
-      { "gps-time",	0, NULL, 'T' },
-      { "gps-t-offset",	1, NULL, 't' },
-      { "v",	0, NULL, 'v' },
-      { "verbose",	1, NULL, 0 },
-      { "quiet",	0, NULL, 'q' },
-      { "front-controls",	1, NULL, 'f' },
-      { "ignitech",	1, NULL, 'i' },
-      { "lc2",	1, NULL, 'l' },
-      { "lc2-delay",	1, NULL, 0 },
-      { "lc2-pin",	1, NULL, 0 },
-      { "sleepy",	1, NULL, 's' },
-      { "sleepy-addr",	1, NULL, 0 },
-      { "can",	1, NULL, 'C' },
-      { "ignitech-dump-file",	1, NULL, 0 },
-      { "ignitech-servo-as-iap",	0, NULL, 0 },
-      { "ignitech-sai-low",	1, NULL, 0 },
-      { "ignitech-sai-low-mv",	1, NULL, 0 },
-      { "ignitech-sai-high",	1, NULL, 0 },
-      { "ignitech-sai-high-mv",	1, NULL, 0 },
-      { "mount-offset-roll",	1, NULL, 0 },
-      { "mount-offset-pitch",	1, NULL, 0 },
-      { "roll-pitch-swap",	0, NULL, 0 },
-      { "test-mode",	1, NULL, 0 },
+      { "help", 0, NULL, 'h' },
+      { "detailed-help",  0, NULL, 0 },
+      { "full-help",  0, NULL, 0 },
+      { "version",  0, NULL, 'V' },
+      { "config-file",  1, NULL, 'c' },
+      { "output-file",  1, NULL, 'o' },
+      { "gpx-file", 1, NULL, 'G' },
+      { "output-file-date", 0, NULL, 'd' },
+      { "output-file-format", 1, NULL, 'F' },
+      { "gear-ratios",  1, NULL, 'g' },
+      { "weight", 1, NULL, 'W' },
+      { "gps-time", 0, NULL, 'T' },
+      { "gps-t-offset", 1, NULL, 't' },
+      { "v",  0, NULL, 'v' },
+      { "verbose",  1, NULL, 0 },
+      { "quiet",  0, NULL, 'q' },
+      { "front-controls", 1, NULL, 'f' },
+      { "ignitech", 1, NULL, 'i' },
+      { "lc2",  1, NULL, 'l' },
+      { "lc2-delay",  1, NULL, 0 },
+      { "lc2-pin",  1, NULL, 0 },
+      { "sleepy", 1, NULL, 's' },
+      { "sleepy-addr",  1, NULL, 0 },
+      { "can",  1, NULL, 'C' },
+      { "ignitech-dump-file", 1, NULL, 0 },
+      { "ignitech-servo-as-iap",  0, NULL, 0 },
+      { "ignitech-sai-low", 1, NULL, 0 },
+      { "ignitech-sai-low-mv",  1, NULL, 0 },
+      { "ignitech-sai-high",  1, NULL, 0 },
+      { "ignitech-sai-high-mv", 1, NULL, 0 },
+      { "mount-offset-roll",  1, NULL, 0 },
+      { "mount-offset-pitch", 1, NULL, 0 },
+      { "roll-pitch-swap",  0, NULL, 0 },
+      { "test-mode",  1, NULL, 0 },
       { 0,  0, 0, 0 }
     };
 
     c = getopt_long (argc, argv, "hVc:o:G:dF:g:W:Tt:vqf:i:l:s:C:", long_options, &option_index);
 
-    if (c == -1) break;	/* Exit from `while (1)' loop.  */
+    if (c == -1) break; /* Exit from `while (1)' loop.  */
 
     switch (c) {
-      case 'h':	/* Print help and exit.  */
+      case 'h': /* Print help and exit.  */
         cmdline_parser_print_help ();
         cmdline_parser_free (&local_args_info);
         exit (EXIT_SUCCESS);
 
-      case 'V':	/* Print version and exit.  */
+      case 'V': /* Print version and exit.  */
         cmdline_parser_print_version ();
         cmdline_parser_free (&local_args_info);
         exit (EXIT_SUCCESS);
 
-      case 'c':	/* Configuration file..  */
+      case 'c': /* Configuration file..  */
 
 
         if (update_arg( (void *) & (args_info->config_file_arg),
@@ -1090,7 +1090,7 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 'o':	/* Output file for CSV logging.  */
+      case 'o': /* Output file for CSV logging.  */
 
 
         if (update_arg( (void *) & (args_info->output_file_arg),
@@ -1102,7 +1102,7 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 'G':	/* Output file for GPX logging.  */
+      case 'G': /* Output file for GPX logging.  */
 
 
         if (update_arg( (void *) & (args_info->gpx_file_arg),
@@ -1114,7 +1114,7 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 'd':	/* Insert date and time into output filename..  */
+      case 'd': /* Insert date and time into output filename..  */
 
 
         if (update_arg( 0,
@@ -1126,7 +1126,7 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 'F':	/* Format string of output CSV file.  */
+      case 'F': /* Format string of output CSV file.  */
 
 
         if (update_arg( (void *) & (args_info->output_file_format_arg),
@@ -1138,7 +1138,7 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 'g':	/* RPM/Speed ratios. Comma separated. (Eg. -g \"175,122,95,78,67\").  */
+      case 'g': /* RPM/Speed ratios. Comma separated. (Eg. -g \"175,122,95,78,67\").  */
 
 
         if (update_arg( (void *) & (args_info->gear_ratios_arg),
@@ -1150,7 +1150,7 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 'W':	/* Weight of vehicle, in kg, to use for calculations..  */
+      case 'W': /* Weight of vehicle, in kg, to use for calculations..  */
 
 
         if (update_arg( (void *) & (args_info->weight_arg),
@@ -1162,7 +1162,7 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 'T':	/* Sync System time with GPS time.  */
+      case 'T': /* Sync System time with GPS time.  */
 
 
         if (update_arg( 0,
@@ -1174,7 +1174,7 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 't':	/* Offset between System time and GPS time before hard sync.  */
+      case 't': /* Offset between System time and GPS time before hard sync.  */
 
 
         if (update_arg( (void *) & (args_info->gps_t_offset_arg),
@@ -1186,12 +1186,12 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 'v':	/* Verbose output. Specify multiple times for increasing verbosity..  */
+      case 'v': /* Verbose output. Specify multiple times for increasing verbosity..  */
 
         local_args_info.v_given++;
 
         break;
-      case 'q':	/* Suppress output. Same as --verbose=NONE (Overrides both -v and --verbose).  */
+      case 'q': /* Suppress output. Same as --verbose=NONE (Overrides both -v and --verbose).  */
 
 
         if (update_arg( 0,
@@ -1203,7 +1203,7 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 'f':	/* Front controls device.  */
+      case 'f': /* Front controls device.  */
 
 
         if (update_arg( (void *) & (args_info->front_controls_arg),
@@ -1215,7 +1215,7 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 'i':	/* Ignitech ignition device.  */
+      case 'i': /* Ignitech ignition device.  */
 
 
         if (update_arg( (void *) & (args_info->ignitech_arg),
@@ -1227,7 +1227,7 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 'l':	/* Innovate LC-2 device.  */
+      case 'l': /* Innovate LC-2 device.  */
 
 
         if (update_arg( (void *) & (args_info->lc2_arg),
@@ -1239,7 +1239,7 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 's':	/* I2C device to communicate with Sleepy Pi..  */
+      case 's': /* I2C device to communicate with Sleepy Pi..  */
 
 
         if (update_arg( (void *) & (args_info->sleepy_arg),
@@ -1251,7 +1251,7 @@ cmdline_parser_internal (
           goto failure;
 
         break;
-      case 'C':	/* CAN device to bind to. CAN disabled if not set..  */
+      case 'C': /* CAN device to bind to. CAN disabled if not set..  */
 
 
         if (update_arg( (void *) & (args_info->can_arg),
@@ -1264,7 +1264,7 @@ cmdline_parser_internal (
 
         break;
 
-      case 0:	/* Long option with no short option */
+      case 0: /* Long option with no short option */
         if (strcmp (long_options[option_index].name, "detailed-help") == 0) {
           cmdline_parser_print_detailed_help ();
           cmdline_parser_free (&local_args_info);
@@ -1459,11 +1459,11 @@ cmdline_parser_internal (
         }
 
         break;
-      case '?':	/* Invalid option.  */
+      case '?': /* Invalid option.  */
         /* `getopt_long' already printed an error message.  */
         goto failure;
 
-      default:	/* bug: option not considered.  */
+      default:  /* bug: option not considered.  */
         fprintf (stderr, "%s: option unknown: %c%s\n", CMDLINE_PARSER_PACKAGE, c, (additional_error ? additional_error : ""));
         abort ();
     } /* switch */

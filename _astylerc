@@ -27,6 +27,6 @@
 --pad-header
 
 # --max-instatement-indent=40
-# --convert-tabs
+--convert-tabs
 # --max-code-length=79
 # --pad-method-colon=none

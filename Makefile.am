@@ -1,5 +1,6 @@
 AM_CFLAGS = -Wall -Wextra
 AM_CXXFLAGS = -Wall -Wextra
+ASTYLEFLAGS = --options=_astylerc
 bin_PROGRAMS = enginedatalogger
 bin_SCRIPTS = bin/shutdowncheck.py
 enginedatalogger_SOURCES= \
@@ -134,6 +135,9 @@ $(etcdir)/enginedatalogger.conf.dist: $(etcdir)/enginedatalogger.conf.dist.in
 
 doc: Doxyfile
 	PROJECT_NUMBER=$(VERSION) doxygen Doxyfile
+
+style : $(enginedatalogger_SOURCES)
+	astyle $(ASTYLEFLAGS) $^ 
 
 BUILT_SOURCES += $(top_srcdir)/.version
 $(top_srcdir)/.version:

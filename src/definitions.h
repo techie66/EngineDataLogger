@@ -33,8 +33,8 @@ extern "C" {
 #define STOPPED_RPM 500
 #define LOG_INTERVAL 50000
 #define GPX_INTERVAL 1000000
-#define CAN_RATE_LIMIT_NSEC 200000000
-#define O2_PIN 26	// Default //
+#define CAN_RATE_LIMIT_NSEC 330000000
+#define O2_PIN 26 // Default //
 #define LC2_POWER_DELAY 15 // delay in seconds. Default //
 #define ENGINE_DATA_ADDR 0x04
 
@@ -58,7 +58,7 @@ extern const uint8_t  CLUTCH_DISENGAGED,
        IN_NEUTRAL;
 
 // CmdA flags
-extern const uint8_t		ENGINE_RUNNING;
+extern const uint8_t    ENGINE_RUNNING;
 
 struct      engine_data {
   uint16_t  rpm;
@@ -66,8 +66,8 @@ struct      engine_data {
             temp_oil, // divide by 100 for actual temp
             pres_oil, // divide by 100 for actual pressure
             speed; // divide by 100 for actual speed
-  uint32_t	odometer;
-  uint32_t	trip;
+  uint32_t  odometer;
+  uint32_t  trip;
 };
 
 extern const struct engine_data ENGINE_DATA_DEFAULT;

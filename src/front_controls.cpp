@@ -25,10 +25,10 @@
 
 int readFC(int &fd_front_controls, bike_data &log_data)
 {
-  int	n = 0,
+  int n = 0,
       i = 0,
       i_serial_in = 0;
-  char	buf [100],
+  char  buf [100],
         serial_in[100];
 
   n = read (fd_front_controls, buf, sizeof(buf));
@@ -63,7 +63,7 @@ int readFC(int &fd_front_controls, bike_data &log_data)
       i_serial_in += 2;
       memcpy((void *)&log_data.systemvoltage, (void *)&serial_in[i_serial_in], 4);
 
-      char 	CmdC[9],
+      char  CmdC[9],
             CmdD[9];
       strcpy(CmdC, exCmd_bin(log_data.inputCmdC));
       strcpy(CmdD, exCmd_bin(log_data.inputCmdD));
@@ -91,7 +91,7 @@ int writeFC(int fd_front_controls, bike_data &log_data)
   int result;
 
   error_message (INFO, "Sending 6 bytes to front controls");
-  char 	CmdA[9],
+  char  CmdA[9],
         CmdB[9],
         CmdC[9],
         CmdD[9];
@@ -100,7 +100,7 @@ int writeFC(int fd_front_controls, bike_data &log_data)
   strcpy(CmdC, exCmd_bin(log_data.serialCmdC));
   strcpy(CmdD, exCmd_bin(log_data.serialCmdD));
   error_message (DEBUG, "A: %s B: %s C: %s D: %s", CmdA, CmdB, CmdC, CmdD);
-  unsigned char	buf[6];
+  unsigned char buf[6];
   buf[0] = 'A';
   buf[1] = log_data.serialCmdD;
   buf[2] = log_data.serialCmdB;

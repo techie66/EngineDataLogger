@@ -38,8 +38,8 @@ int trailing_average_power(bike_data &log_data, int periods)
 }
 
 /** @Alexey Frunze
-	https://stackoverflow.com/questions/15846762/timeval-subtract-explanation
-	Shamelessly copied
+  https://stackoverflow.com/questions/15846762/timeval-subtract-explanation
+  Shamelessly copied
 **/
 int timeval_subtract(struct timeval *result, struct timeval *x, struct timeval *y)
 {

@@ -687,34 +687,31 @@ int obd2_process(const struct can_frame *frame, struct bike_data *log_data, cons
 int can_send(struct bike_data *log_data, const int can_s)
 {
   int _status = EXIT_SUCCESS;
-  /* 0x227
-  * RPM uint16 0-25000
-  * SPEED float mph max 65 :)
+  /* 0x229
+  * ADVANCE 0-255
   * TPS int 0-100%
-  * OIL TEMP float -50 - 500 F
-  * OIL PRESSURE float 0-150 psi
   * IAP int kpa 0-115
-  * voltage float (range 0-20) 0.1V
+  * gear enum 0=N
+  * Lambda uint16 0.001 scale
   */
-  error_message(DEBUG, "CAN: Send ENGINE1");
-  struct edl_engine1_t _edl_engine1;
-  struct can_frame _engine1_frame;
-  _edl_engine1.rpm = log_data->rpm;
-  _edl_engine1.speed_mph = edl_engine1_speed_mph_encode(log_data->speed);
-  _edl_engine1.tps = log_data->tps_percent;
-  _edl_engine1.oil_pres = edl_engine1_oil_pres_encode(log_data->oil_pres);
-  _edl_engine1.iap = log_data->map_kpa;
+  error_message(DEBUG, "CAN: Send ENGINE3");
+  struct edl_engine3_t _edl_engine3;
+  struct can_frame _engine3_frame;
+  _edl_engine3.adv = edl_engine3_adv_encode(log_data->advance1);
+  _edl_engine3.tps = log_data->tps_percent;
+  _edl_engine3.iap = log_data->map_kpa;
   if ( log_data->gear == 'N' )
-    _edl_engine1.gear = 0;
+    _edl_engine3.gear = 0;
   else if ( log_data->gear == '?' )
-    _edl_engine1.gear = -1;
+    _edl_engine3.gear = -1;
   else
-    _edl_engine1.gear = log_data->gear - 48; // Convert from 'char' to actual number
-  edl_engine1_pack(_engine1_frame.data, &_edl_engine1, sizeof(struct can_frame));
-  _engine1_frame.can_dlc = EDL_ENGINE1_LENGTH;
-  _engine1_frame.can_id = EDL_ENGINE1_FRAME_ID;
-  if (write(can_s, &_engine1_frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-    error_message(ERROR, "CAN: ENGINE1 Write failed");
+    _edl_engine3.gear = log_data->gear - 48; // Convert from 'char' to actual number
+  _edl_engine3.lambda = edl_engine3_lambda_encode(log_data->lambda / 1000.0);
+  edl_engine3_pack(_engine3_frame.data, &_edl_engine3, sizeof(struct can_frame));
+  _engine3_frame.can_dlc = EDL_ENGINE3_LENGTH;
+  _engine3_frame.can_id = EDL_ENGINE3_FRAME_ID;
+  if (write(can_s, &_engine3_frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+    error_message(ERROR, "CAN: ENGINE3 Write failed");
     _status = EXIT_FAILURE;
   }
 
@@ -734,42 +731,6 @@ int can_send(struct bike_data *log_data, const int can_s)
       _status = EXIT_FAILURE;
     }
 
-    /* 0x228
-    * odometer uint32 km 0.01 scale
-    * trip uint32  (max 1000? convert to tenths)
-    * Lambda uint16 0.001 scale
-    * gear char enum?
-    */
-    error_message(DEBUG, "CAN: Send ENGINE2");
-    struct edl_engine2_t _edl_engine2;
-    struct can_frame _engine2_frame;
-    _edl_engine2.odo = edl_engine2_odo_encode(log_data->odometer * 1.609344 / 100.0);
-    _edl_engine2.trip = edl_engine2_trip_encode(log_data->trip * 1.609344 / 100.0);
-    _edl_engine2.lambda = edl_engine2_lambda_encode(log_data->lambda / 1000.0);
-    edl_engine2_pack(_engine2_frame.data, &_edl_engine2, sizeof(struct can_frame));
-    _engine2_frame.can_dlc = EDL_ENGINE2_LENGTH;
-    _engine2_frame.can_id = EDL_ENGINE2_FRAME_ID;
-    if (write(can_s, &_engine2_frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-      error_message(ERROR, "CAN: ENGINE2 Write failed");
-      _status = EXIT_FAILURE;
-    }
-
-    /* 0x229
-    * ADVANCE 0-255
-    */
-    error_message(DEBUG, "CAN: Send ENGINE3");
-    struct edl_engine3_t _edl_engine3;
-    struct can_frame _engine3_frame;
-    _edl_engine3.adv = edl_engine3_adv_encode(log_data->advance1);
-    _edl_engine3.oil_temp = edl_engine3_oil_temp_encode(log_data->oil_temp);
-    _edl_engine3.voltage = edl_engine3_voltage_encode(log_data->batteryvoltage);
-    edl_engine3_pack(_engine3_frame.data, &_edl_engine3, sizeof(struct can_frame));
-    _engine3_frame.can_dlc = EDL_ENGINE3_LENGTH;
-    _engine3_frame.can_id = EDL_ENGINE3_FRAME_ID;
-    if (write(can_s, &_engine3_frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-      error_message(ERROR, "CAN: ENGINE3 Write failed");
-      _status = EXIT_FAILURE;
-    }
     call_count = 0;
   }
 

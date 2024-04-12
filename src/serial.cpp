@@ -32,15 +32,15 @@ set_interface_attribs (int fd, int speed, int parity)
   cfsetospeed (&tty, speed);
   cfsetispeed (&tty, speed);
   /*
-  	tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;     // 8-bit chars
-  	// disable IGNBRK for mismatched speed tests; otherwise receive break
-  	// as \000 chars
-  	tty.c_iflag &= ~IGNBRK;         // disable break processing
-  	tty.c_lflag = 0;                // no signaling chars, no echo,
-  									// no canonical processing
-  	tty.c_oflag = 0;                // no remapping, no delays
+    tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;     // 8-bit chars
+    // disable IGNBRK for mismatched speed tests; otherwise receive break
+    // as \000 chars
+    tty.c_iflag &= ~IGNBRK;         // disable break processing
+    tty.c_lflag = 0;                // no signaling chars, no echo,
+                    // no canonical processing
+    tty.c_oflag = 0;                // no remapping, no delays
 
-  	tty.c_iflag &= ~(IXON | IXOFF | IXANY); // shut off xon/xoff ctrl
+    tty.c_iflag &= ~(IXON | IXOFF | IXANY); // shut off xon/xoff ctrl
   */
   cfmakeraw(&tty);
   tty.c_cc[VMIN]  = 0;            // read doesn't block

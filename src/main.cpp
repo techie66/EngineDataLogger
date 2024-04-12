@@ -42,10 +42,10 @@
 #endif /* FEAT_POWERCALC */
 
 #ifdef FEAT_I2C
-#include <unistd.h>			//Needed for I2C port
-#include <fcntl.h>			//Needed for I2C port
-#include <sys/ioctl.h>			//Needed for I2C port
-#include <linux/i2c-dev.h>		//Needed for I2C port
+#include <unistd.h>     //Needed for I2C port
+#include <fcntl.h>      //Needed for I2C port
+#include <sys/ioctl.h>      //Needed for I2C port
+#include <linux/i2c-dev.h>    //Needed for I2C port
 #endif /* FEAT_I2C */
 
 #ifdef HAVE_LIBISP2
@@ -80,14 +80,14 @@
 #include "definitions.h"
 #include "error_handling.h"
 
-const uint8_t		BRAKE_ON = 1 << 2,
+const uint8_t   BRAKE_ON = 1 << 2,
                 HORN_ON = 1 << 3,
                 LEFT_ON = 1 << 4,
                 RIGHT_ON = 1 << 5,
                 HIGH_BEAMS_ON = 1 << 6,
                 KILL_ON = 1 << 7;
-const uint8_t		ENGINE_RUNNING = 1 << 7;
-const uint8_t		CLUTCH_DISENGAGED = 1 << 2,
+const uint8_t   ENGINE_RUNNING = 1 << 7;
+const uint8_t   CLUTCH_DISENGAGED = 1 << 2,
                 KICKSTAND_UP = 1 << 3,
                 IN_NEUTRAL = 1 << 4;
 
@@ -256,11 +256,11 @@ int main(int argc, char *argv[])
   // TODO SIGHUP start new output file?
   signal(SIGHUP, hupHandler);
 
-  int 		fd_front_controls = -1;
-  FILE		*fd_log;
+  int     fd_front_controls = -1;
+  FILE    *fd_log;
 
   #ifdef FEAT_DASHBOARD
-  EDL_Bluetooth	dashboard;
+  EDL_Bluetooth dashboard;
   #endif /* FEAT_DASHBOARD */
 
   gengetopt_args_info args_info;
@@ -502,7 +502,7 @@ int main(int argc, char *argv[])
   #endif /* HAVE_LIBISP2 */
 
   #ifdef FEAT_I2C
-  int	fd_i2c = -1;
+  int fd_i2c = -1;
   uint8_t engine_data_addr = ENGINE_DATA_ADDR;
   if ( args_info.sleepy_given ) {
     // TODO
@@ -535,8 +535,8 @@ int main(int argc, char *argv[])
 
 
   // Main Loop
-  engine_data	enData = ENGINE_DATA_DEFAULT;
-  bike_data	log_data;
+  engine_data enData = ENGINE_DATA_DEFAULT;
+  bike_data log_data;
   log_data = BIKE_DATA_DEFAULT;
 
   if ( args_info.weight_given ) {
@@ -556,20 +556,20 @@ int main(int argc, char *argv[])
   }
 
   #ifdef HAVE_LIBISP2
-  isp2_t		lc2_data = isp2_t();
+  isp2_t    lc2_data = isp2_t();
   lc2_data.status = ISP2_WARMING;
   #endif /* HAVE_LIBISP2 */
 
   #ifdef FEAT_FRONTCONTROLS
-  //fc_data		fcData = FC_DATA_DEFAULT;
+  //fc_data   fcData = FC_DATA_DEFAULT;
   #endif /* FEAT_FRONTCONTROLS */
 
   #ifdef FEAT_I2C
-  char		en_to_cmd = 0;
+  char    en_to_cmd = 0;
   #endif /* FEAT_I2C */
 
   #ifdef FEAT_DASHBOARD
-  System_CMD	db_from_cmd = NO_CMD;
+  System_CMD  db_from_cmd = NO_CMD;
   #endif /* FEAT_DASHBOARD */
 
   bool    __attribute__ ((unused)) engineRunning = false;
@@ -589,7 +589,7 @@ int main(int argc, char *argv[])
         time_to_quit = true;
     }
 
-    int	length;
+    int length;
     // Check if restarting logfile
     if ( detect_time_change() == 1 ) {
       restart_log = true;
@@ -620,11 +620,11 @@ int main(int argc, char *argv[])
 
       // length is calculated by fixed size of data stream from Sleepy Pi
       length = sizeof(enData.rpm) + sizeof(enData.speed) + sizeof(enData.temp_oil) + sizeof(enData.batteryVoltage)
-               + sizeof(enData.odometer) + 2;		//<<< Number of bytes to read
+               + sizeof(enData.odometer) + 2;   //<<< Number of bytes to read
 
-      unsigned char 	buffer[60] = {0};
-      unsigned char	*buffer_ptr = buffer;
-      if (read(fd_i2c, buffer, length) != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)KE
+      unsigned char   buffer[60] = {0};
+      unsigned char *buffer_ptr = buffer;
+      if (read(fd_i2c, buffer, length) != length) {   //read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)KE
         //ERROR HANDLING: i2c transaction failed
         error_message (WARN, "WARN: Failed to read from the i2c bus.");
       } else {
@@ -686,9 +686,9 @@ int main(int argc, char *argv[])
     #endif /* HAVE_LIBIGNITECH */
 
     // Setup read sets
-    int	select_result = 0,
+    int select_result = 0,
         max_fd = 0;
-    fd_set	readset,
+    fd_set  readset,
             writeset;
     FD_ZERO(&readset);
     FD_ZERO(&writeset);
@@ -738,7 +738,7 @@ int main(int argc, char *argv[])
     }
     #endif /* HAVE_LIBISP2 */
 
-    struct timeval	timeout;
+    struct timeval  timeout;
     timeout.tv_sec = 0;
     timeout.tv_usec = LOG_INTERVAL;
 
@@ -812,7 +812,7 @@ int main(int argc, char *argv[])
 
     // calculate stuff / make decisions
     static time_t start_running_time;
-    struct timeval	currtime;
+    struct timeval  currtime;
     time_t my_time;
 
     int my_rpm = enData.rpm;

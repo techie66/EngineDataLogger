@@ -30,20 +30,20 @@
 		<frame canId="0x227" endianess="little">  <!--ENGINE1-->
 			<value targetId="37" startbit="0" bitcount="14" units="rpm" endianess="little" signed="false" rangeMin="0" rangeMax="65535" ></value><!--Comment=RPM-->
 			<value targetId="81" startbit="16" bitcount="8" units="MPH" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=Speed (MPH)-->
-			<value targetId="42" startbit="24" bitcount="7" endianess="little" signed="false" rangeMin="0" rangeMax="100" ></value><!--Comment=Throttle position (%)-->
-			<value targetId="151" startbit="32" bitcount="8" units="psi" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=Engine oil pressure (psi)-->
-			<value targetId="31" startbit="40" bitcount="8" units="kpa" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=Intake absolute pressure (kpa)-->
-			<value targetId="200" startbit="48" bitcount="8" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=character representing current gear-->
+			<value targetId="151" startbit="24" bitcount="8" units="psi" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=Engine oil pressure (psi)-->
+			<value targetId="152" startbit="32" bitcount="9" units="F" endianess="little" signed="false" rangeMin="-50" rangeMax="450" conversion="V-50"></value><!--Comment=Engine oil temp (Fahrenheit)-->
+			<value targetId="12" startbit="48" bitcount="8" units="V" endianess="little" signed="false" rangeMin="0" rangeMax="25.5" conversion="V/10.0"></value><!--Comment=System Voltage (0.1 V)-->
 		</frame>
 		<frame canId="0x228" endianess="little">  <!--ENGINE2-->
 			<value targetId="310" startbit="0" bitcount="24" units="km" endianess="little" signed="false" rangeMin="0" rangeMax="1677721.0" conversion="V/10.0"></value><!--Comment=Odometer (0.1 mi)-->
 			<value targetId="311" startbit="24" bitcount="20" units="km" endianess="little" signed="false" rangeMin="0" rangeMax="104857.0" conversion="V/10.0"></value><!--Comment=Tripmeter (0.1 mi)-->
-			<value targetId="0" startbit="48" bitcount="11" units="None" endianess="little" signed="false" rangeMin="0" rangeMax="2.048" conversion="V/1000.0"></value><!--Comment=Lambda-->
 		</frame>
 		<frame canId="0x229" endianess="little">  <!--ENGINE3-->
 			<value targetId="38" startbit="0" bitcount="8" units="deg" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=Ignition advance-->
-			<value targetId="152" startbit="8" bitcount="9" units="F" endianess="little" signed="false" rangeMin="-50" rangeMax="450" conversion="V-50"></value><!--Comment=Engine oil temp (Fahrenheit)-->
-			<value targetId="12" startbit="24" bitcount="8" units="V" endianess="little" signed="false" rangeMin="0" rangeMax="25.5" conversion="V/10.0"></value><!--Comment=System Voltage (0.1 V)-->
+			<value targetId="42" startbit="8" bitcount="7" endianess="little" signed="false" rangeMin="0" rangeMax="100" ></value><!--Comment=Throttle position (%)-->
+			<value targetId="31" startbit="16" bitcount="8" units="kpa" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=Intake absolute pressure (kpa)-->
+			<value targetId="200" startbit="24" bitcount="8" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=Numeric gear, 0=N-->
+			<value targetId="0" startbit="32" bitcount="11" units="None" endianess="little" signed="false" rangeMin="0" rangeMax="2.048" conversion="V/1000.0"></value><!--Comment=Lambda-->
 		</frame>
   </frames>
 </RealDashCAN>

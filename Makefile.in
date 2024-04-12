@@ -456,6 +456,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CFLAGS = -Wall -Wextra
 AM_CXXFLAGS = -Wall -Wextra
+ASTYLEFLAGS = --options=_astylerc
 bin_SCRIPTS = bin/shutdowncheck.py
 enginedatalogger_SOURCES = src/main.cpp src/hexconvert.cpp \
 	src/serial.cpp src/serial.h src/error_handling.c \
@@ -1280,6 +1281,9 @@ $(etcdir)/enginedatalogger.conf.dist: $(etcdir)/enginedatalogger.conf.dist.in
 
 doc: Doxyfile
 	PROJECT_NUMBER=$(VERSION) doxygen Doxyfile
+
+style : $(enginedatalogger_SOURCES)
+	astyle $(ASTYLEFLAGS) $^ 
 $(top_srcdir)/.version:
 	echo $(VERSION) > $@-t && mv $@-t $@
 dist-hook:
