@@ -59,8 +59,8 @@ BO_ 552 ENGINE2: 6 EDL
  SG_ TRIP : 24|20@1+ (0.1,0) [0|104857.0] "km" FC
 
 CM_ BO_ 552 "EDL Engine Frame 2";
-CM_ SG_ 552 ODO "Odometer (0.1 mi)";
-CM_ SG_ 552 TRIP "Tripmeter (0.1 mi)";
+CM_ SG_ 552 ODO "Odometer (0.1 km)";
+CM_ SG_ 552 TRIP "Tripmeter (0.1 km)";
 
 BO_ 553 ENGINE3: 6 EDL
  SG_ ADV : 0|8@1+ (1,0) [0|255] "deg" FC

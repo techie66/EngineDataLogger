@@ -13,7 +13,8 @@
       <value name="Unlock Code4" offset="4" length="1" initialValue="0x87"></value>
       <value name="Unlock Code5" offset="5" length="1" initialValue="0x8E"></value>
       <value name="Unlock Code6" offset="6" length="1" initialValue="0xBC"></value>
-      <value name="Unlock Code7" offset="7" length="1" initialValue="0x00"></value>
+      <value name="Unlock Code7" offset="7" length="1" initialValue="0x1F"></value>
+      <value name="Unlock Codebit" units="bit" startbit="64" bitcount="1" initialValue="0"></value>
     </frame>
     <frame canId="0x260" endianess="little"> <!--   -->
 			<value targetId="230" units="bit" startbit="2" bitcount="1"></value><!--brake bit-->
@@ -35,8 +36,8 @@
 			<value targetId="12" startbit="48" bitcount="8" units="V" endianess="little" signed="false" rangeMin="0" rangeMax="25.5" conversion="V/10.0"></value><!--Comment=System Voltage (0.1 V)-->
 		</frame>
 		<frame canId="0x228" endianess="little">  <!--ENGINE2-->
-			<value targetId="310" startbit="0" bitcount="24" units="km" endianess="little" signed="false" rangeMin="0" rangeMax="1677721.0" conversion="V/10.0"></value><!--Comment=Odometer (0.1 mi)-->
-			<value targetId="311" startbit="24" bitcount="20" units="km" endianess="little" signed="false" rangeMin="0" rangeMax="104857.0" conversion="V/10.0"></value><!--Comment=Tripmeter (0.1 mi)-->
+			<value targetId="310" startbit="0" bitcount="24" units="km" endianess="little" signed="false" rangeMin="0" rangeMax="1677721.0" conversion="V/10.0"></value><!--Comment=Odometer (0.1 km)-->
+			<value targetId="311" startbit="24" bitcount="20" units="km" endianess="little" signed="false" rangeMin="0" rangeMax="104857.0" conversion="V/10.0"></value><!--Comment=Tripmeter (0.1 km)-->
 		</frame>
 		<frame canId="0x229" endianess="little">  <!--ENGINE3-->
 			<value targetId="38" startbit="0" bitcount="8" units="deg" endianess="little" signed="false" rangeMin="0" rangeMax="255" ></value><!--Comment=Ignition advance-->
