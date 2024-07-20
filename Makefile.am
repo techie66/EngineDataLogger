@@ -26,6 +26,8 @@ enginedatalogger_SOURCES += \
 		    src/ignitech_can.h \
 		    src/fc.c \
 		    src/fc.h \
+		    src/spartan3.c \
+		    src/spartan3.h \
 		    src/gps.c \
 		    src/gps.h \
 		    src/edl.c \

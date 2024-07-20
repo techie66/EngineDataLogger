@@ -100,6 +100,8 @@ bin_PROGRAMS = enginedatalogger$(EXEEXT)
 @CANBUS_TRUE@		    src/ignitech_can.h \
 @CANBUS_TRUE@		    src/fc.c \
 @CANBUS_TRUE@		    src/fc.h \
+@CANBUS_TRUE@		    src/spartan3.c \
+@CANBUS_TRUE@		    src/spartan3.h \
 @CANBUS_TRUE@		    src/gps.c \
 @CANBUS_TRUE@		    src/gps.h \
 @CANBUS_TRUE@		    src/edl.c \
@@ -153,16 +155,17 @@ am__enginedatalogger_SOURCES_DIST = src/main.cpp src/hexconvert.cpp \
 	src/error_handling.h src/cmdline.c src/cmdline.h src/logfile.c \
 	src/logfile.h src/definitions.h src/can.c src/can.h \
 	src/imu_can.c src/imu_can.h src/ignitech_can.c \
-	src/ignitech_can.h src/fc.c src/fc.h src/gps.c src/gps.h \
-	src/edl.c src/edl.h src/obd2.c src/obd2.h src/bluetooth.cpp \
+	src/ignitech_can.h src/fc.c src/fc.h src/spartan3.c \
+	src/spartan3.h src/gps.c src/gps.h src/edl.c src/edl.h \
+	src/obd2.c src/obd2.h src/bluetooth.cpp \
 	src/cb1100f-app_generated.h src/bluetooth.h src/gpx.cpp \
 	src/gpx.h src/powercalc.cpp src/powercalc.h \
 	src/front_controls.cpp src/front_controls.h
 am__dirstamp = $(am__leading_dot)dirstamp
 @CANBUS_TRUE@am__objects_1 = src/can.$(OBJEXT) src/imu_can.$(OBJEXT) \
 @CANBUS_TRUE@	src/ignitech_can.$(OBJEXT) src/fc.$(OBJEXT) \
-@CANBUS_TRUE@	src/gps.$(OBJEXT) src/edl.$(OBJEXT) \
-@CANBUS_TRUE@	src/obd2.$(OBJEXT)
+@CANBUS_TRUE@	src/spartan3.$(OBJEXT) src/gps.$(OBJEXT) \
+@CANBUS_TRUE@	src/edl.$(OBJEXT) src/obd2.$(OBJEXT)
 @DASHBOARD_TRUE@am__objects_2 = src/bluetooth.$(OBJEXT)
 @GPX_TRUE@am__objects_3 = src/gpx.$(OBJEXT)
 @POWERCALC_TRUE@am__objects_4 = src/powercalc.$(OBJEXT)
@@ -225,7 +228,7 @@ am__depfiles_remade = src/$(DEPDIR)/bluetooth.Po src/$(DEPDIR)/can.Po \
 	src/$(DEPDIR)/ignitech_can.Po src/$(DEPDIR)/imu_can.Po \
 	src/$(DEPDIR)/logfile.Po src/$(DEPDIR)/main.Po \
 	src/$(DEPDIR)/obd2.Po src/$(DEPDIR)/powercalc.Po \
-	src/$(DEPDIR)/serial.Po
+	src/$(DEPDIR)/serial.Po src/$(DEPDIR)/spartan3.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -606,6 +609,8 @@ src/imu_can.$(OBJEXT): src/$(am__dirstamp) \
 src/ignitech_can.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/fc.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/spartan3.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/gps.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/edl.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/obd2.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
@@ -680,6 +685,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/obd2.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/powercalc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/serial.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/spartan3.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -1135,6 +1141,7 @@ distclean: distclean-recursive
 	-rm -f src/$(DEPDIR)/obd2.Po
 	-rm -f src/$(DEPDIR)/powercalc.Po
 	-rm -f src/$(DEPDIR)/serial.Po
+	-rm -f src/$(DEPDIR)/spartan3.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-tags
@@ -1201,6 +1208,7 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f src/$(DEPDIR)/obd2.Po
 	-rm -f src/$(DEPDIR)/powercalc.Po
 	-rm -f src/$(DEPDIR)/serial.Po
+	-rm -f src/$(DEPDIR)/spartan3.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

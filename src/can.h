@@ -44,6 +44,7 @@ extern "C" {
 #include "obd2.h"
 #include "gps.h"
 #include "fc.h"
+#include "spartan3.h"
 #include "edl.h"
 
 // 3rd-Party Libraries

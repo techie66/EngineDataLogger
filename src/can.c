@@ -17,6 +17,7 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 #include "can.h"
+#include "spartan3.h"
 
 bool can_sock_connect( int can_s, char const *can_arg )
 {
@@ -87,6 +88,17 @@ void can_parse(const struct can_frame *frame, struct bike_data *log_data, const 
         log_data->lambda = st_wb2.lambda * 10 ; // Convert scaled by 0.01 to 0.001
       }
       error_message(DEBUG, "CAN:ignitech lambda: %f", ignitech_can_ignitech_wb_2_lambda_decode(st_wb2.lambda));
+    }
+    break;
+
+    case SPARTAN3_SPARTAN3_FRAME_ID: {
+      struct spartan3_spartan3_t st_spartan3;
+      int status_unpack = spartan3_spartan3_unpack(&st_spartan3, frame->data, sizeof(frame->data));
+      if ( status_unpack == 0 ) {
+        _status = EXIT_SUCCESS;
+        log_data->lambda = st_spartan3.lambda ;
+      }
+      error_message(DEBUG, "CAN:Spartan lambda: %f", spartan3_spartan3_lambda_decode(st_spartan3.lambda));
     }
     break;
 
