@@ -67,7 +67,7 @@ BO_ 553 ENGINE3: 6 EDL
  SG_ TPS : 8|7@1+ (1,0) [0|100] "%" FC
  SG_ IAP : 16|8@1+ (1,0) [0|255] "kpa" FC
  SG_ GEAR : 24|8@1+ (1,0) [0|255] "" FC
- SG_ LAMBDA : 32|11@1+ (0.001,0) [0|2.048] "" FC
+ SG_ LAMBDA : 32|12@1+ (0.001,0) [0|3.4] "" FC
 
 CM_ BO_ 553 "EDL Engine Frame 3";
 CM_ SG_ 553 ADV "Ignition advance";
