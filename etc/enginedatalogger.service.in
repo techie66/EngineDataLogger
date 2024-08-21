@@ -2,8 +2,7 @@
 [Unit]
 Description=EngineDataLogger
 DefaultDependencies=false
-After=timers.target
-Wants=timers.target
+After=systemd-user-sessions.service
 
 [Service]
 Type=simple
