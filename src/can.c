@@ -17,6 +17,7 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 #include "can.h"
+#include "edl.h"
 #include "spartan3.h"
 
 bool can_sock_connect( int can_s, char const *can_arg )
@@ -186,6 +187,13 @@ void can_parse(const struct can_frame *frame, struct bike_data *log_data, const 
         log_data->systemvoltage = fc_front_controls_voltage_decode(st_front_controls.voltage);
       }
     }
+    break;
+
+    // Right now we get all this info over i2c from this ecu, but it is also sent 
+    // over the CAN bus, so we ignore it.
+    case EDL_ENGINE2_FRAME_ID:
+    break;
+    case EDL_ENGINE1_FRAME_ID:
     break;
 
     default: /// Default if can_id is not in the switch print out message details
